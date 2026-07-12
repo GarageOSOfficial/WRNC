@@ -1,0 +1,10 @@
+{
+  "extends": "expo/eslintrc-shared",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}

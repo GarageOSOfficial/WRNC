@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Garage OS",
+    "slug": "garage-os",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTabletMode": true,
+      "supportsRTL": false,
+      "bundleIdentifier": "com.garageos.mobile",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.garageos.mobile",
+      "versionCode": 1,
+      "targetSdkVersion": 34
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Garage OS to access your photos and videos for vehicle documentation.",
+          "cameraPermission": "Allow Garage OS to access your camera to document your builds."
+        }
+      ],
+      "expo-file-system"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c7cfc85b-904f-4d2a-8fbb-1aec8f51aecb"
+      }
+    },
+    "scheme": "garageos",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ]
+  }
+}
