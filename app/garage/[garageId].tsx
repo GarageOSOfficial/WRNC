@@ -49,6 +49,13 @@ export default function GarageScreen() {
     loadGarage();
   }, [loadGarage]);
 
+  const goToVehicle = (vehicleId: string) => {
+    router.push({
+      pathname: '/vehicle/[vehicleId]',
+      params: { vehicleId },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Pressable style={styles.backButton} onPress={() => router.back()}>
@@ -84,14 +91,15 @@ export default function GarageScreen() {
               </View>
             }
             renderItem={({ item }) => (
-              <View style={styles.vehicleCard}>
+              <Pressable style={styles.vehicleCard} onPress={() => goToVehicle(item.id)}>
                 <Text style={styles.vehicleName}>
-                  {item.year} {item.make}
+                  {[item.year, item.make, item.model].filter(Boolean).join(' ') || 'Vehicle'}
                 </Text>
                 {item.trim ? <Text style={styles.vehicleMeta}>{item.trim}</Text> : null}
                 {item.nickname ? <Text style={styles.vehicleMeta}>Nickname: {item.nickname}</Text> : null}
                 <Text style={styles.vehicleMeta}>Mileage: {item.mileage ?? 0}</Text>
-              </View>
+                <Text style={styles.vehicleLink}>Open Workspace</Text>
+              </Pressable>
             )}
           />
         </>
@@ -192,5 +200,10 @@ const styles = StyleSheet.create({
   vehicleMeta: {
     color: '#CBD5E1',
     marginTop: 4,
+  },
+  vehicleLink: {
+    color: '#93C5FD',
+    marginTop: 10,
+    fontWeight: '600',
   },
 });

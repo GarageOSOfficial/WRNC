@@ -13,9 +13,11 @@ export interface GarageInput {
 
 export interface GarageVehicle {
   id: string;
-  make: string;
-  year: number;
+  make: string | null;
+  model: string | null;
+  year: number | null;
   trim: string | null;
   nickname: string | null;
   mileage: number | null;
+  image_url: string | null;
 }
