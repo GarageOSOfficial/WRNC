@@ -1,4 +1,5 @@
 /**
  * Backward-compatible storage service module entry point.
  */
-export {};
+
+export * from './storage';

@@ -3,3 +3,4 @@
  */
 
 export * from './garage-service';
+export * from './activity-service';
