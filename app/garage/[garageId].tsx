@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuth } from '@/hooks';
@@ -14,7 +14,7 @@ export default function GarageScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
-  const loadGarage = async () => {
+  const loadGarage = useCallback(async () => {
     if (!user || !garageId) {
       setIsLoading(false);
       return;
@@ -43,11 +43,11 @@ export default function GarageScreen() {
     setVehicles(vehicleResponse.data);
     setFeedbackMessage(null);
     setIsLoading(false);
-  };
+  }, [garageId, user]);
 
   useEffect(() => {
     loadGarage();
-  }, [garageId, user]);
+  }, [loadGarage]);
 
   return (
     <View style={styles.container}>

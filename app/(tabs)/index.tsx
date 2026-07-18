@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -31,7 +31,7 @@ export default function MissionControlScreen() {
   const [description, setDescription] = useState('');
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
-  const loadGarages = async () => {
+  const loadGarages = useCallback(async () => {
     if (!user) {
       setGarages([]);
       setIsLoading(false);
@@ -50,11 +50,11 @@ export default function MissionControlScreen() {
     setFeedbackMessage(null);
     setGarages(data);
     setIsLoading(false);
-  };
+  }, [user]);
 
   useEffect(() => {
     loadGarages();
-  }, [user]);
+  }, [loadGarages]);
 
   const openCreateGarage = () => {
     setEditingGarageId(null);
