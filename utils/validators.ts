@@ -1,4 +1,5 @@
 import type { ActivityType, CreateActivityInput } from '../types/activity';
+import type { CreateDocumentInput } from '../types/document';
 
 // ─── Vehicle validation ───────────────────────────────────────────────────────
 
@@ -120,65 +121,46 @@ export function validateActivityInput(
   return { valid: Object.keys(errors).length === 0, errors };
 }
 
-export const ACTIVITY_TYPES: ActivityType[] = [
-  'purchased_part',
-  'installed_part',
-  'maintenance',
-  'progress_update',
-  'journal_entry',
-  'record_upload',
-];
+// ─── Document validation ─────────────────────────────────────────────────────
 
-export interface ActivityValidationResult {
+export const SUPPORTED_MIME_TYPES = [
+  'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'text/plain',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+] as const;
+
+export interface DocumentValidationResult {
   valid: boolean;
-  errors: Partial<Record<'vehicleId' | 'type' | 'metadata', string>>;
+  errors: Partial<Record<'title' | 'documentType' | 'fileUrl' | 'mimeType' | 'fileSize', string>>;
 }
 
-/** Validates required activity fields per WRNC-002 acceptance criteria. */
-export function validateActivityInput(
-  input: Partial<CreateActivityInput>
-): ActivityValidationResult {
-  const errors: ActivityValidationResult['errors'] = {};
+export function validateDocumentInput(
+  input: Partial<CreateDocumentInput>
+): DocumentValidationResult {
+  const errors: DocumentValidationResult['errors'] = {};
 
-  if (!input.vehicleId || !input.vehicleId.trim()) {
-    errors.vehicleId = 'Vehicle ID is required.';
+  if (!input.title || !input.title.trim()) {
+    errors.title = 'Title is required.';
   }
 
-  if (!input.type) {
-    errors.type = 'Activity type is required.';
-  } else if (!ACTIVITY_TYPES.includes(input.type)) {
-    errors.type = `Activity type must be one of: ${ACTIVITY_TYPES.join(', ')}.`;
+  if (!input.documentType || !input.documentType.trim()) {
+    errors.documentType = 'Document type is required.';
   }
 
-  if (input.type === 'purchased_part') {
-    const meta = (input.metadata ?? {}) as Record<string, unknown>;
-    if (!meta.partName || !(meta.partName as string).trim()) {
-      errors.metadata = 'Part name is required for Purchased Part activities.';
-    }
+  if (!input.fileUrl || !input.fileUrl.trim()) {
+    errors.fileUrl = 'File URL is required.';
   }
 
-  if (input.type === 'installed_part') {
-    const meta = (input.metadata ?? {}) as Record<string, unknown>;
-    if (!meta.partName || !(meta.partName as string).trim()) {
-      errors.metadata = 'Part name is required for Installed Part activities.';
-    }
+  if (input.mimeType && !SUPPORTED_MIME_TYPES.includes(input.mimeType as (typeof SUPPORTED_MIME_TYPES)[number])) {
+    errors.mimeType = 'Unsupported MIME type.';
   }
 
-  if (input.type === 'maintenance') {
-    const meta = (input.metadata ?? {}) as Record<string, unknown>;
-    if (!meta.serviceType || !(meta.serviceType as string).trim()) {
-      errors.metadata = 'Service type is required for Maintenance activities.';
-    }
-  }
-
-  if (input.type === 'record_upload') {
-    const meta = (input.metadata ?? {}) as Record<string, unknown>;
-    if (!meta.fileUrl || !(meta.fileUrl as string).trim()) {
-      errors.metadata = 'File URL is required for Record Upload activities.';
-    }
-    if (!meta.fileName || !(meta.fileName as string).trim()) {
-      errors.metadata = 'File name is required for Record Upload activities.';
-    }
+  if (input.fileSize !== undefined && input.fileSize !== null && input.fileSize <= 0) {
+    errors.fileSize = 'File size must be greater than 0.';
   }
 
   return { valid: Object.keys(errors).length === 0, errors };
