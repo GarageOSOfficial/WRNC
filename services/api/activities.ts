@@ -1,5 +1,26 @@
 import { supabase } from '../../lib/supabase';
 import {
+  ACTIVITY_TYPES,
+  toActivity,
+  type Activity,
+  type CreateActivityInput,
+  type ListActivitiesOptions,
+} from '../../types/activity';
+
+function validateActivityInput(input: CreateActivityInput) {
+  const errors: string[] = [];
+
+  if (!input.vehicleId) errors.push('Vehicle is required.');
+  if (!input.userId) errors.push('User is required.');
+  if (!ACTIVITY_TYPES.includes(input.activityType)) errors.push('Activity type is invalid.');
+  if (!input.title.trim()) errors.push('Title is required.');
+  if (!input.activityDate) errors.push('Activity date is required.');
+
+  if (errors.length > 0) {
+    throw new Error(errors.join(' '));
+  }
+}
+
   toActivity,
   type Activity,
   type CreateActivityInput,
@@ -16,10 +37,14 @@ export async function listActivities(
   vehicleId: string,
   options: ListActivitiesOptions = {}
 ): Promise<Activity[]> {
+  const sortDirection = options.sortDirection ?? 'desc';
+
   let query = supabase
     .from('activities')
     .select('*')
     .eq('vehicle_id', vehicleId)
+    .order('activity_date', { ascending: sortDirection === 'asc' })
+    .order('created_at', { ascending: sortDirection === 'asc' });
     .order('occurred_at', { ascending: false });
 
   if (!options.includeArchived) {
@@ -31,6 +56,11 @@ export async function listActivities(
   return (data ?? []).map(toActivity);
 }
 
+export async function getActivity(activityId: string): Promise<Activity> {
+  const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .eq('id', activityId)
 /** Read: fetch a single activity by id. */
 export async function getActivity(id: string): Promise<Activity> {
   const { data, error } = await supabase
@@ -43,6 +73,8 @@ export async function getActivity(id: string): Promise<Activity> {
   return toActivity(data);
 }
 
+export async function createActivity(input: CreateActivityInput): Promise<Activity> {
+  validateActivityInput(input);
 /** Create: insert a new activity. vehicleId and type are required. */
 export async function createActivity(input: CreateActivityInput): Promise<Activity> {
   const { valid, errors } = validateActivityInput(input);
@@ -54,6 +86,14 @@ export async function createActivity(input: CreateActivityInput): Promise<Activi
     .from('activities')
     .insert({
       vehicle_id: input.vehicleId,
+      user_id: input.userId,
+      activity_type: input.activityType,
+      title: input.title.trim(),
+      description: input.description?.trim() || null,
+      activity_date: input.activityDate,
+      photos: input.photos ?? [],
+      attachments: input.attachments ?? [],
+      metadata: input.metadata ?? null,
       type: input.type,
       title: input.title ?? null,
       notes: input.notes ?? null,
@@ -67,6 +107,11 @@ export async function createActivity(input: CreateActivityInput): Promise<Activi
   return toActivity(data);
 }
 
+export async function archiveActivity(activityId: string): Promise<Activity> {
+  const { data, error } = await supabase
+    .from('activities')
+    .update({ archived_at: new Date().toISOString() })
+    .eq('id', activityId)
 /** Update: any activity field may be edited (title, notes, metadata, occurredAt). */
 export async function updateActivity(
   id: string,
@@ -103,6 +148,11 @@ export async function archiveActivity(id: string): Promise<Activity> {
   return toActivity(data);
 }
 
+export async function restoreActivity(activityId: string): Promise<Activity> {
+  const { data, error } = await supabase
+    .from('activities')
+    .update({ archived_at: null })
+    .eq('id', activityId)
 /** Restore: un-archive a previously archived activity. */
 export async function restoreActivity(id: string): Promise<Activity> {
   const { data, error } = await supabase
@@ -114,4 +164,5 @@ export async function restoreActivity(id: string): Promise<Activity> {
 
   if (error) throw error;
   return toActivity(data);
+}
 }

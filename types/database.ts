@@ -2,6 +2,13 @@
  * Hand-maintained mirror of the Supabase schema (see supabase/migrations).
  * Regenerate with `supabase gen types typescript` once a live project is linked.
  */
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 export type ActivityType =
   | 'purchased_part'
@@ -94,6 +101,17 @@ export interface Database {
         Row: {
           id: string;
           vehicle_id: string;
+          user_id: string;
+          activity_type: string;
+          title: string;
+          description: string | null;
+          activity_date: string;
+          created_at: string;
+          updated_at: string | null;
+          photos: string[];
+          attachments: string[];
+          metadata: Json | null;
+          archived_at: string | null;
           type: ActivityType;
           title: string | null;
           notes: string | null;
@@ -106,6 +124,17 @@ export interface Database {
         Insert: {
           id?: string;
           vehicle_id: string;
+          user_id: string;
+          activity_type: string;
+          title: string;
+          description?: string | null;
+          activity_date: string;
+          created_at?: string;
+          updated_at?: string | null;
+          photos?: string[];
+          attachments?: string[];
+          metadata?: Json | null;
+          archived_at?: string | null;
           type: ActivityType;
           title?: string | null;
           notes?: string | null;
@@ -118,6 +147,17 @@ export interface Database {
         Update: {
           id?: string;
           vehicle_id?: string;
+          user_id?: string;
+          activity_type?: string;
+          title?: string;
+          description?: string | null;
+          activity_date?: string;
+          created_at?: string;
+          updated_at?: string | null;
+          photos?: string[];
+          attachments?: string[];
+          metadata?: Json | null;
+          archived_at?: string | null;
           type?: ActivityType;
           title?: string | null;
           notes?: string | null;

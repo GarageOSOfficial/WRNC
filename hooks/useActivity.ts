@@ -5,6 +5,8 @@ import {
   getActivity,
   listActivities,
   restoreActivity,
+} from '../services/api/activities';
+import type { CreateActivityInput, ListActivitiesOptions } from '../types/activity';
   updateActivity,
   type ListActivitiesOptions,
 } from '../services/api/activities';
@@ -19,6 +21,10 @@ export const activityKeys = {
   detail: (id: string) => [...activityKeys.details(), id] as const,
 };
 
+export function useActivities(
+  vehicleId: string | undefined,
+  options: ListActivitiesOptions = {}
+) {
 /** Read: list activities for a vehicle. */
 export function useActivities(vehicleId: string | undefined, options: ListActivitiesOptions = {}) {
   return useQuery({
@@ -35,6 +41,10 @@ export function useActivity(activityId: string | undefined) {
     queryKey: activityKeys.detail(activityId ?? ''),
     queryFn: () => getActivity(activityId as string),
     enabled: Boolean(activityId),
+    staleTime: 60 * 1000,
+  });
+}
+
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -50,6 +60,10 @@ export function useCreateActivity() {
   });
 }
 
+export function useArchiveActivity() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (activityId: string) => archiveActivity(activityId),
 /** Update: edits any activity field (title, notes, metadata, occurredAt). */
 export function useUpdateActivity() {
   const queryClient = useQueryClient();
@@ -75,6 +89,10 @@ export function useArchiveActivity() {
   });
 }
 
+export function useRestoreActivity() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (activityId: string) => restoreActivity(activityId),
 /** Restore: brings an archived activity back into default lists. */
 export function useRestoreActivity() {
   const queryClient = useQueryClient();
@@ -85,4 +103,5 @@ export function useRestoreActivity() {
       queryClient.invalidateQueries({ queryKey: activityKeys.list(activity.vehicleId) });
     },
   });
+}
 }
