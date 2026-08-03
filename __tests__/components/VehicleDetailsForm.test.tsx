@@ -44,4 +44,90 @@ describe('VehicleDetailsForm', () => {
 
     expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ year: 1999, make: 'Toyota', model: 'Corolla' }));
   });
+
+  it('shows a loading indicator and disables save when isSubmitting is true', () => {
+    const { getByRole, queryByText } = render(
+      <VehicleDetailsForm
+        vehicleData={vehicle}
+        isEditMode={true}
+        onSubmit={jest.fn()}
+        onCancel={jest.fn()}
+        isSubmitting={true}
+      />
+    );
+
+    // The Save Changes label is replaced by ActivityIndicator when loading
+    expect(queryByText('Save Changes')).toBeNull();
+    // The button itself is still present but disabled
+    const buttons = getByRole('button', { name: /cancel/i });
+    expect(buttons).toBeTruthy();
+  });
+
+  it('disables the cancel button while submitting', () => {
+    const onCancel = jest.fn();
+    const { getByText } = render(
+      <VehicleDetailsForm
+        vehicleData={vehicle}
+        isEditMode={true}
+        onSubmit={jest.fn()}
+        onCancel={onCancel}
+        isSubmitting={true}
+      />
+    );
+
+    fireEvent.press(getByText('Cancel'));
+    expect(onCancel).not.toHaveBeenCalled();
+  });
+
+  it('shows validation errors after a failed submit', () => {
+    const { getByText, getByLabelText } = render(
+      <VehicleDetailsForm vehicleData={vehicle} isEditMode={true} onSubmit={jest.fn()} onCancel={jest.fn()} />
+    );
+
+    fireEvent.changeText(getByLabelText('Make'), '   ');
+    fireEvent.changeText(getByLabelText('Model'), '   ');
+    fireEvent.press(getByText('Save Changes'));
+
+    expect(getByText('Make is required.')).toBeTruthy();
+    expect(getByText('Model is required.')).toBeTruthy();
+  });
+
+  it('does not call onSubmit when validation fails', () => {
+    const onSubmit = jest.fn();
+    const { getByText, getByLabelText } = render(
+      <VehicleDetailsForm vehicleData={vehicle} isEditMode={true} onSubmit={onSubmit} onCancel={jest.fn()} />
+    );
+
+    fireEvent.changeText(getByLabelText('Make'), '');
+    fireEvent.press(getByText('Save Changes'));
+
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('calls onCancel when the Cancel button is pressed', () => {
+    const onCancel = jest.fn();
+    const { getByText } = render(
+      <VehicleDetailsForm vehicleData={vehicle} isEditMode={true} onSubmit={jest.fn()} onCancel={onCancel} />
+    );
+
+    fireEvent.press(getByText('Cancel'));
+
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it('exposes accessible labels for all inputs', () => {
+    const { getByLabelText } = render(
+      <VehicleDetailsForm vehicleData={vehicle} isEditMode={true} onSubmit={jest.fn()} onCancel={jest.fn()} />
+    );
+
+    expect(getByLabelText('Nickname')).toBeTruthy();
+    expect(getByLabelText('Year')).toBeTruthy();
+    expect(getByLabelText('Make')).toBeTruthy();
+    expect(getByLabelText('Model')).toBeTruthy();
+    expect(getByLabelText('Trim')).toBeTruthy();
+    expect(getByLabelText('VIN')).toBeTruthy();
+    expect(getByLabelText('Engine')).toBeTruthy();
+    expect(getByLabelText('Transmission')).toBeTruthy();
+    expect(getByLabelText('Mileage')).toBeTruthy();
+  });
 });

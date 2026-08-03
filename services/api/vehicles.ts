@@ -5,7 +5,7 @@ import {
   type UpdateVehicleInput,
   type Vehicle,
 } from '../../types/vehicle';
-import { validateVehicleInput } from '../../utils/validators';
+import { validateVehicleInput, MIN_YEAR, VIN_LENGTH } from '../../utils/validators';
 
 export interface ListVehiclesOptions {
   includeArchived?: boolean;
@@ -83,8 +83,8 @@ export async function updateVehicle(
   if (input.year !== undefined) {
     if (input.year === null || input.year === undefined) {
       errors.year = 'Year is required.';
-    } else if (!Number.isInteger(input.year) || input.year < 1900 || input.year > new Date().getFullYear() + 1) {
-      errors.year = 'Year must be a whole number between 1900 and ' + (new Date().getFullYear() + 1) + '.';
+    } else if (!Number.isInteger(input.year) || input.year < MIN_YEAR || input.year > new Date().getFullYear() + 1) {
+      errors.year = `Year must be a whole number between ${MIN_YEAR} and ${new Date().getFullYear() + 1}.`;
     } else {
       payload.year = input.year;
     }
@@ -106,10 +106,26 @@ export async function updateVehicle(
     }
   }
 
-  if (input.vin !== undefined) payload.vin = input.vin;
+  if (input.vin !== undefined && input.vin !== null) {
+    if (input.vin.length !== VIN_LENGTH) {
+      errors.vin = `VIN must be ${VIN_LENGTH} characters.`;
+    } else if (!/^[A-HJ-NPR-Z0-9]+$/i.test(input.vin)) {
+      errors.vin = 'VIN contains invalid characters.';
+    } else {
+      payload.vin = input.vin;
+    }
+  } else if (input.vin !== undefined) {
+    payload.vin = input.vin;
+  }
+
+  if (input.mileage !== undefined && input.mileage !== null && input.mileage < 0) {
+    errors.mileage = 'Mileage cannot be negative.';
+  } else if (input.mileage !== undefined) {
+    payload.mileage = input.mileage;
+  }
+
   if (input.trim !== undefined) payload.trim = input.trim;
   if (input.nickname !== undefined) payload.nickname = input.nickname;
-  if (input.mileage !== undefined) payload.mileage = input.mileage;
   if (input.engine !== undefined) payload.engine = input.engine;
   if (input.transmission !== undefined) payload.transmission = input.transmission;
   if (input.coverPhotoUrl !== undefined) payload.cover_photo_url = input.coverPhotoUrl;

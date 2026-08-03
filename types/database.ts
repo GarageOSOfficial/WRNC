@@ -10,6 +10,14 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+export type ActivityType =
+  | 'purchased_part'
+  | 'installed_part'
+  | 'maintenance'
+  | 'progress_update'
+  | 'journal_entry'
+  | 'record_upload';
+
 export interface Database {
   public: {
     Tables: {
@@ -104,6 +112,14 @@ export interface Database {
           attachments: string[];
           metadata: Json | null;
           archived_at: string | null;
+          type: ActivityType;
+          title: string | null;
+          notes: string | null;
+          metadata: Record<string, unknown>;
+          occurred_at: string;
+          archived_at: string | null;
+          created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -119,6 +135,14 @@ export interface Database {
           attachments?: string[];
           metadata?: Json | null;
           archived_at?: string | null;
+          type: ActivityType;
+          title?: string | null;
+          notes?: string | null;
+          metadata?: Record<string, unknown>;
+          occurred_at?: string;
+          archived_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
@@ -134,6 +158,14 @@ export interface Database {
           attachments?: string[];
           metadata?: Json | null;
           archived_at?: string | null;
+          type?: ActivityType;
+          title?: string | null;
+          notes?: string | null;
+          metadata?: Record<string, unknown>;
+          occurred_at?: string;
+          archived_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
       };
     };
