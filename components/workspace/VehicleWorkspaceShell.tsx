@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useCurrentWorkspace } from '../../hooks/useWorkspace';
 import { useVehicles, useCreateVehicle, useArchiveVehicle, useRestoreVehicle, useUpdateVehicle } from '../../hooks/useVehicle';
 import { Button } from '../common/Button';
@@ -12,7 +11,6 @@ import { validateVehicleInput } from '../../utils/validators';
 import type { Vehicle } from '../../types/vehicle';
 
 export function VehicleWorkspaceShell() {
-  const router = useRouter();
   const { data: workspace } = useCurrentWorkspace();
   const { data: vehicles = [], isLoading } = useVehicles(workspace?.id);
   const createVehicle = useCreateVehicle();
@@ -62,15 +60,6 @@ export function VehicleWorkspaceShell() {
   const handleSelectVehicle = (vehicle: Vehicle) => {
     setActiveVehicle(vehicle);
     setIsEditMode(false);
-  };
-
-  const handleSaveVehicle = (vehicle: Vehicle) => {
-    updateVehicle.mutate(
-      { id: vehicle.id, input: { year: vehicle.year, make: vehicle.make, model: vehicle.model } },
-      {
-        onSuccess: () => setIsEditMode(false),
-      }
-    );
   };
 
   if (isLoading) {

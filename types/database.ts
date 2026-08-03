@@ -2,6 +2,15 @@
  * Hand-maintained mirror of the Supabase schema (see supabase/migrations).
  * Regenerate with `supabase gen types typescript` once a live project is linked.
  */
+
+export type ActivityType =
+  | 'purchased_part'
+  | 'installed_part'
+  | 'maintenance'
+  | 'progress_update'
+  | 'journal_entry'
+  | 'record_upload';
+
 export interface Database {
   public: {
     Tables: {
@@ -76,6 +85,44 @@ export interface Database {
           transmission?: string | null;
           mileage?: number | null;
           cover_photo_url?: string | null;
+          archived_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      activities: {
+        Row: {
+          id: string;
+          vehicle_id: string;
+          type: ActivityType;
+          title: string | null;
+          notes: string | null;
+          metadata: Record<string, unknown>;
+          occurred_at: string;
+          archived_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          vehicle_id: string;
+          type: ActivityType;
+          title?: string | null;
+          notes?: string | null;
+          metadata?: Record<string, unknown>;
+          occurred_at?: string;
+          archived_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          vehicle_id?: string;
+          type?: ActivityType;
+          title?: string | null;
+          notes?: string | null;
+          metadata?: Record<string, unknown>;
+          occurred_at?: string;
           archived_at?: string | null;
           created_at?: string;
           updated_at?: string;
