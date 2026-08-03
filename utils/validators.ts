@@ -3,8 +3,8 @@ export interface ValidationResult {
   errors: Partial<Record<'year' | 'make' | 'model' | 'vin' | 'mileage', string>>;
 }
 
-const MIN_YEAR = 1900;
-const VIN_LENGTH = 17;
+export const MIN_YEAR = 1900;
+export const VIN_LENGTH = 17;
 
 export interface VehicleValidationInput {
   year?: number | null;

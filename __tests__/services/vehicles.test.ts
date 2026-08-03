@@ -1,5 +1,5 @@
 import { supabase } from '../../lib/supabase';
-import { createVehicle, updateVehicle, archiveVehicle, restoreVehicle } from '../../services/api/vehicles';
+import { createVehicle, updateVehicle, archiveVehicle, restoreVehicle, listVehicles, getVehicle } from '../../services/api/vehicles';
 import { validateVehicleInput } from '../../utils/validators';
 
 process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
@@ -95,9 +95,38 @@ describe('vehicle CRUD service', () => {
     expect(result.errors.model).toBe('Model is required.');
   });
 
+  it('accepts year 1900 (lower boundary)', () => {
+    const result = validateVehicleInput({ year: 1900, make: 'Honda', model: 'Civic' });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.year).toBeUndefined();
+  });
+
+  it('rejects year 1899 (below lower boundary)', () => {
+    const result = validateVehicleInput({ year: 1899, make: 'Honda', model: 'Civic' });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.year).toMatch(/Year must be a whole number/);
+  });
+
+  it('accepts the next model year (upper boundary)', () => {
+    const nextYear = new Date().getFullYear() + 1;
+    const result = validateVehicleInput({ year: nextYear, make: 'Honda', model: 'Civic' });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.year).toBeUndefined();
+  });
+
   it('rejects a year beyond the next model year', () => {
     const futureYear = new Date().getFullYear() + 2;
     const result = validateVehicleInput({ year: futureYear, make: 'Honda', model: 'Civic' });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.year).toMatch(/Year must be a whole number/);
+  });
+
+  it('rejects a non-integer year', () => {
+    const result = validateVehicleInput({ year: 2000.5, make: 'Honda', model: 'Civic' });
 
     expect(result.valid).toBe(false);
     expect(result.errors.year).toMatch(/Year must be a whole number/);
@@ -117,11 +146,39 @@ describe('vehicle CRUD service', () => {
     expect(result.errors.vin).toBe('VIN contains invalid characters.');
   });
 
+  it('accepts a valid 17-character VIN', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: '1HGCM82633A004352' });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.vin).toBeUndefined();
+  });
+
+  it('accepts a null VIN (VIN is optional)', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: null });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.vin).toBeUndefined();
+  });
+
   it('rejects negative mileage', () => {
     const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', mileage: -1 });
 
     expect(result.valid).toBe(false);
     expect(result.errors.mileage).toBe('Mileage cannot be negative.');
+  });
+
+  it('accepts zero mileage', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', mileage: 0 });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.mileage).toBeUndefined();
+  });
+
+  it('accepts extremely large mileage (no upper bound)', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', mileage: 1_000_000_000 });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.mileage).toBeUndefined();
   });
 
   it('rejects whitespace-only make and model', () => {
@@ -130,6 +187,71 @@ describe('vehicle CRUD service', () => {
     expect(result.valid).toBe(false);
     expect(result.errors.make).toBe('Make is required.');
     expect(result.errors.model).toBe('Model is required.');
+  });
+
+  it('accepts make and model with surrounding whitespace (trimmed to non-empty)', () => {
+    const result = validateVehicleInput({ year: 2000, make: '  Honda  ', model: '  Civic  ' });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.make).toBeUndefined();
+    expect(result.errors.model).toBeUndefined();
+  });
+
+  // ─── listVehicles ─────────────────────────────────────────────────────────────
+
+  it('listVehicles returns mapped vehicles, excluding archived by default', async () => {
+    mockIs.mockResolvedValue({ data: [makeRow({ nickname: 'Bluebird' })], error: null });
+
+    const vehicles = await listVehicles('ws-1');
+
+    expect(vehicles).toHaveLength(1);
+    expect(vehicles[0].id).toBe('veh-1');
+    expect(vehicles[0].nickname).toBe('Bluebird');
+    expect(mockIs).toHaveBeenCalledWith('archived_at', null);
+  });
+
+  it('listVehicles includes archived vehicles when includeArchived is true', async () => {
+    mockOrder.mockResolvedValue({
+      data: [makeRow(), makeRow({ id: 'veh-2', archived_at: '2026-01-01T00:00:00.000Z' })],
+      error: null,
+    });
+
+    const vehicles = await listVehicles('ws-1', { includeArchived: true });
+
+    expect(vehicles).toHaveLength(2);
+    expect(mockIs).not.toHaveBeenCalled();
+  });
+
+  it('listVehicles returns an empty array when the workspace has no vehicles', async () => {
+    mockIs.mockResolvedValue({ data: [], error: null });
+
+    const vehicles = await listVehicles('ws-1');
+
+    expect(vehicles).toEqual([]);
+  });
+
+  it('listVehicles throws when Supabase returns an error', async () => {
+    mockIs.mockResolvedValue({ data: null, error: { message: 'list failed' } });
+
+    await expect(listVehicles('ws-1')).rejects.toMatchObject({ message: 'list failed' });
+  });
+
+  // ─── getVehicle ───────────────────────────────────────────────────────────────
+
+  it('getVehicle returns a mapped vehicle by id', async () => {
+    mockSingle.mockResolvedValue({ data: makeRow({ year: 2005, make: 'Toyota', model: 'Supra' }), error: null });
+
+    const vehicle = await getVehicle('veh-1');
+
+    expect(vehicle.id).toBe('veh-1');
+    expect(vehicle.year).toBe(2005);
+    expect(vehicle.make).toBe('Toyota');
+  });
+
+  it('getVehicle throws when Supabase returns an error', async () => {
+    mockSingle.mockResolvedValue({ data: null, error: { message: 'not found' } });
+
+    await expect(getVehicle('veh-99')).rejects.toMatchObject({ message: 'not found' });
   });
 
   // ─── Happy-path CRUD ─────────────────────────────────────────────────────────
@@ -180,6 +302,34 @@ describe('vehicle CRUD service', () => {
 
     expect(archived.archivedAt).not.toBeNull();
     expect(restored.archivedAt).toBeNull();
+  });
+
+  // ─── updateVehicle validation (bug fix coverage) ──────────────────────────────
+
+  it('updateVehicle throws when VIN has invalid length', async () => {
+    await expect(
+      updateVehicle('veh-1', { vin: 'TOOSHORT' })
+    ).rejects.toThrow('VIN must be 17 characters.');
+  });
+
+  it('updateVehicle throws when VIN has invalid characters', async () => {
+    await expect(
+      updateVehicle('veh-1', { vin: 'IOQIOQIOQIOQIOQIO' })
+    ).rejects.toThrow('VIN contains invalid characters.');
+  });
+
+  it('updateVehicle throws when mileage is negative', async () => {
+    await expect(
+      updateVehicle('veh-1', { mileage: -500 })
+    ).rejects.toThrow('Mileage cannot be negative.');
+  });
+
+  it('updateVehicle accepts null VIN (clearing the field)', async () => {
+    mockSingle.mockResolvedValue({ data: makeRow({ vin: null }), error: null });
+
+    await expect(
+      updateVehicle('veh-1', { vin: null })
+    ).resolves.toMatchObject({ vin: null });
   });
 
   // ─── Supabase failure paths ───────────────────────────────────────────────────
