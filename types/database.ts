@@ -2,6 +2,14 @@
  * Hand-maintained mirror of the Supabase schema (see supabase/migrations).
  * Regenerate with `supabase gen types typescript` once a live project is linked.
  */
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
 export interface Database {
   public: {
     Tables: {
@@ -79,6 +87,53 @@ export interface Database {
           archived_at?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+      };
+      activities: {
+        Row: {
+          id: string;
+          vehicle_id: string;
+          user_id: string;
+          activity_type: string;
+          title: string;
+          description: string | null;
+          activity_date: string;
+          created_at: string;
+          updated_at: string | null;
+          photos: string[];
+          attachments: string[];
+          metadata: Json | null;
+          archived_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          vehicle_id: string;
+          user_id: string;
+          activity_type: string;
+          title: string;
+          description?: string | null;
+          activity_date: string;
+          created_at?: string;
+          updated_at?: string | null;
+          photos?: string[];
+          attachments?: string[];
+          metadata?: Json | null;
+          archived_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          vehicle_id?: string;
+          user_id?: string;
+          activity_type?: string;
+          title?: string;
+          description?: string | null;
+          activity_date?: string;
+          created_at?: string;
+          updated_at?: string | null;
+          photos?: string[];
+          attachments?: string[];
+          metadata?: Json | null;
+          archived_at?: string | null;
         };
       };
     };

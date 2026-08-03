@@ -119,6 +119,7 @@ export function VehicleWorkspaceShell() {
                 />
                 {!isEditMode ? (
                   <View className="mt-4 flex-row gap-3">
+                    <Button label="Timeline" variant="secondary" onPress={() => router.push(`/vehicle/${activeVehicle.id}/timeline`)} />
                     <Button label="Edit" variant="secondary" onPress={() => setIsEditMode(true)} />
                     {activeVehicle.archivedAt ? (
                       <Button label="Restore" onPress={() => restoreVehicle.mutate(activeVehicle.id)} />
