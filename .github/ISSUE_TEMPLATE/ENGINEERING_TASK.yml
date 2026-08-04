@@ -9,6 +9,7 @@ body:
     attributes:
       value: |
         Use this template for technical engineering tasks, infrastructure work, or refactoring.
+        Review the governance guidance in docs/governance before drafting the work.
 
   - type: textarea
     id: description

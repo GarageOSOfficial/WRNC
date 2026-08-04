@@ -48,7 +48,9 @@ WRNC favors a mobile-first, document-centric approach. The platform emphasizes n
 
 ## Contribution guidance
 
-Contributions should stay aligned with the WRNC product identity and avoid unnecessary feature churn. For documentation, branding, or infrastructure work, keep changes focused and professional. For product work, follow the existing architecture and testing patterns in the repository.
+Contributions should stay aligned with the WRNC product identity and avoid unnecessary feature churn. For documentation, governance, or infrastructure work, keep changes focused and professional. For product work, follow the existing architecture and testing patterns in the repository.
+
+For the repository standards that govern contributions, reviews, releases, and maintenance, see the governance documentation in [docs/governance](docs/governance).
 
 ## Current roadmap
 

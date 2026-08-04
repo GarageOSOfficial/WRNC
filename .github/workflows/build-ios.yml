@@ -29,6 +29,19 @@ jobs:
       
       - name: Run tests
         run: npm test -- --coverage
+
+      - name: Validate governance documentation links
+        run: python - <<'PY'
+import os
+from pathlib import Path
+root = Path('.')
+files = [root / 'README.md', root / 'CONTRIBUTING.md', root / '.github/PULL_REQUEST_TEMPLATE.md']
+for path in files:
+    text = path.read_text(encoding='utf-8')
+    if 'docs/governance' not in text:
+        raise SystemExit(f'Missing governance reference in {path}')
+print('Governance references present')
+PY
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

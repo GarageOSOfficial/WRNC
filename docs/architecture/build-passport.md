@@ -26,3 +26,7 @@ The feature does not introduce new persistence, duplicate storage, or separate b
 - Service tests validate the aggregation output, category mapping, source-link generation, and statistics.
 - Hook tests validate that the Passport hook composes the existing domain hooks and returns the aggregated model.
 - Component tests validate the Passport section cards render the derived data and navigation actions.
+
+## Governance note
+
+This architecture document should remain aligned with the repository governance guidance in [docs/governance](../governance).
