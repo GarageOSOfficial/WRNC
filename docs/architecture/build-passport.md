@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build Passport™ is a read-only aggregation layer that combines the existing Vehicle, Activity, Timeline, Document, and Documentation Score™ domains into a single vehicle history view.
+Build Passport™ is the flagship WRNC feature and a read-only aggregation layer that combines the existing Vehicle, Activity, Timeline, Document, and Documentation Score™ domains into a single vehicle history view.
 
 The feature does not introduce new persistence, duplicate storage, or separate business rules. It computes its output from the current domain records at read time.
 

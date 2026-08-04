@@ -1,8 +1,8 @@
-# GitHub Actions CI/CD Setup for Garage OS
+# GitHub Actions CI/CD Setup for WRNC
 
 ## Complete Workflow Overview
 
-This document describes the complete GitHub Actions workflow for Garage OS iOS app builds and TestFlight deployment.
+This document describes the complete GitHub Actions workflow for WRNC iOS app builds and TestFlight deployment.
 
 ### Workflow File: `.github/workflows/build-ios.yml`
 
@@ -62,7 +62,7 @@ This document describes the complete GitHub Actions workflow for Garage OS iOS a
 
 ## Required GitHub Secrets
 
-Add these at: `https://github.com/GarageOSOfficial/GarageOS/settings/secrets/actions`
+Add these at: `https://github.com/WRNCOfficial/WRNC/settings/secrets/actions`
 
 ### EAS Secrets
 
@@ -78,7 +78,7 @@ Add these at: `https://github.com/GarageOSOfficial/GarageOS/settings/secrets/act
 | `APPLE_ID` | Apple ID email | Your Apple ID email address |
 | `APPLE_ID_PASSWORD` | App-specific password | Generated at https://appleid.apple.com/account/manage/security |
 | `APPLE_TEAM_ID` | Apple Developer Team ID | https://developer.apple.com/account/ → Membership |
-| `ASC_APP_ID` | App Store Connect App ID | https://appstoreconnect.apple.com/ → Apps → Garage OS → App Information |
+| `ASC_APP_ID` | App Store Connect App ID | https://appstoreconnect.apple.com/ → Apps → WRNC → App Information |
 
 ### Slack Secrets (Optional)
 
@@ -119,7 +119,7 @@ Your Apple ID email (e.g., developer@example.com)
 
 **ASC_APP_ID:**
 1. Go to https://appstoreconnect.apple.com/
-2. Click "Apps" → "Garage OS"
+2. Click "Apps" → "WRNC"
 3. Click "App Information" in the sidebar
 4. Copy the "Apple ID" (not Bundle ID)
 5. Add to GitHub Secrets as `ASC_APP_ID`
@@ -151,7 +151,7 @@ commit → workflow starts automatically
 ### Manual Trigger
 
 **Via GitHub Actions tab:**
-1. Go to https://github.com/GarageOSOfficial/GarageOS/actions
+1. Go to https://github.com/WRNCOfficial/WRNC/actions
 2. Select "Build, Test, and Deploy iOS" workflow
 3. Click "Run workflow" → "main" branch
 4. Click "Run workflow" button
@@ -165,7 +165,7 @@ gh workflow run build-ios.yml --ref main
 
 ### Real-Time Monitoring
 
-1. Go to: https://github.com/GarageOSOfficial/GarageOS/actions
+1. Go to: https://github.com/WRNCOfficial/WRNC/actions
 2. Click latest "Build, Test, and Deploy iOS" run
 3. Watch progress in real-time
 4. Click each job to see detailed logs
@@ -293,4 +293,4 @@ Team gets TestFlight notification
 
 **Status:** Complete workflow ready for deployment
 **Last Updated:** 2024
-**Maintained by:** GarageOS Team
+**Maintained by:** WRNC Team

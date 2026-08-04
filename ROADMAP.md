@@ -1,4 +1,4 @@
-# Garage OS™ Roadmap
+# WRNC™ Roadmap
 
 Strategic product roadmap organized into three phases: NOW (current), NEXT (planned), and LATER (future vision).
 
@@ -74,7 +74,7 @@ Beta program for early adopters and key stakeholders providing real-world valida
 
 ### Public Launch
 
-Full public release of Garage OS for general availability.
+Full public release of WRNC for general availability.
 
 **Focus:** Production deployment to public market with complete documentation and support.
 
@@ -90,7 +90,7 @@ To request features or report issues:
 - **Tasks**: Use [ENGINEERING_TASK.yml](./.github/ISSUE_TEMPLATE/ENGINEERING_TASK.yml)
 - **Debt**: Use [TECHNICAL_DEBT.yml](./.github/ISSUE_TEMPLATE/TECHNICAL_DEBT.yml)
 
-See [PRODUCT_GLOSSARY.md](./PRODUCT_GLOSSARY.md) for official Garage OS terminology.
+See [PRODUCT_GLOSSARY.md](./PRODUCT_GLOSSARY.md) for official WRNC terminology.
 See [DECISIONS.md](./DECISIONS.md) for architecture decisions and patterns.
 
 Last updated: 2024

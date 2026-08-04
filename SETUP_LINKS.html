@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garage OS - Credentials Setup Links</title>
+    <title>WRNC - Credentials Setup Links</title>
     <style>
         * {
             margin: 0;
@@ -225,7 +225,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Garage OS CI/CD Setup</h1>
+            <h1>🚀 WRNC CI/CD Setup</h1>
             <p>Complete Credentials Setup for Continuous Delivery</p>
         </div>
 
@@ -254,7 +254,7 @@
                     <span class="name">EAS_PROJECT_ID</span> = c7cfc85b-904f-4d2a-8fbb-1aec8f51aecb
                 </div>
                 <div class="github-secret">
-                    <span class="name">APPLE_ID</span> = admin@garageos.co
+                    <span class="name">APPLE_ID</span> = admin@wrnc.co
                 </div>
                 <p style="margin-top: 15px; color: #6b7280; font-size: 14px;">These two are ready to add to GitHub Secrets.</p>
             </div>
@@ -268,7 +268,7 @@
                     <h3><span class="step-number">1</span>Get APPLE_ID_PASSWORD</h3>
                     <ol>
                         <li>Click the button below to open Apple ID Management</li>
-                        <li>Sign in with: <strong>admin@garageos.co</strong></li>
+                        <li>Sign in with: <strong>admin@wrnc.co</strong></li>
                         <li>Click <strong>"Security"</strong> in the sidebar</li>
                         <li>Click <strong>"App-specific passwords"</strong></li>
                         <li>Click <strong>"Generate password"</strong></li>
@@ -288,7 +288,7 @@
                     <h3><span class="step-number">2</span>Get APPLE_TEAM_ID</h3>
                     <ol>
                         <li>Click the button below to open Apple Developer Account</li>
-                        <li>Sign in with: <strong>admin@garageos.co</strong></li>
+                        <li>Sign in with: <strong>admin@wrnc.co</strong></li>
                         <li>Click <strong>"Membership"</strong> in the sidebar</li>
                         <li>Look for <strong>"Team ID"</strong> field (10 characters like: ABCD1234EF)</li>
                         <li><strong>COPY THE TEAM ID</strong></li>
@@ -301,16 +301,16 @@
                     <h3><span class="step-number">3</span>Create App Store Connect App & Get ASC_APP_ID</h3>
                     <ol>
                         <li>Click the button below to open App Store Connect</li>
-                        <li>Sign in with: <strong>admin@garageos.co</strong></li>
+                        <li>Sign in with: <strong>admin@wrnc.co</strong></li>
                         <li>Click <strong>"Apps"</strong> in the sidebar</li>
                         <li>Click the <strong>"+"</strong> button to create a new app</li>
                         <li>Fill in the form:
                             <ul style="margin-top: 8px; margin-left: 20px;">
                                 <li><strong>Platform:</strong> iOS</li>
-                                <li><strong>Name:</strong> Garage OS</li>
+                                <li><strong>Name:</strong> WRNC</li>
                                 <li><strong>Primary Language:</strong> English</li>
-                                <li><strong>Bundle ID:</strong> com.garageos.mobile</li>
-                                <li><strong>SKU:</strong> garageos-mobile</li>
+                                <li><strong>Bundle ID:</strong> com.wrnc.mobile</li>
+                                <li><strong>SKU:</strong> wrnc-mobile</li>
                             </ul>
                         </li>
                         <li>Click <strong>"Create"</strong></li>
@@ -336,7 +336,7 @@
                         <li>Click the button below (or use link in browser)</li>
                         <li>You should already be logged in</li>
                     </ol>
-                    <a href="https://github.com/GarageOSOfficial/GarageOS/settings/secrets/actions" class="link-button" target="_blank">🔑 Open GitHub Secrets</a>
+                    <a href="https://github.com/WRNCOfficial/WRNC/settings/secrets/actions" class="link-button" target="_blank">🔑 Open GitHub Secrets</a>
                 </div>
 
                 <div class="step">
@@ -354,7 +354,7 @@
                     <h3>📝 Secrets to Add</h3>
                     <ul class="checklist">
                         <li><strong>Name:</strong> EAS_PROJECT_ID<br><strong>Value:</strong> c7cfc85b-904f-4d2a-8fbb-1aec8f51aecb</li>
-                        <li><strong>Name:</strong> APPLE_ID<br><strong>Value:</strong> admin@garageos.co</li>
+                        <li><strong>Name:</strong> APPLE_ID<br><strong>Value:</strong> admin@wrnc.co</li>
                         <li><strong>Name:</strong> APPLE_ID_PASSWORD<br><strong>Value:</strong> (from Step 1 above)</li>
                         <li><strong>Name:</strong> APPLE_TEAM_ID<br><strong>Value:</strong> (from Step 2 above)</li>
                         <li><strong>Name:</strong> ASC_APP_ID<br><strong>Value:</strong> (from Step 3 above)</li>
@@ -381,12 +381,12 @@ git push origin main
                 <div class="step">
                     <h3><span class="step-number">2</span>Watch the Build</h3>
                     <ol>
-                        <li>Go to: <a href="https://github.com/GarageOSOfficial/GarageOS/actions" target="_blank">GitHub Actions</a></li>
+                        <li>Go to: <a href="https://github.com/WRNCOfficial/WRNC/actions" target="_blank">GitHub Actions</a></li>
                         <li>Click the latest <strong>"Build, Test, and Deploy iOS"</strong> run</li>
                         <li>Watch progress in real-time</li>
                         <li>Build should complete in 15-20 minutes</li>
                     </ol>
-                    <a href="https://github.com/GarageOSOfficial/GarageOS/actions" class="link-button" target="_blank">👀 Watch GitHub Actions</a>
+                    <a href="https://github.com/WRNCOfficial/WRNC/actions" class="link-button" target="_blank">👀 Watch GitHub Actions</a>
                 </div>
             </div>
 
@@ -397,9 +397,9 @@ git push origin main
                     <a href="https://appleid.apple.com/account/manage" class="link-button secondary" target="_blank">🍎 Apple ID</a>
                     <a href="https://developer.apple.com/account" class="link-button secondary" target="_blank">👨‍💻 Developer Account</a>
                     <a href="https://appstoreconnect.apple.com" class="link-button secondary" target="_blank">🏪 App Store Connect</a>
-                    <a href="https://github.com/GarageOSOfficial/GarageOS/settings/secrets/actions" class="link-button secondary" target="_blank">🔑 GitHub Secrets</a>
-                    <a href="https://github.com/GarageOSOfficial/GarageOS/actions" class="link-button secondary" target="_blank">⚙️ GitHub Actions</a>
-                    <a href="https://github.com/GarageOSOfficial/GarageOS" class="link-button secondary" target="_blank">📦 Repository</a>
+                    <a href="https://github.com/WRNCOfficial/WRNC/settings/secrets/actions" class="link-button secondary" target="_blank">🔑 GitHub Secrets</a>
+                    <a href="https://github.com/WRNCOfficial/WRNC/actions" class="link-button secondary" target="_blank">⚙️ GitHub Actions</a>
+                    <a href="https://github.com/WRNCOfficial/WRNC" class="link-button secondary" target="_blank">📦 Repository</a>
                 </div>
             </div>
 
@@ -417,8 +417,8 @@ git push origin main
         </div>
 
         <div class="footer">
-            <p><strong>Garage OS Continuous Delivery Setup</strong></p>
-            <p style="margin-top: 10px; font-size: 12px;">For full documentation, see: <a href="https://github.com/GarageOSOfficial/GarageOS/blob/main/SECRETS_SETUP_GUIDE.md" target="_blank">SECRETS_SETUP_GUIDE.md</a></p>
+            <p><strong>WRNC Continuous Delivery Setup</strong></p>
+            <p style="margin-top: 10px; font-size: 12px;">For full documentation, see: <a href="https://github.com/WRNCOfficial/WRNC/blob/main/SECRETS_SETUP_GUIDE.md" target="_blank">SECRETS_SETUP_GUIDE.md</a></p>
             <p style="margin-top: 5px; font-size: 12px;">Last Updated: 2026-07-13 | Status: Ready for Phase 2</p>
         </div>
     </div>

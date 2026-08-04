@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Garage OS",
-    "slug": "garage-os",
+    "name": "WRNC",
+    "slug": "wrnc",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTabletMode": true,
       "supportsRTL": false,
-      "bundleIdentifier": "com.garageos.mobile",
+      "bundleIdentifier": "com.wrnc.mobile",
       "buildNumber": "1"
     },
     "android": {
@@ -28,7 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.garageos.mobile",
+      "package": "com.wrnc.mobile",
       "versionCode": 1,
       "targetSdkVersion": 34
     },
@@ -39,8 +39,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Garage OS to access your photos and videos for vehicle documentation.",
-          "cameraPermission": "Allow Garage OS to access your camera to document your builds."
+          "photosPermission": "Allow WRNC to access your photos and videos for vehicle documentation.",
+          "cameraPermission": "Allow WRNC to access your camera to document your builds."
         }
       ],
       "expo-file-system"
@@ -50,7 +50,7 @@
         "projectId": "c7cfc85b-904f-4d2a-8fbb-1aec8f51aecb"
       }
     },
-    "scheme": "garageos",
+    "scheme": "wrnc",
     "platforms": [
       "ios",
       "android",

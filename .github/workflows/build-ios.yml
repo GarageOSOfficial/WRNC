@@ -119,13 +119,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "🚀 Garage OS iOS Build & TestFlight Deployment Successful",
+              "text": "🚀 WRNC iOS Build & TestFlight Deployment Successful",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*✅ Deployment Status: Success*\n*App:* Garage OS\n*Platform:* iOS\n*Destination:* TestFlight\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* main\n*Time:* $(date -u)"
+                    "text": "*✅ Deployment Status: Success*\n*App:* WRNC\n*Platform:* iOS\n*Destination:* TestFlight\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* main\n*Time:* $(date -u)"
                   }
                 },
                 {
@@ -161,13 +161,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "❌ Garage OS iOS Build Failed",
+              "text": "❌ WRNC iOS Build Failed",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*❌ Deployment Status: Failed*\n*App:* Garage OS\n*Platform:* iOS\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* main\n*Time:* $(date -u)"
+                    "text": "*❌ Deployment Status: Failed*\n*App:* WRNC\n*Platform:* iOS\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* main\n*Time:* $(date -u)"
                   }
                 },
                 {

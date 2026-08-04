@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Document Engine is the centralized document management domain for WRNC. Every uploaded artifact becomes a document and can be associated with a vehicle, an activity, or both.
+The Document Engine is the centralized document management domain for WRNC. Every uploaded artifact becomes a document and can be associated with a vehicle, an activity, or both, supporting the broader WRNC documentation experience and Build Passport™ summaries.
 
 ## Relationships
 

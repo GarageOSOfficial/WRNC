@@ -1,7 +1,7 @@
 {
-  "name": "garage-os",
+  "name": "wrnc",
   "version": "0.1.0",
-  "description": "Garage OS - Vehicle Build Documentation & Collaboration Platform",
+  "description": "WRNC - Vehicle Build Documentation & Collaboration Platform",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",

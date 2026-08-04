@@ -1,6 +1,6 @@
 # Vehicle Workspace Architecture - v0.4
 
-Complete system design for the Vehicle Workspace, establishing it as the center of the Garage OS application.
+Complete system design for the Vehicle Workspace, establishing it as the center of the WRNC application.
 
 ## Overview
 
@@ -40,7 +40,7 @@ Activities remain the single source of truth. Presentation classifications are o
 
 ### 2. Passive Synchronization
 
-Garage OS favors passive synchronization:
+WRNC favors passive synchronization:
 - React Query caches update silently in the background
 - Builders interrupted only when conflicts require action
 - No constant polling or forced refreshes
@@ -66,7 +66,7 @@ Vehicle information edits occur directly inside the About tab:
 
 ### 5. Photo Pipeline Requirements
 
-Garage OS supports a complete photo pipeline:
+WRNC supports a complete photo pipeline:
 - Client-side compression
 - Thumbnail generation
 - Progressive loading
@@ -78,7 +78,7 @@ Implementation approach is flexible and not prescribed.
 
 ### 6. Vehicle Workspace State Restoration
 
-Garage OS remembers the last active Vehicle Workspace tab when practical:
+WRNC remembers the last active Vehicle Workspace tab when practical:
 - Persisted on leaving and returning to workspace
 - Improves continuity and user experience
 - Session-based restoration (browser session)
@@ -88,7 +88,7 @@ Garage OS remembers the last active Vehicle Workspace tab when practical:
 
 **Every Vehicle has one Hero Photo.**
 
-The Hero Photo becomes the canonical visual identity of that build throughout Garage OS:
+The Hero Photo becomes the canonical visual identity of that build throughout WRNC:
 - Displayed prominently in workspace header
 - Shown in Mission Control vehicle cards
 - Used in shared vehicle references
@@ -259,7 +259,7 @@ Display Logic:
 
 ## Photo Pipeline
 
-**Garage OS supports:**
+**WRNC supports:**
 - Client-side compression
 - Thumbnail generation
 - Progressive loading (low-res → high-res)
