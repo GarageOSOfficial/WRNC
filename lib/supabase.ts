@@ -1,28 +1,48 @@
-import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '../types/database';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-const isSupabaseConfigured =
-  Boolean(process.env.EXPO_PUBLIC_SUPABASE_URL) &&
-  Boolean(process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+/**
+ * Indicates whether Supabase has been configured.
+ */
+export const isSupabaseConfigured =
+  !!supabaseUrl &&
+  !!supabaseAnonKey;
 
-export { isSupabaseConfigured };
+/**
+ * Always create a client so the application shell can start.
+ * If configuration is missing, use harmless placeholder values.
+ */
+export const supabase: SupabaseClient = createClient(
+  supabaseUrl ?? 'https://placeholder.supabase.co',
+  supabaseAnonKey ?? 'placeholder-anon-key',
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  }
+);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing EXPO_PUBLIC_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_ANON_KEY environment variables.'
-  );
+if (__DEV__ && !isSupabaseConfigured) {
+  console.warn(`
+=========================================================
+WRNC DEVELOPMENT WARNING
+
+Supabase has not been configured.
+
+Create a ".env" file from ".env.example" and provide:
+
+  EXPO_PUBLIC_SUPABASE_URL
+  EXPO_PUBLIC_SUPABASE_ANON_KEY
+
+The application will continue running with a placeholder
+Supabase client until valid credentials are provided.
+
+=========================================================
+`);
 }
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-  },
-});
