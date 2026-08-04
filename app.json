@@ -18,8 +18,6 @@
       "**/*"
     ],
     "ios": {
-      "supportsTabletMode": true,
-      "supportsRTL": false,
       "bundleIdentifier": "com.wrnc.mobile",
       "buildNumber": "1"
     },
@@ -29,11 +27,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.wrnc.mobile",
-      "versionCode": 1,
-      "targetSdkVersion": 34
+      "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./favicon.png"
     },
     "plugins": [
       [
