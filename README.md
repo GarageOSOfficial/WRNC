@@ -59,6 +59,25 @@ For the repository standards that govern contributions, reviews, releases, and m
 - Strengthen engineering infrastructure and release readiness
 - Refine the Build Passport and documentation experience
 
+## Local Development
+
+### Environment Variables
+
+Copy the example configuration:
+
+```bash
+cp .env.example .env
+```
+
+Replace the placeholder values with your own Supabase project credentials.
+
+Required variables:
+
+- EXPO_PUBLIC_SUPABASE_URL
+- EXPO_PUBLIC_SUPABASE_ANON_KEY
+
+The `.env` file should never be committed to source control.
+
 ## License
 
 WRNC™ — All rights reserved.
