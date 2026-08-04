@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useCurrentWorkspace } from '../../hooks/useWorkspace';
 import { useVehicles, useCreateVehicle, useArchiveVehicle, useRestoreVehicle, useUpdateVehicle } from '../../hooks/useVehicle';
 import { useDocumentationScore } from '../../hooks/useDocumentationScore';
@@ -13,10 +14,10 @@ import { validateVehicleInput } from '../../utils/validators';
 import type { Vehicle } from '../../types/vehicle';
 
 export function VehicleWorkspaceShell() {
+  const router = useRouter();
   const { data: workspace } = useCurrentWorkspace();
   const { data: vehicles = [], isLoading } = useVehicles(workspace?.id);
   const createVehicle = useCreateVehicle();
-  const documentationScore = useDocumentationScore(activeVehicle?.id);
   const updateVehicle = useUpdateVehicle();
   const archiveVehicle = useArchiveVehicle();
   const restoreVehicle = useRestoreVehicle();
@@ -25,6 +26,7 @@ export function VehicleWorkspaceShell() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [activeVehicle, setActiveVehicle] = useState<Vehicle | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const documentationScore = useDocumentationScore(activeVehicle?.id);
 
   const handleCreate = () => {
     const year = Number(form.year);
@@ -100,7 +102,10 @@ export function VehicleWorkspaceShell() {
             <VehicleCard vehicle={vehicle} onPress={() => handleSelectVehicle(vehicle)} />
             {activeVehicle?.id === vehicle.id ? (
               <View className="rounded-xl border border-gray-200 bg-white p-4">
-                <DocumentationScoreCard score={documentationScore.data?.overallScore ?? 0} />
+                <DocumentationScoreCard
+                  score={documentationScore.data?.overallScore ?? 0}
+                  onPress={() => router.push(`/vehicle/${activeVehicle.id}/passport`)}
+                />
                 <VehicleDetailsForm
                   vehicleData={activeVehicle}
                   isEditMode={isEditMode}

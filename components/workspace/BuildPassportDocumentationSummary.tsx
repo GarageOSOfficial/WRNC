@@ -1,0 +1,74 @@
+import React from 'react';
+import { Text, View } from 'react-native';
+import { Button } from '../common/Button';
+import { DocumentationCategoryProgress } from './DocumentationCategoryProgress';
+import type { BuildPassportDocumentationSummary as BuildPassportDocumentationSummaryType } from '../../types/buildPassport';
+
+interface BuildPassportDocumentationSummaryProps {
+  summary: BuildPassportDocumentationSummaryType;
+  onNavigate: (route: string) => void;
+  onBack: () => void;
+}
+
+function renderLink(
+  link: BuildPassportDocumentationSummaryType['sourceLinks'][number],
+  onNavigate: (route: string) => void,
+  onBack: () => void
+) {
+  if (link.action === 'back') {
+    return <Button label={link.label} variant="secondary" onPress={onBack} />;
+  }
+
+  if (!link.route) {
+    return null;
+  }
+
+  return <Button label={link.label} variant="secondary" onPress={() => onNavigate(link.route as string)} />;
+}
+
+export function BuildPassportDocumentationSummary({ summary, onNavigate, onBack }: BuildPassportDocumentationSummaryProps) {
+  return (
+    <View className="rounded-2xl border border-gray-200 bg-white p-5">
+      <Text className="text-lg font-semibold text-gray-900">Documentation Summary</Text>
+      <Text className="mt-1 text-sm text-gray-500">Documentation Score™ and attached records.</Text>
+
+      <View className="mt-4 flex-row flex-wrap gap-3">
+        <Stat label="Score" value={`${summary.overallScore}/100`} />
+        <Stat label="Documents" value={summary.totalDocuments} />
+        <Stat label="Photos" value={summary.photoDocuments} />
+        <Stat label="Archived" value={summary.archivedDocuments} />
+      </View>
+
+      {summary.latestDocument ? (
+        <View className="mt-4 rounded-xl bg-gray-50 px-4 py-3">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-gray-500">Latest Document</Text>
+          <Text className="mt-1 text-base font-semibold text-gray-900">{summary.latestDocument.title}</Text>
+          <Text className="mt-1 text-sm text-gray-600">{summary.latestDocument.documentType}</Text>
+        </View>
+      ) : null}
+
+      <View className="mt-4 gap-2">
+        {summary.categories.map((category) => (
+          <DocumentationCategoryProgress key={category.key} category={category} />
+        ))}
+      </View>
+
+      <View className="mt-4 flex-row flex-wrap gap-3">
+        {summary.sourceLinks.map((link) => (
+          <View key={link.label} className="min-w-36 flex-1">
+            {renderLink(link, onNavigate, onBack)}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number | string }) {
+  return (
+    <View className="min-w-24 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
+      <Text className="text-xs uppercase tracking-wide text-gray-500">{label}</Text>
+      <Text className="mt-1 text-lg font-semibold text-gray-900">{value}</Text>
+    </View>
+  );
+}
