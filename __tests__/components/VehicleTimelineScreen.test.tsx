@@ -90,7 +90,7 @@ describe('VehicleTimelineScreen', () => {
 
   it('filters activities and opens selected entries', () => {
     const onActivityPress = jest.fn();
-    const { getByText, getByLabelText, queryByText } = render(
+    const { getAllByRole, getByText, getByLabelText, queryByText } = render(
       <VehicleTimelineScreen
         vehicle={vehicle}
         activities={activities}
@@ -103,12 +103,14 @@ describe('VehicleTimelineScreen', () => {
     expect(getByText('Brake Service')).toBeTruthy();
     expect(getByText('Weekend Photos')).toBeTruthy();
 
-    fireEvent.press(getByText('Maintenance'));
+    const maintenanceButtons = getAllByRole('button', { name: 'Maintenance' });
+    fireEvent.press(maintenanceButtons[0]);
     expect(queryByText('Weekend Photos')).toBeNull();
     expect(getByText('Brake Service')).toBeTruthy();
     expect(getByText('Archived Inspection')).toBeTruthy();
 
-    fireEvent.press(getByText('Archived'));
+    const archivedButtons = getAllByRole('button', { name: 'Archived' });
+    fireEvent.press(archivedButtons[0]);
     expect(queryByText('Brake Service')).toBeNull();
     expect(getByText('Archived Inspection')).toBeTruthy();
 
@@ -117,8 +119,9 @@ describe('VehicleTimelineScreen', () => {
     expect(getByText('No activities yet')).toBeTruthy();
 
     fireEvent.changeText(getByLabelText('Start Date'), '');
-    fireEvent.press(getByText('All'));
-    fireEvent.press(getByText('All'));
+    const allButtons = getAllByRole('button', { name: 'All' });
+    fireEvent.press(allButtons[0]);
+    fireEvent.press(allButtons[1]);
 
     fireEvent.press(getByText('Weekend Photos'));
     expect(onActivityPress).toHaveBeenCalledWith('act-2');

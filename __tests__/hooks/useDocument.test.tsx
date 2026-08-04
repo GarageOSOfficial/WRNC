@@ -15,6 +15,8 @@ import {
   restoreDocument,
 } from '../../services/api/documents';
 
+const queryClients: QueryClient[] = [];
+
 jest.mock('../../services/api/documents', () => ({
   createDocument: jest.fn(),
   updateDocument: jest.fn(),
@@ -50,17 +52,27 @@ function makeWrapper() {
       mutations: { retry: false },
     },
   });
+  queryClient.setDefaultOptions({
+    queries: { retry: false, gcTime: 0 },
+    mutations: { retry: false },
+  });
+  queryClients.push(queryClient);
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
   return { queryClient, wrapper };
 }
 
+afterEach(() => {
+  queryClients.forEach((client) => client.clear());
+  queryClients.length = 0;
+});
+
 describe('document hooks', () => {
   it('exposes stable document query keys', () => {
     expect(documentKeys.all).toEqual(['documents']);
     expect(documentKeys.lists()).toEqual(['documents', 'list']);
-    expect(documentKeys.list('ws-1')).toEqual(['documents', 'list', 'ws-1']);
+    expect(documentKeys.list('ws-1')).toEqual(['documents', 'list', 'ws-1', {}]);
     expect(documentKeys.detail('doc-1')).toEqual(['documents', 'detail', 'doc-1']);
   });
 
