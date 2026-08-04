@@ -31,16 +31,12 @@
 <!-- Document architectural choices made in this PR -->
 
 ## Checklist
-- [ ] Code follows WRNC engineering principles
+- [ ] Change follows the governance guidance in docs/governance
 - [ ] Self-review completed
-- [ ] CODE_REVIEW_CHECKLIST.md verified
-- [ ] ARCHITECTURE_REVIEW checklist completed
-- [ ] DATABASE_REVIEW checklist completed
-- [ ] UX_REVIEW checklist completed
-- [ ] SECURITY_REVIEW checklist completed
-- [ ] Documentation updated (including PRODUCT_GLOSSARY.md if terminology used)
+- [ ] Engineering review checklist completed
+- [ ] Documentation updated where appropriate
 - [ ] No console errors or warnings
-- [ ] Commit messages follow conventional format
+- [ ] Commit messages follow the documented standards
 - [ ] Related issues linked
 
 ## Related Issues
