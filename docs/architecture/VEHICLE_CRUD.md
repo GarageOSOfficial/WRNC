@@ -7,7 +7,7 @@
 
 ## Overview
 
-The Vehicle CRUD stack follows a strict three-layer architecture:
+The Vehicle CRUD stack follows a strict three-layer architecture within WRNC:
 
 ```
 Screen / Component

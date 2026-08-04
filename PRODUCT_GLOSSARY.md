@@ -1,6 +1,6 @@
-# Garage OS™ Product Glossary
+# WRNC™ Product Glossary
 
-Official terminology guide for Garage OS product language, features, and concepts.
+Official terminology guide for WRNC product language, features, and concepts.
 
 Use this glossary to ensure consistent terminology across documentation, UI, marketing, and communications.
 
@@ -10,13 +10,13 @@ Use this glossary to ensure consistent terminology across documentation, UI, mar
 
 ### Mission Control
 
-**Definition:** The primary dashboard and command center of Garage OS. Central hub showing all vehicles, recent activities, and key metrics.
+**Definition:** The primary dashboard and command center of WRNC. Central hub showing all vehicles, recent activities, and key metrics.
 
 **Purpose:** Provide quick access to all vehicles and current status without needing to navigate into individual workspaces.
 
 **When to Use:**
 - Referring to the main dashboard/home screen
-- Describing the entry point to Garage OS
+- Describing the entry point to WRNC
 - Discussing vehicle overview and status monitoring
 
 **When NOT to Use:**
@@ -44,9 +44,9 @@ Use this glossary to ensure consistent terminology across documentation, UI, mar
 
 ### Vehicle
 
-**Definition:** A specific car, truck, motorcycle, boat, or other vehicle being tracked in Garage OS.
+**Definition:** A specific car, truck, motorcycle, boat, or other vehicle being tracked in WRNC.
 
-**Purpose:** The primary entity managed within Garage OS. Each vehicle is independent and has its own workspace, history, and documentation.
+**Purpose:** The primary entity managed within WRNC. Each vehicle is independent and has its own workspace, history, and documentation.
 
 **When to Use:**
 - Referring to any specific car or transport being tracked
@@ -61,7 +61,7 @@ Use this glossary to ensure consistent terminology across documentation, UI, mar
 
 ### Vehicle Workspace
 
-**Definition:** The main application interface for a single vehicle. The center of Garage OS where all work on a vehicle is performed, documented, and tracked.
+**Definition:** The main application interface for a single vehicle. The center of WRNC where all work on a vehicle is performed, documented, and tracked.
 
 **Purpose:** Dedicated environment for managing every aspect of a vehicle's life and modification journey.
 
@@ -203,9 +203,9 @@ Use this glossary to ensure consistent terminology across documentation, UI, mar
 
 ### Plank Owner
 
-**Definition:** Early adopter and beta tester who received Garage OS during the beta phase and provided critical feedback shaping the product.
+**Definition:** Early adopter and beta tester who received WRNC during the beta phase and provided critical feedback shaping the product.
 
-**Purpose:** Recognition of users who helped develop and refine Garage OS before public release.
+**Purpose:** Recognition of users who helped develop and refine WRNC before public release.
 
 **When to Use:**
 - Referring to beta program participants
@@ -328,7 +328,7 @@ Use this glossary to ensure consistent terminology across documentation, UI, mar
 ## Consistency Guidelines
 
 ### Capitalization
-- **Capitalize** proper product names: Garage OS™, Vehicle Workspace, Mission Control, Build Summary™, Plank Owner
+- **Capitalize** proper product names: WRNC™, Vehicle Workspace, Mission Control, Build Summary™, Plank Owner
 - **Do not capitalize** generic terms: activity, vehicle, part, inventory, timeline, records, budget
 
 ### Pluralization

@@ -1,5 +1,5 @@
 # Why This Screen Exists
-## Vehicle Workspace: The Heart of Garage OS
+## Vehicle Workspace: The Heart of WRNC
 
 ---
 
@@ -31,7 +31,7 @@ It's where builders go to:
 
 ---
 
-## How It Supports Garage OS Mission
+## How It Supports WRNC Mission
 
 ### "Builders Before Developers"
 The Workspace is designed entirely around builder needs, not technical requirements.
@@ -88,7 +88,7 @@ They feel **organized, proud, and motivated**. Their build isn't just in their h
 ### For Collaborative Teams
 They can see who did what and when. Progress is visible. Knowledge isn't lost when someone steps away from the build.
 
-### For the Garage OS Ecosystem
+### For the WRNC Ecosystem
 The Workspace is the gravity well that holds everything else together:
 - Mission Control directs builders TO the Workspace
 - Activities radiate OUT from the Workspace

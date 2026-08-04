@@ -31,7 +31,7 @@
 <!-- Document architectural choices made in this PR -->
 
 ## Checklist
-- [ ] Code follows Garage OS engineering principles
+- [ ] Code follows WRNC engineering principles
 - [ ] Self-review completed
 - [ ] CODE_REVIEW_CHECKLIST.md verified
 - [ ] ARCHITECTURE_REVIEW checklist completed

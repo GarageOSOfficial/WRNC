@@ -1,6 +1,6 @@
 # 🚀 FOUNDER TESTING BRIEFING
 
-**Garage OS™ - Vehicle Build Documentation & Collaboration Platform**
+**WRNC™ - Vehicle Build Documentation & Collaboration Platform**
 
 **Phase:** Alpha Validation (Founder Testing)  
 **Version:** v0.1.0-alpha  
@@ -13,7 +13,7 @@
 ## 📋 TABLE OF CONTENTS
 
 1. [Executive Overview](#executive-overview)
-2. [What is Garage OS](#what-is-garage-os)
+2. [What is WRNC](#what-is-wrnc)
 3. [Architecture Baseline v0.3.4](#architecture-baseline-v034)
 4. [Your Role as Founder Testers](#your-role-as-founder-testers)
 5. [Getting Started](#getting-started)
@@ -28,13 +28,13 @@
 
 ## 🎯 EXECUTIVE OVERVIEW
 
-**Welcome to Garage OS Alpha Testing!**
+**Welcome to WRNC Alpha Testing!**
 
-You've been selected as a **Plank Owner** – an early adopter who will help shape the future of vehicle build documentation. Your feedback during this alpha phase is critical to making Garage OS the essential tool for builders worldwide.
+You've been selected as a **Plank Owner** – an early adopter who will help shape the future of vehicle build documentation. Your feedback during this alpha phase is critical to making WRNC the essential tool for builders worldwide.
 
 ### What You're Testing
 
-**Garage OS v0.1.0-alpha** - The Vehicle Workspace, the center of the entire application where builders manage, document, and track their vehicle projects.
+**WRNC v0.1.0-alpha** - The Vehicle Workspace, the center of the entire application where builders manage, document, and track their vehicle projects.
 
 ### Key Capabilities (v0.1.0)
 
@@ -69,7 +69,7 @@ Builders document their projects manually across multiple apps and files:
 
 ### The Solution
 
-**Garage OS** - A single source of truth for everything about your vehicle.
+**WRNC** - A single source of truth for everything about your vehicle.
 
 Every action, photo, and decision is recorded as an immutable **Activity**. This creates a complete, auditable history that's impossible to lose or corrupt.
 
@@ -332,7 +332,7 @@ Use these scenarios to explore the app naturally. There's no "right way" – use
 - Photos won't upload
 
 **How to Report:**
-1. Email: feedback@garageos.co
+1. Email: feedback@wrnc.co
 2. Subject: `[BUG] Short description`
 3. Include:
    - What you were doing
@@ -350,7 +350,7 @@ Use these scenarios to explore the app naturally. There's no "right way" – use
 - Feature doesn't work as expected
 
 **How to Report:**
-1. Email: feedback@garageos.co
+1. Email: feedback@wrnc.co
 2. Subject: `[UX] Short description`
 3. Include:
    - What you were trying to do
@@ -365,7 +365,7 @@ Use these scenarios to explore the app naturally. There's no "right way" – use
 - You have questions about design
 
 **How to Report:**
-1. Email: feedback@garageos.co
+1. Email: feedback@wrnc.co
 2. Subject: `[FEEDBACK] Short description`
 3. Include:
    - Your current workflow
@@ -399,7 +399,7 @@ Any other information that helps us understand
 
 ### Feedback Channel
 
-**Email:** feedback@garageos.co  
+**Email:** feedback@wrnc.co  
 **Response Time:** Within 24-48 hours  
 **Updates:** Weekly digest of all feedback
 
@@ -416,7 +416,7 @@ Any other information that helps us understand
 - ✅ The app fits into your workflow
 - ✅ You'd use this in production
 
-### For Garage OS
+### For WRNC
 
 **Success metrics:**
 - ✅ Zero data loss incidents
@@ -477,34 +477,34 @@ If you experience any red flags, report immediately.
 
 ### Documentation
 
-- **Product Glossary:** https://github.com/GarageOSOfficial/GarageOS/blob/main/PRODUCT_GLOSSARY.md
-  - Official terminology for Garage OS features
+- **Product Glossary:** https://github.com/WRNCOfficial/WRNC/blob/main/PRODUCT_GLOSSARY.md
+  - Official terminology for WRNC features
 
-- **Architecture Decisions:** https://github.com/GarageOSOfficial/GarageOS/blob/main/DECISIONS.md
+- **Architecture Decisions:** https://github.com/WRNCOfficial/WRNC/blob/main/DECISIONS.md
   - Understand why features work the way they do
 
-- **Roadmap:** https://github.com/GarageOSOfficial/GarageOS/blob/main/ROADMAP.md
+- **Roadmap:** https://github.com/WRNCOfficial/WRNC/blob/main/ROADMAP.md
   - What's coming in future versions
 
 ### Getting Help
 
 **Quick Questions:**
-- Email: support@garageos.co
+- Email: support@wrnc.co
 - Response: Within 24 hours
 
 **Technical Issues:**
-- Email: feedback@garageos.co
+- Email: feedback@wrnc.co
 - Include: Steps to reproduce, screenshots
 
 **General Feedback:**
-- Email: feedback@garageos.co
+- Email: feedback@wrnc.co
 - Subject: [FEEDBACK] Your message
 
 ### Additional Resources
 
-- **Setup Guide:** https://raw.githubusercontent.com/GarageOSOfficial/GarageOS/main/SETUP_LINKS.html
-- **CI/CD Info:** https://github.com/GarageOSOfficial/GarageOS/blob/main/CI_CD_SETUP.md
-- **Contributing:** https://github.com/GarageOSOfficial/GarageOS/blob/main/CONTRIBUTING.md
+- **Setup Guide:** https://raw.githubusercontent.com/WRNCOfficial/WRNC/main/SETUP_LINKS.html
+- **CI/CD Info:** https://github.com/WRNCOfficial/WRNC/blob/main/CI_CD_SETUP.md
+- **Contributing:** https://github.com/WRNCOfficial/WRNC/blob/main/CONTRIBUTING.md
 
 ---
 
@@ -538,15 +538,15 @@ After this alpha phase:
 
 | Role | Email | Response Time |
 |------|-------|----------------|
-| Support | support@garageos.co | 24 hours |
-| Feedback | feedback@garageos.co | 24-48 hours |
-| Bugs | feedback@garageos.co | 24 hours |
+| Support | support@wrnc.co | 24 hours |
+| Feedback | feedback@wrnc.co | 24-48 hours |
+| Bugs | feedback@wrnc.co | 24 hours |
 
 ### Key Links
 
-- GitHub: https://github.com/GarageOSOfficial/GarageOS
-- Release Certification: https://github.com/GarageOSOfficial/GarageOS/blob/main/RELEASE_READINESS_CERTIFICATION.md
-- Setup Guide: https://raw.githubusercontent.com/GarageOSOfficial/GarageOS/main/SETUP_LINKS.html
+- GitHub: https://github.com/WRNCOfficial/WRNC
+- Release Certification: https://github.com/WRNCOfficial/WRNC/blob/main/RELEASE_READINESS_CERTIFICATION.md
+- Setup Guide: https://raw.githubusercontent.com/WRNCOfficial/WRNC/main/SETUP_LINKS.html
 
 ### App Features Summary
 
@@ -572,13 +572,13 @@ After this alpha phase:
 4. **Add Your Vehicle** (basic info)
 5. **Create First Activity** (photo + description)
 6. **Explore & Test** (follow scenarios)
-7. **Submit Feedback** (email feedback@garageos.co)
+7. **Submit Feedback** (email feedback@wrnc.co)
 
 ---
 
 **Welcome aboard, Plank Owner! Let's build the future of vehicle documentation together.** 🏆
 
-**Garage OS™ - Where builders build, and history is forever.**
+**WRNC™ - Where builders build, and history is forever.**
 
 ---
 

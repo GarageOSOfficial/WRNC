@@ -1,6 +1,6 @@
 # Architecture Decisions
 
-Permanent log of architectural decisions, patterns, and principles established for Garage OS™.
+Permanent log of architectural decisions, patterns, and principles established for WRNC™.
 
 Each decision documents rationale, alternatives considered, and current status.
 
@@ -123,7 +123,7 @@ By archiving instead:
 **Status:** Active | LOCKED
 
 **Decision:**
-The Vehicle Workspace is the primary working environment in Garage OS. All work, documentation, and features center around the Vehicle Workspace. Mission Control is the entry point and overview.
+The Vehicle Workspace is the primary working environment in WRNC. All work, documentation, and features center around the Vehicle Workspace. Mission Control is the entry point and overview.
 
 **Reason:**
 To simplify navigation and keep user focus on the vehicle being worked on. Eliminates context switching and makes the app feel purposeful and focused.
@@ -158,7 +158,7 @@ Automotive projects require focus and context. By making Vehicle Workspace the c
 **Status:** Active | LOCKED
 
 **Decision:**
-Mission Control is the primary entry point and dashboard for Garage OS. It shows all vehicles, recent activities, and status overview. It is read-only and exploratory; work happens in Vehicle Workspace.
+Mission Control is the primary entry point and dashboard for WRNC. It shows all vehicles, recent activities, and status overview. It is read-only and exploratory; work happens in Vehicle Workspace.
 
 **Reason:**
 To provide quick visibility into all projects without entering individual workspaces. Users can assess status and choose which vehicle to work on.
@@ -238,7 +238,7 @@ To keep the Recent Activity feed focused on builder work while maintaining compl
 **Status:** Active
 
 **Decision:**
-Garage OS favors passive synchronization. React Query caches update silently. Builders interrupted only when conflicts require action.
+WRNC favors passive synchronization. React Query caches update silently. Builders interrupted only when conflicts require action.
 
 **Reason:**
 To minimize disruption and preserve builder focus. Database sync should be invisible.
@@ -326,7 +326,7 @@ To streamline editing. Modal dialogs interrupt focus; inline editing maintains c
 **Status:** Active
 
 **Decision:**
-Garage OS supports complete photo pipeline with client-side optimization. Implementation approach is flexible and not prescribed.
+WRNC supports complete photo pipeline with client-side optimization. Implementation approach is flexible and not prescribed.
 
 **Supported Capabilities:**
 - Client-side Compression, Thumbnail Generation, Progressive Loading, Blur Placeholders, Lazy Loading, Future Virtualization
@@ -354,7 +354,7 @@ Flexible. Suggested: Canvas API for compression, Service Worker for caching, Int
 **Status:** Active
 
 **Decision:**
-Every Vehicle has one Hero Photo. The Hero Photo becomes the canonical visual identity throughout Garage OS.
+Every Vehicle has one Hero Photo. The Hero Photo becomes the canonical visual identity throughout WRNC.
 
 **Hero Photo:**
 - Designated by builder in About tab
@@ -383,7 +383,7 @@ To create consistent visual identity. Photos are how builders recognize their bu
 **Status:** Active
 
 **Decision:**
-Garage OS remembers the last active Vehicle Workspace tab when practical. State restored when returning to workspace.
+WRNC remembers the last active Vehicle Workspace tab when practical. State restored when returning to workspace.
 
 **Implementation:**
 - Store active tab in session storage or URL query param
