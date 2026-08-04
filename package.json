@@ -23,7 +23,6 @@
     "expo-status-bar": "~1.11.1",
     "expo-image-picker": "~14.7.1",
     "expo-file-system": "~16.0.6",
-    "expo-image": "^56.0.10",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "react-native-screens": "~3.27.0",
@@ -37,7 +36,8 @@
     "tailwindcss": "3.3.0",
     "react-native-svg": "14.1.0",
     "@supabase/supabase-js": "^2.43.1",
-    "react-native-url-polyfill": "^2.0.0"
+    "react-native-url-polyfill": "^2.0.0",
+    "@react-native-async-storage/async-storage": "~1.23.1"
   },
   "devDependencies": {
     "@types/react": "~18.2.37",
@@ -49,7 +49,6 @@
     "eslint": "^8.54.0",
     "eslint-config-expo": "^7.0.0",
     "prettier": "^3.1.0",
-    "@react-native-async-storage/async-storage": "~1.23.1",
     "babel-preset-expo": "^10.0.1",
     "@testing-library/react-native": "^12.4.5",
     "react-test-renderer": "18.2.0"
