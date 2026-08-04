@@ -6,20 +6,22 @@ This project follows the principles of **Keep a Changelog**, with entries organi
 
 ---
 
-# [Alpha 0.1] - In Development
+## [Alpha 0.1] - In Development
 
-## Added
+### Added
 
-### Core Platform
+#### Core Platform
 
 - Vehicle CRUD
 - Activity Engine
+- Mission Control dashboard
+- Vehicle Workspace shell
 - Vehicle Timeline
 - Document Engine
 - Documentation Score™
 - Build Passport™
 
-### Documentation
+#### Documentation
 
 - Repository governance
 - Engineering standards
@@ -28,7 +30,7 @@ This project follows the principles of **Keep a Changelog**, with entries organi
 - Product glossary
 - Release readiness documentation
 
-### Engineering
+#### Engineering
 
 - Standardized GitHub Issues
 - Standardized Pull Request workflow
@@ -38,7 +40,7 @@ This project follows the principles of **Keep a Changelog**, with entries organi
 - Repository governance
 - Repository branding standards
 
-### Product Identity
+#### Product Identity
 
 - WRNC established as the primary product.
 - Swear Like A Sailor, LLC established as the parent company.
@@ -47,7 +49,7 @@ This project follows the principles of **Keep a Changelog**, with entries organi
 
 ---
 
-## Changed
+### Changed
 
 - Repository documentation rewritten for consistency.
 - README modernized with product vision and development workflow.
@@ -57,7 +59,7 @@ This project follows the principles of **Keep a Changelog**, with entries organi
 
 ---
 
-## Fixed
+### Fixed
 
 - Repository governance documentation gaps.
 - Brand inconsistencies across documentation.
@@ -67,7 +69,7 @@ This project follows the principles of **Keep a Changelog**, with entries organi
 
 ---
 
-## Technical Debt
+### Technical Debt
 
 Known items remaining:
 
@@ -77,7 +79,7 @@ Known items remaining:
 
 ---
 
-## Status
+### Status
 
 **Current Phase:** Alpha 0.1
 
