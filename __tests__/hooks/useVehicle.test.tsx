@@ -15,6 +15,8 @@ import {
   restoreVehicle,
 } from '../../services/api/vehicles';
 
+const queryClients: QueryClient[] = [];
+
 jest.mock('../../services/api/vehicles', () => ({
   createVehicle: jest.fn(),
   updateVehicle: jest.fn(),
@@ -49,11 +51,21 @@ function makeWrapper() {
       mutations: { retry: false },
     },
   });
+  queryClient.setDefaultOptions({
+    queries: { retry: false, gcTime: 0 },
+    mutations: { retry: false },
+  });
+  queryClients.push(queryClient);
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
   return { queryClient, wrapper };
 }
+
+afterEach(() => {
+  queryClients.forEach((client) => client.clear());
+  queryClients.length = 0;
+});
 
 // ─── vehicleKeys factory ──────────────────────────────────────────────────────
 

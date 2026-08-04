@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useCurrentWorkspace } from '../../hooks/useWorkspace';
 import { useVehicles, useCreateVehicle, useArchiveVehicle, useRestoreVehicle, useUpdateVehicle } from '../../hooks/useVehicle';
+import { useDocumentationScore } from '../../hooks/useDocumentationScore';
 import { Button } from '../common/Button';
 import { EmptyState } from '../common/EmptyState';
 import { VehicleCard } from './VehicleCard';
 import { VehicleDetailsForm } from './VehicleDetailsForm';
+import { DocumentationScoreCard } from './DocumentationScoreCard';
 import { Input } from '../common/Input';
 import { validateVehicleInput } from '../../utils/validators';
 import type { Vehicle } from '../../types/vehicle';
@@ -14,6 +16,7 @@ export function VehicleWorkspaceShell() {
   const { data: workspace } = useCurrentWorkspace();
   const { data: vehicles = [], isLoading } = useVehicles(workspace?.id);
   const createVehicle = useCreateVehicle();
+  const documentationScore = useDocumentationScore(activeVehicle?.id);
   const updateVehicle = useUpdateVehicle();
   const archiveVehicle = useArchiveVehicle();
   const restoreVehicle = useRestoreVehicle();
@@ -97,6 +100,7 @@ export function VehicleWorkspaceShell() {
             <VehicleCard vehicle={vehicle} onPress={() => handleSelectVehicle(vehicle)} />
             {activeVehicle?.id === vehicle.id ? (
               <View className="rounded-xl border border-gray-200 bg-white p-4">
+                <DocumentationScoreCard score={documentationScore.data?.overallScore ?? 0} />
                 <VehicleDetailsForm
                   vehicleData={activeVehicle}
                   isEditMode={isEditMode}

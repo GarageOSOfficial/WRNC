@@ -7,10 +7,6 @@ import {
   restoreActivity,
 } from '../services/api/activities';
 import type { CreateActivityInput, ListActivitiesOptions } from '../types/activity';
-  updateActivity,
-  type ListActivitiesOptions,
-} from '../services/api/activities';
-import type { CreateActivityInput, UpdateActivityInput } from '../types/activity';
 
 export const activityKeys = {
   all: ['activities'] as const,
@@ -21,11 +17,6 @@ export const activityKeys = {
   detail: (id: string) => [...activityKeys.details(), id] as const,
 };
 
-export function useActivities(
-  vehicleId: string | undefined,
-  options: ListActivitiesOptions = {}
-) {
-/** Read: list activities for a vehicle. */
 export function useActivities(vehicleId: string | undefined, options: ListActivitiesOptions = {}) {
   return useQuery({
     queryKey: activityKeys.list(vehicleId ?? '', options),
@@ -35,21 +26,15 @@ export function useActivities(vehicleId: string | undefined, options: ListActivi
   });
 }
 
-/** Read: a single activity. */
 export function useActivity(activityId: string | undefined) {
   return useQuery({
     queryKey: activityKeys.detail(activityId ?? ''),
     queryFn: () => getActivity(activityId as string),
     enabled: Boolean(activityId),
-    staleTime: 60 * 1000,
-  });
-}
-
     staleTime: 5 * 60 * 1000,
   });
 }
 
-/** Create: adds a new activity to the vehicle. */
 export function useCreateActivity() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -60,24 +45,6 @@ export function useCreateActivity() {
   });
 }
 
-export function useArchiveActivity() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (activityId: string) => archiveActivity(activityId),
-/** Update: edits any activity field (title, notes, metadata, occurredAt). */
-export function useUpdateActivity() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: UpdateActivityInput }) =>
-      updateActivity(id, input),
-    onSuccess: (activity) => {
-      queryClient.invalidateQueries({ queryKey: activityKeys.detail(activity.id) });
-      queryClient.invalidateQueries({ queryKey: activityKeys.list(activity.vehicleId) });
-    },
-  });
-}
-
-/** Archive: soft-deletes an activity (never permanently removed). */
 export function useArchiveActivity() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -92,16 +59,10 @@ export function useArchiveActivity() {
 export function useRestoreActivity() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (activityId: string) => restoreActivity(activityId),
-/** Restore: brings an archived activity back into default lists. */
-export function useRestoreActivity() {
-  const queryClient = useQueryClient();
-  return useMutation({
     mutationFn: (id: string) => restoreActivity(id),
     onSuccess: (activity) => {
       queryClient.invalidateQueries({ queryKey: activityKeys.detail(activity.id) });
       queryClient.invalidateQueries({ queryKey: activityKeys.list(activity.vehicleId) });
     },
   });
-}
 }

@@ -5,7 +5,6 @@ import {
   archiveDocument,
   restoreDocument,
   listDocuments,
-  getDocument,
 } from '../../services/api/documents';
 
 process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
@@ -101,7 +100,7 @@ describe('document CRUD service', () => {
   });
 
   it('creates a document and maps the Supabase row', async () => {
-    mockSingle.mockResolvedValue({ data: makeRow({ title: 'Invoice' }), error: null });
+    mockSingle.mockResolvedValue({ data: makeRow({ title: 'Invoice', document_type: 'invoice' }), error: null });
 
     const document = await createDocument({
       workspaceId: 'ws-1',
