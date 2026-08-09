@@ -40,7 +40,7 @@ export default function LoginScreen() {
       return;
     }
 
-    router.replace('/');
+    router.replace('/workspace');
   };
 
   return (

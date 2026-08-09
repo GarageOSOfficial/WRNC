@@ -77,7 +77,7 @@ export default function AuthCallbackScreen() {
           ) : (
             <Pressable
               accessibilityRole="button"
-              onPress={() => router.replace(state === 'confirmed' ? '/' : '/login')}
+              onPress={() => router.replace(state === 'confirmed' ? '/workspace' : '/login')}
               style={styles.primaryButton}
             >
               <Text style={styles.primaryButtonText}>{state === 'confirmed' ? 'CONTINUE TO WRNC' : 'SIGN IN TO WRNC'}</Text>
