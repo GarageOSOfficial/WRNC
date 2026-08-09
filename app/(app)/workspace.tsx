@@ -17,10 +17,10 @@ export default function WorkspaceScreen() {
 
     let isMounted = true;
 
-    void supabase.auth.getSession().then(({ data }) => {
+    void supabase.auth.getSession().then(({ data, error }) => {
       if (!isMounted) return;
 
-      if (!data.session) {
+      if (error || !data.session) {
         router.replace('/login');
         return;
       }

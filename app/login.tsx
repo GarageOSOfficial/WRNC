@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { WrncLogo } from '../components/marketing/WrncLogo';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
@@ -11,6 +11,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const passwordInputRef = useRef<TextInput>(null);
 
   const handleLogin = async () => {
     const normalizedEmail = email.trim().toLowerCase();
@@ -28,7 +29,7 @@ export default function LoginScreen() {
     setError(null);
     setIsSubmitting(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email: normalizedEmail,
       password,
     });
@@ -37,6 +38,11 @@ export default function LoginScreen() {
 
     if (signInError) {
       setError(signInError.message);
+      return;
+    }
+
+    if (!data.session) {
+      setError('Your sign-in session could not be started. Please try again.');
       return;
     }
 
@@ -62,8 +68,10 @@ export default function LoginScreen() {
             autoComplete="email"
             keyboardType="email-address"
             onChangeText={setEmail}
+            onSubmitEditing={() => passwordInputRef.current?.focus()}
             placeholder="you@example.com"
             placeholderTextColor="#777777"
+            returnKeyType="next"
             style={styles.input}
             value={email}
           />
@@ -73,8 +81,11 @@ export default function LoginScreen() {
             accessibilityLabel="Password"
             autoComplete="current-password"
             onChangeText={setPassword}
+            onSubmitEditing={handleLogin}
             placeholder="Your password"
             placeholderTextColor="#777777"
+            ref={passwordInputRef}
+            returnKeyType="go"
             secureTextEntry
             style={styles.input}
             value={password}
