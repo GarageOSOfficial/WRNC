@@ -32,7 +32,7 @@ function VehicleTimelineListComponent({
         <View>
           {header}
           <View className="mb-3 px-1">
-            <Text className="text-sm text-gray-500">
+            <Text className="text-sm text-wrnc-text-secondary">
               {totalCount} {totalCount === 1 ? 'activity' : 'activities'}
             </Text>
           </View>

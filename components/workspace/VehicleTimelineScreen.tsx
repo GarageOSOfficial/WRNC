@@ -52,20 +52,20 @@ export function VehicleTimelineScreen({
     <View>
       <Button label="Back" variant="secondary" onPress={onBack} />
       <View className="mt-4">
-        <Text className="text-3xl font-bold text-gray-900">Timeline</Text>
-        <Text className="mt-2 text-sm text-gray-500">{vehicle.nickname || vehicleLabel}</Text>
+        <Text className="text-3xl font-bold text-wrnc-text-primary">Timeline</Text>
+        <Text className="mt-2 text-sm text-wrnc-text-secondary">{vehicle.nickname || vehicleLabel}</Text>
       </View>
       <VehicleTimelineFilters filters={filters} onFiltersChange={setFilters} />
     </View>
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-wrnc-background">
       {isLoading ? (
         <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
           {listHeader}
-          <View className="items-center justify-center rounded-2xl border border-gray-200 bg-white px-6 py-12">
-            <Text className="text-sm text-gray-600">Loading activities…</Text>
+          <View className="items-center justify-center rounded-2xl border border-wrnc-border bg-wrnc-surface px-6 py-12">
+            <Text className="text-sm text-wrnc-text-secondary">Loading activities…</Text>
           </View>
         </ScrollView>
       ) : filteredActivities.length === 0 ? (

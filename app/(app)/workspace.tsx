@@ -47,6 +47,6 @@ export default function WorkspaceScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { backgroundColor: '#F9FAFB', flex: 1 },
+  screen: { backgroundColor: '#080808', flex: 1 },
   loading: { alignItems: 'center', flex: 1, justifyContent: 'center' },
 });

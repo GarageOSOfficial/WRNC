@@ -28,9 +28,9 @@ function renderLink(
 
 export function BuildPassportDocumentationSummary({ summary, onNavigate, onBack }: BuildPassportDocumentationSummaryProps) {
   return (
-    <View className="rounded-2xl border border-gray-200 bg-white p-5">
-      <Text className="text-lg font-semibold text-gray-900">Documentation Summary</Text>
-      <Text className="mt-1 text-sm text-gray-500">Documentation Score™ and attached records.</Text>
+    <View className="rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
+      <Text className="text-lg font-semibold text-wrnc-text-primary">Documentation Summary</Text>
+      <Text className="mt-1 text-sm text-wrnc-text-secondary">Documentation Score™ and attached records.</Text>
 
       <View className="mt-4 flex-row flex-wrap gap-3">
         <Stat label="Score" value={`${summary.overallScore}/100`} />
@@ -40,10 +40,10 @@ export function BuildPassportDocumentationSummary({ summary, onNavigate, onBack 
       </View>
 
       {summary.latestDocument ? (
-        <View className="mt-4 rounded-xl bg-gray-50 px-4 py-3">
-          <Text className="text-xs font-semibold uppercase tracking-wide text-gray-500">Latest Document</Text>
-          <Text className="mt-1 text-base font-semibold text-gray-900">{summary.latestDocument.title}</Text>
-          <Text className="mt-1 text-sm text-gray-600">{summary.latestDocument.documentType}</Text>
+        <View className="mt-4 rounded-xl bg-wrnc-background px-4 py-3">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-wrnc-text-secondary">Latest Document</Text>
+          <Text className="mt-1 text-base font-semibold text-wrnc-text-primary">{summary.latestDocument.title}</Text>
+          <Text className="mt-1 text-sm text-wrnc-text-secondary">{summary.latestDocument.documentType}</Text>
         </View>
       ) : null}
 
@@ -66,9 +66,9 @@ export function BuildPassportDocumentationSummary({ summary, onNavigate, onBack 
 
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
-    <View className="min-w-24 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
-      <Text className="text-xs uppercase tracking-wide text-gray-500">{label}</Text>
-      <Text className="mt-1 text-lg font-semibold text-gray-900">{value}</Text>
+    <View className="min-w-24 flex-1 rounded-xl border border-wrnc-border bg-wrnc-background px-3 py-2">
+      <Text className="text-xs uppercase tracking-wide text-wrnc-text-secondary">{label}</Text>
+      <Text className="mt-1 text-lg font-semibold text-wrnc-text-primary">{value}</Text>
     </View>
   );
 }

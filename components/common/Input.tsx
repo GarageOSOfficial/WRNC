@@ -10,16 +10,16 @@ export interface InputProps extends TextInputProps {
 export function Input({ label, error, ...props }: InputProps) {
   return (
     <View className="mb-4">
-      <Text className="mb-1 text-sm font-medium text-gray-700">{label}</Text>
+      <Text className="mb-1 text-sm font-medium text-wrnc-text-secondary">{label}</Text>
       <TextInput
         accessibilityLabel={label}
-        className={`rounded-md border px-3 py-2 text-base text-gray-900 ${
-          error ? 'border-red-500' : 'border-gray-300'
+        className={`rounded-md border bg-wrnc-background px-3 py-2 text-base text-wrnc-text-primary ${
+          error ? 'border-semantic-error' : 'border-wrnc-border'
         }`}
-        placeholderTextColor="#9CA3AF"
+        placeholderTextColor="#C0C0C0"
         {...props}
       />
-      {error ? <Text className="mt-1 text-xs text-red-600">{error}</Text> : null}
+      {error ? <Text className="mt-1 text-xs text-semantic-error">{error}</Text> : null}
     </View>
   );
 }

@@ -68,16 +68,16 @@ export function VehicleWorkspaceShell() {
   };
 
   if (isLoading) {
-    return <Text className="p-4 text-gray-600">Loading vehicles…</Text>;
+    return <Text className="p-4 text-wrnc-text-secondary">Loading vehicles…</Text>;
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-50 p-4">
-      <Text className="mb-4 text-2xl font-bold text-gray-900">Vehicles</Text>
+    <ScrollView className="flex-1 bg-wrnc-background p-4">
+      <Text className="mb-4 text-2xl font-bold text-wrnc-text-primary">Vehicles</Text>
       {!showCreate ? (
         <Button label="Create Vehicle" onPress={() => setShowCreate(true)} />
       ) : (
-        <View className="mb-4 rounded-xl border border-gray-200 bg-white p-4">
+        <View className="mb-4 rounded-xl border border-wrnc-border bg-wrnc-surface p-4">
           <Input label="Year" value={form.year} onChangeText={(year) => setForm((f) => ({ ...f, year }))} keyboardType="number-pad" error={formErrors.year} />
           <Input label="Make" value={form.make} onChangeText={(make) => setForm((f) => ({ ...f, make }))} error={formErrors.make} />
           <Input label="Model" value={form.model} onChangeText={(model) => setForm((f) => ({ ...f, model }))} error={formErrors.model} />
@@ -101,7 +101,7 @@ export function VehicleWorkspaceShell() {
           <View key={vehicle.id} className="mb-3">
             <VehicleCard vehicle={vehicle} onPress={() => handleSelectVehicle(vehicle)} />
             {activeVehicle?.id === vehicle.id ? (
-              <View className="rounded-xl border border-gray-200 bg-white p-4">
+              <View className="rounded-xl border border-wrnc-border bg-wrnc-surface p-4">
                 <DocumentationScoreCard
                   score={documentationScore.data?.overallScore ?? 0}
                   onPress={() => router.push(`/vehicle/${activeVehicle.id}/passport`)}

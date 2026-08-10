@@ -14,10 +14,10 @@ function FilterChip({ label, selected, onPress }: FilterChipProps) {
   return (
     <Pressable
       accessibilityRole="button"
-      className={`mr-2 rounded-full px-3 py-2 ${selected ? 'bg-blue-600' : 'bg-gray-200'}`}
+      className={`mr-2 rounded-full px-3 py-2 ${selected ? 'bg-wrnc-data-accent' : 'bg-wrnc-surface-elevated'}`}
       onPress={onPress}
     >
-      <Text className={`text-xs font-semibold ${selected ? 'text-white' : 'text-gray-700'}`}>
+      <Text className={`text-xs font-semibold ${selected ? 'text-white' : 'text-wrnc-text-secondary'}`}>
         {label}
       </Text>
     </Pressable>
@@ -42,9 +42,9 @@ function VehicleTimelineFiltersComponent({
   };
 
   return (
-    <View className="mb-4 rounded-2xl border border-gray-200 bg-white p-4">
+    <View className="mb-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-4">
       <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-semibold text-gray-900">Filters</Text>
+        <Text className="text-lg font-semibold text-wrnc-text-primary">Filters</Text>
         <Pressable
           accessibilityRole="button"
           onPress={() =>
@@ -54,13 +54,13 @@ function VehicleTimelineFiltersComponent({
             })
           }
         >
-          <Text className="text-sm font-semibold text-blue-700">
+          <Text className="text-sm font-semibold text-wrnc-data-accent">
             {filters.sortDirection === 'desc' ? 'Newest First' : 'Oldest First'}
           </Text>
         </Pressable>
       </View>
 
-      <Text className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+      <Text className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-wrnc-text-secondary">
         Activity Type
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -75,7 +75,7 @@ function VehicleTimelineFiltersComponent({
         ))}
       </ScrollView>
 
-      <Text className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+      <Text className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-wrnc-text-secondary">
         Status
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>

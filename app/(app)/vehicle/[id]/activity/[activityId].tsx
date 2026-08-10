@@ -20,8 +20,8 @@ export default function ActivityDetailsRoute() {
 
   if (isLoading || !activity) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Loading activity…</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Loading activity…</Text>
       </SafeAreaView>
     );
   }
@@ -30,42 +30,42 @@ export default function ActivityDetailsRoute() {
   const odometer = getActivityOdometer(activity);
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-wrnc-background">
       <ScrollView className="flex-1 p-4">
         <Button label="Back to Timeline" variant="secondary" onPress={() => router.back()} />
-        <View className="mt-4 rounded-2xl border border-gray-200 bg-white p-5">
-          <Text className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+        <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-wrnc-data-accent">
             {activity.activityType}
           </Text>
-          <Text className="mt-2 text-2xl font-bold text-gray-900">{activity.title}</Text>
-          <Text className="mt-2 text-sm text-gray-500">
+          <Text className="mt-2 text-2xl font-bold text-wrnc-text-primary">{activity.title}</Text>
+          <Text className="mt-2 text-sm text-wrnc-text-secondary">
             {formatTimelineDate(activity.activityDate)}
           </Text>
-          <Text className="mt-1 text-sm text-gray-500">
+          <Text className="mt-1 text-sm text-wrnc-text-secondary">
             {vehicle ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : 'Vehicle details unavailable'}
           </Text>
 
           {activity.description ? (
-            <Text className="mt-4 text-base leading-6 text-gray-700">{activity.description}</Text>
+            <Text className="mt-4 text-base leading-6 text-wrnc-text-secondary">{activity.description}</Text>
           ) : null}
 
           <View className="mt-5 gap-3">
             {odometer !== null ? (
-              <View className="rounded-xl bg-gray-100 px-4 py-3">
-                <Text className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <View className="rounded-xl bg-wrnc-surface-elevated px-4 py-3">
+                <Text className="text-xs font-semibold uppercase tracking-wide text-wrnc-text-secondary">
                   Odometer
                 </Text>
-                <Text className="mt-1 text-base font-semibold text-gray-900">
+                <Text className="mt-1 text-base font-semibold text-wrnc-text-primary">
                   {odometer.toLocaleString()} miles
                 </Text>
               </View>
             ) : null}
             {cost !== null ? (
-              <View className="rounded-xl bg-gray-100 px-4 py-3">
-                <Text className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <View className="rounded-xl bg-wrnc-surface-elevated px-4 py-3">
+                <Text className="text-xs font-semibold uppercase tracking-wide text-wrnc-text-secondary">
                   Cost
                 </Text>
-                <Text className="mt-1 text-base font-semibold text-gray-900">
+                <Text className="mt-1 text-base font-semibold text-wrnc-text-primary">
                   ${cost.toFixed(2)}
                 </Text>
               </View>

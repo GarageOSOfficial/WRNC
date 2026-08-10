@@ -16,16 +16,16 @@ export default function VehicleTimelineRoute() {
 
   if (!vehicleId) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Vehicle not found.</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Vehicle not found.</Text>
       </SafeAreaView>
     );
   }
 
   if (vehicleLoading || !vehicle) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Loading timeline…</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Loading timeline…</Text>
       </SafeAreaView>
     );
   }
