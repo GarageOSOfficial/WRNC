@@ -6,18 +6,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: "#f0f7ff",
-          100: "#e0efff",
-          500: "#0066cc",
-          600: "#0052a3",
-          700: "#003d7a"
-        },
-        neutral: {
-          50: "#f9fafb",
-          100: "#f3f4f6",
-          900: "#111827"
-        }
+        "wrnc-background": "#080808",
+        "wrnc-surface": "#1A1D22",
+        "wrnc-surface-elevated": "#24282E",
+        "wrnc-border": "#30343A",
+        "wrnc-text-primary": "#FFFFFF",
+        "wrnc-text-secondary": "#C0C0C0",
+        "wrnc-action-primary": "#FF6400",
+        "wrnc-data-accent": "#7C3AED",
+        "semantic-success": "#22C55E",
+        "semantic-warning": "#F59E0B",
+        "semantic-error": "#EF4444"
       },
       fontSize: {
         xs: "11px",
@@ -28,6 +27,9 @@ module.exports = {
         "2xl": "24px"
       }
     }
+  },
+  corePlugins: {
+    preflight: false
   },
   plugins: []
 };
