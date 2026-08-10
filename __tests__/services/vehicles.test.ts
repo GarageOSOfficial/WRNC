@@ -139,6 +139,20 @@ describe('vehicle CRUD service', () => {
     expect(result.errors.vin).toBe('VIN must be 17 characters.');
   });
 
+  it('rejects a 16-character VIN', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: '1234567890123456' });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.vin).toBe('VIN must be 17 characters.');
+  });
+
+  it('rejects an 18-character VIN', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: '123456789012345678' });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.vin).toBe('VIN must be 17 characters.');
+  });
+
   it('rejects a VIN with invalid characters (I, O, Q)', () => {
     const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: 'IOQIOQIOQIOQIOQIO' });
 
@@ -153,8 +167,29 @@ describe('vehicle CRUD service', () => {
     expect(result.errors.vin).toBeUndefined();
   });
 
+  it('accepts a valid lowercase VIN by normalizing before validation', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: '1hgcm82633a004352' });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.vin).toBeUndefined();
+  });
+
+  it('accepts a 17-digit numeric VIN value', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: '12345678901234567' });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.vin).toBeUndefined();
+  });
+
   it('accepts a null VIN (VIN is optional)', () => {
     const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: null });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors.vin).toBeUndefined();
+  });
+
+  it('treats whitespace-only VIN as optional blank input', () => {
+    const result = validateVehicleInput({ year: 2000, make: 'Honda', model: 'Civic', vin: '   ' });
 
     expect(result.valid).toBe(true);
     expect(result.errors.vin).toBeUndefined();
@@ -316,6 +351,14 @@ describe('vehicle CRUD service', () => {
     await expect(
       updateVehicle('veh-1', { vin: 'IOQIOQIOQIOQIOQIO' })
     ).rejects.toThrow('VIN contains invalid characters.');
+  });
+
+  it('updateVehicle normalizes VIN before saving', async () => {
+    mockSingle.mockResolvedValue({ data: makeRow({ vin: '1HGCM82633A004352' }), error: null });
+
+    await updateVehicle('veh-1', { vin: ' 1hgcm82633a004352 ' });
+
+    expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({ vin: '1HGCM82633A004352' }));
   });
 
   it('updateVehicle throws when mileage is negative', async () => {

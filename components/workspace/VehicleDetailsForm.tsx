@@ -83,12 +83,13 @@ export function VehicleDetailsForm({
   const handleSubmit = () => {
     const year = Number(form.year);
     const mileage = form.mileage.trim() ? Number(form.mileage) : null;
+    const normalizedVin = form.vin.trim().toUpperCase();
 
     const { valid, errors: validationErrors } = validateVehicleInput({
       year,
       make: form.make,
       model: form.model,
-      vin: form.vin.trim() || null,
+      vin: normalizedVin || null,
       mileage,
     });
 
@@ -104,7 +105,7 @@ export function VehicleDetailsForm({
       model: form.model.trim(),
       trim: form.trim.trim() || null,
       nickname: form.nickname.trim() || null,
-      vin: form.vin.trim() || null,
+      vin: normalizedVin || null,
       engine: form.engine.trim() || null,
       transmission: form.transmission.trim() || null,
       mileage,

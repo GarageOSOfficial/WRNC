@@ -30,11 +30,12 @@ export function VehicleWorkspaceShell() {
 
   const handleCreate = () => {
     const year = Number(form.year);
+    const normalizedVin = form.vin.trim().toUpperCase();
     const { valid, errors } = validateVehicleInput({
       year,
       make: form.make,
       model: form.model,
-      vin: form.vin || null,
+      vin: normalizedVin || null,
     });
 
     if (!valid) {
@@ -43,6 +44,7 @@ export function VehicleWorkspaceShell() {
     }
 
     if (!workspace) return;
+    setFormErrors({});
     createVehicle.mutate(
       {
         workspaceId: workspace.id,
@@ -50,7 +52,7 @@ export function VehicleWorkspaceShell() {
         make: form.make.trim(),
         model: form.model.trim(),
         nickname: form.nickname.trim() || null,
-        vin: form.vin.trim() || null,
+        vin: normalizedVin || null,
       },
       {
         onSuccess: () => {

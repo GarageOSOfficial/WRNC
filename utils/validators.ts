@@ -40,10 +40,12 @@ export function validateVehicleInput(
     errors.model = 'Model is required.';
   }
 
-  if (input.vin) {
-    if (input.vin.length !== VIN_LENGTH) {
+  const normalizedVin = input.vin?.trim().toUpperCase() || null;
+
+  if (normalizedVin) {
+    if (normalizedVin.length !== VIN_LENGTH) {
       errors.vin = `VIN must be ${VIN_LENGTH} characters.`;
-    } else if (!/^[A-HJ-NPR-Z0-9]+$/i.test(input.vin)) {
+    } else if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(normalizedVin)) {
       errors.vin = 'VIN contains invalid characters.';
     }
   }
