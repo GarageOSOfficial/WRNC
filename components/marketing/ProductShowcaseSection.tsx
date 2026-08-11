@@ -20,6 +20,14 @@ const productViews = [
 export function ProductShowcaseSection() {
   const { width } = useWindowDimensions();
   const isCompact = width < 768;
+  const isMedium = width >= 768 && width < 1100;
+  const columns = isCompact ? 1 : isMedium ? 2 : 3;
+  const gap = 18;
+  const horizontalPadding = isCompact ? 24 : 48;
+  const gridMaxWidth = 1200;
+  const availableWidth = Math.min(gridMaxWidth, Math.max(0, width - horizontalPadding * 2));
+  const cardWidth = Math.min(380, Math.floor((availableWidth - gap * (columns - 1)) / columns));
+  const imageHeight = isCompact ? 340 : 440;
 
   return (
     <View style={[styles.section, isCompact && styles.sectionCompact]}>
@@ -30,19 +38,12 @@ export function ProductShowcaseSection() {
           From the first part to the final drive, WRNC turns scattered details into one living record.
         </Text>
         <View style={styles.grid}>
-          <View style={[styles.card, styles.cardWide]}>
-            <Image resizeMode="cover" source={productViews[0].source} style={styles.imageWide} />
-            <Text style={styles.caption}>{productViews[0].caption}</Text>
-          </View>
-
-          <View style={[styles.portraitRow, isCompact && styles.portraitRowCompact]}>
-            {productViews.slice(1).map((view) => (
-              <View key={view.caption} style={[styles.card, styles.portraitCard, isCompact && styles.portraitCardCompact]}>
-                <Image resizeMode="contain" source={view.source} style={[styles.imagePortrait, isCompact && styles.imagePortraitCompact]} />
-                <Text style={styles.caption}>{view.caption}</Text>
-              </View>
-            ))}
-          </View>
+          {productViews.map((view) => (
+            <View key={view.caption} style={[styles.card, { width: cardWidth, maxWidth: 380 }]}>
+              <Image resizeMode="contain" source={view.source} style={[styles.image, { height: imageHeight }]} />
+              <Text style={styles.caption}>{view.caption}</Text>
+            </View>
+          ))}
         </View>
       </View>
     </View>
@@ -53,15 +54,15 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: '#101216',
     paddingHorizontal: 48,
-    paddingVertical: 120,
+    paddingVertical: 88,
   },
   sectionCompact: {
     paddingHorizontal: 24,
-    paddingVertical: 80,
+    paddingVertical: 64,
   },
   content: {
     alignSelf: 'center',
-    maxWidth: 1344,
+    maxWidth: 1200,
     width: '100%',
   },
   eyebrow: {
@@ -93,45 +94,25 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
   grid: {
-    marginTop: 56,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 18,
+    justifyContent: 'center',
+    marginTop: 40,
+    maxWidth: 1200,
+    width: '100%',
   },
   card: {
     backgroundColor: '#080808',
     borderColor: '#282B31',
     borderRadius: 12,
     borderWidth: 1,
-    flexGrow: 1,
-    minWidth: 280,
     overflow: 'hidden',
   },
-  cardWide: {
-    width: '100%',
-  },
-  portraitRow: {
-    flexDirection: 'row',
-    gap: 18,
-    marginTop: 18,
-  },
-  portraitRowCompact: {
-    flexDirection: 'column',
-  },
-  portraitCard: {
-    flex: 1,
-  },
-  portraitCardCompact: {
-    width: '100%',
-  },
-  imageWide: {
-    aspectRatio: 16 / 8.6,
-    width: '100%',
-  },
-  imagePortrait: {
+  image: {
     backgroundColor: '#080808',
-    height: 520,
     width: '100%',
-  },
-  imagePortraitCompact: {
-    height: 360,
   },
   caption: {
     color: '#FFFFFF',
