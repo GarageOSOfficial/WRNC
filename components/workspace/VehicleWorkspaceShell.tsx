@@ -12,6 +12,7 @@ import { DocumentationScoreCard } from './DocumentationScoreCard';
 import { Input } from '../common/Input';
 import { validateVehicleInput } from '../../utils/validators';
 import type { Vehicle } from '../../types/vehicle';
+import { extractSupabaseErrorMessage, logSupabaseError } from '../../utils/supabaseError';
 
 interface DarkStatusStateProps {
   title: string;
@@ -47,6 +48,7 @@ export function VehicleWorkspaceShell() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [activeVehicle, setActiveVehicle] = useState<Vehicle | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
   const documentationScore = useDocumentationScore(activeVehicle?.id);
 
   const isWorkspacePending = workspaceQuery.isPending ?? workspaceQuery.isLoading;
@@ -101,7 +103,10 @@ export function VehicleWorkspaceShell() {
           setSubmitError(null);
         },
         onError: (error) => {
-          setSubmitError(error instanceof Error ? error.message : 'Unable to create vehicle.');
+          setSubmitError(extractSupabaseErrorMessage(error, 'Unable to create vehicle.'));
+          logSupabaseError('VehicleWorkspaceShell.createVehicle', error, {
+            workspaceId: workspace?.id,
+          });
         },
       }
     );
@@ -110,6 +115,7 @@ export function VehicleWorkspaceShell() {
   const handleSelectVehicle = (vehicle: Vehicle) => {
     setActiveVehicle(vehicle);
     setIsEditMode(false);
+    setEditError(null);
   };
 
   const workspaceStatusMessage = workspaceErrorMessage
@@ -199,11 +205,30 @@ export function VehicleWorkspaceShell() {
                     vehicleData={activeVehicle}
                     isEditMode={isEditMode}
                     onSubmit={(input) => {
-                      updateVehicle.mutate({ id: activeVehicle.id, input }, { onSuccess: () => setIsEditMode(false) });
+                      setEditError(null);
+                      updateVehicle.mutate(
+                        { id: activeVehicle.id, input },
+                        {
+                          onSuccess: (updatedVehicle) => {
+                            setActiveVehicle(updatedVehicle);
+                            setIsEditMode(false);
+                          },
+                          onError: (error) => {
+                            setEditError(extractSupabaseErrorMessage(error, 'Unable to save vehicle changes.'));
+                            logSupabaseError('VehicleWorkspaceShell.updateVehicle', error, {
+                              vehicleId: activeVehicle.id,
+                            });
+                          },
+                        }
+                      );
                     }}
-                    onCancel={() => setIsEditMode(false)}
+                    onCancel={() => {
+                      setIsEditMode(false);
+                      setEditError(null);
+                    }}
                     isSubmitting={updateVehicle.isPending}
                   />
+                  {isEditMode && editError ? <Text className="mt-3 text-xs text-semantic-error">{editError}</Text> : null}
                   {!isEditMode ? (
                     <View className="mt-4 flex-row gap-3">
                       <Button label="Timeline" variant="secondary" onPress={() => router.push(`/vehicle/${activeVehicle.id}/timeline`)} />

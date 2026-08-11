@@ -119,8 +119,10 @@ describe('useCreateVehicle', () => {
 // ─── useUpdateVehicle ─────────────────────────────────────────────────────────
 
 describe('useUpdateVehicle', () => {
-  it('invalidates the vehicle detail and list on success', async () => {
+  it('updates detail/list caches and invalidates them on success', async () => {
     const { queryClient, wrapper } = makeWrapper();
+    const setQueryDataSpy = jest.spyOn(queryClient, 'setQueryData');
+    const setQueriesDataSpy = jest.spyOn(queryClient, 'setQueriesData');
     const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
     (updateVehicle as jest.Mock).mockResolvedValue(mockVehicle);
 
@@ -131,6 +133,12 @@ describe('useUpdateVehicle', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(setQueryDataSpy).toHaveBeenCalledWith(vehicleKeys.detail('veh-1'), mockVehicle);
+    expect(setQueriesDataSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: vehicleKeys.lists() }),
+      expect.any(Function)
+    );
 
     expect(invalidateSpy).toHaveBeenCalledWith(
       expect.objectContaining({ queryKey: vehicleKeys.detail('veh-1') })

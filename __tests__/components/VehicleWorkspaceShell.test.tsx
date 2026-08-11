@@ -1,6 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import { VehicleWorkspaceShell } from '../../components/workspace/VehicleWorkspaceShell';
+
+const mockUpdateVehicleMutate = jest.fn();
 
 const mockWorkspaceQuery: {
   data: { id: string; ownerId: string } | undefined;
@@ -70,7 +72,7 @@ jest.mock('../../hooks/useVehicle', () => ({
     mutate: jest.fn(),
   }),
   useUpdateVehicle: () => ({
-    mutate: jest.fn(),
+    mutate: mockUpdateVehicleMutate,
     isPending: false,
   }),
 }));
@@ -96,6 +98,8 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
     mockVehiclesQuery.isLoading = false;
     mockVehiclesQuery.isPending = false;
     mockVehiclesQuery.isFetching = false;
+
+    mockUpdateVehicleMutate.mockReset();
   });
 
   it('does not render empty state while workspace query is pending', () => {
@@ -201,5 +205,94 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
 
     expect(getByText('Benny')).toBeTruthy();
     expect(queryByText('No vehicles yet')).toBeNull();
+  });
+
+  it('applies updated vehicle data immediately after edit success', () => {
+    const baseVehicle = {
+      id: 'veh-1',
+      workspaceId: 'ws-1',
+      year: 2012,
+      make: 'Porsche',
+      model: '911',
+      trim: null,
+      nickname: 'Benny',
+      vin: null,
+      engine: null,
+      transmission: null,
+      mileage: null,
+      coverPhotoUrl: null,
+      archivedAt: null,
+      createdAt: '2026-08-01T00:00:00.000Z',
+      updatedAt: '2026-08-01T00:00:00.000Z',
+    };
+
+    mockVehiclesQuery.data = [baseVehicle];
+
+    mockUpdateVehicleMutate.mockImplementation(
+      (
+        _variables: unknown,
+        callbacks?: {
+          onSuccess?: (vehicle: typeof baseVehicle) => void;
+        }
+      ) => {
+        callbacks?.onSuccess?.({
+          ...baseVehicle,
+          nickname: 'Benny V2',
+          updatedAt: '2026-08-11T04:30:00.000Z',
+        });
+      }
+    );
+
+    const { getAllByText, getByLabelText, getByText } = render(<VehicleWorkspaceShell />);
+
+    fireEvent.press(getAllByText('Benny')[0]);
+    fireEvent.press(getByText('Edit'));
+    fireEvent.changeText(getByLabelText('Nickname'), 'Benny V2');
+    fireEvent.press(getByText('Save Changes'));
+
+    expect(getByText('Benny V2')).toBeTruthy();
+    expect(mockUpdateVehicleMutate).toHaveBeenCalled();
+  });
+
+  it('keeps edit mode open and shows an error when vehicle update fails', () => {
+    const baseVehicle = {
+      id: 'veh-1',
+      workspaceId: 'ws-1',
+      year: 2012,
+      make: 'Porsche',
+      model: '911',
+      trim: null,
+      nickname: 'Benny',
+      vin: null,
+      engine: null,
+      transmission: null,
+      mileage: null,
+      coverPhotoUrl: null,
+      archivedAt: null,
+      createdAt: '2026-08-01T00:00:00.000Z',
+      updatedAt: '2026-08-01T00:00:00.000Z',
+    };
+
+    mockVehiclesQuery.data = [baseVehicle];
+    mockUpdateVehicleMutate.mockImplementation(
+      (
+        _variables: unknown,
+        callbacks?: {
+          onError?: (error: unknown) => void;
+        }
+      ) => {
+        callbacks?.onError?.({ message: 'update failed' });
+      }
+    );
+
+    const { getAllByText, getByLabelText, getByText } = render(<VehicleWorkspaceShell />);
+
+    fireEvent.press(getAllByText('Benny')[0]);
+    fireEvent.press(getByText('Edit'));
+    fireEvent.changeText(getByLabelText('Nickname'), 'Still Editing');
+    fireEvent.press(getByText('Save Changes'));
+
+    expect(getByText('update failed')).toBeTruthy();
+    expect(getByText('Save Changes')).toBeTruthy();
   });
 });

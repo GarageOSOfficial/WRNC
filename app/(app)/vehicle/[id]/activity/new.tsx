@@ -7,6 +7,8 @@ import { useCreateActivity } from '../../../../../hooks/useActivity';
 import { useVehicle } from '../../../../../hooks/useVehicle';
 import { useCurrentWorkspace } from '../../../../../hooks/useWorkspace';
 import { ACTIVITY_TYPES, type ActivityType } from '../../../../../types/activity';
+import { buildCreateActivityPayload, type CreateActivityFieldErrors } from '../../../../../utils/activityPayload';
+import { extractSupabaseErrorMessage, logSupabaseError } from '../../../../../utils/supabaseError';
 
 function ActivityTypeOption({
   label,
@@ -39,6 +41,7 @@ export default function NewActivityRoute() {
   const [activityDate, setActivityDate] = useState(new Date().toISOString().slice(0, 10));
   const [odometer, setOdometer] = useState('');
   const [cost, setCost] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<CreateActivityFieldErrors>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSave = () => {
@@ -47,25 +50,38 @@ export default function NewActivityRoute() {
       return;
     }
 
+    const payloadResult = buildCreateActivityPayload({
+      vehicleId,
+      userId: workspace.ownerId,
+      activityType,
+      title,
+      description,
+      activityDate,
+      odometer,
+      cost,
+    });
+
+    if (!payloadResult.input) {
+      setFieldErrors(payloadResult.errors);
+      setErrorMessage(null);
+      return;
+    }
+
+    setFieldErrors({});
+    setErrorMessage(null);
+
     createActivity.mutate(
-      {
-        vehicleId,
-        userId: workspace.ownerId,
-        activityType,
-        title,
-        description,
-        activityDate,
-        metadata: {
-          ...(odometer ? { odometer: Number(odometer) } : {}),
-          ...(cost ? { cost: Number(cost) } : {}),
-        },
-      },
+      payloadResult.input,
       {
         onSuccess: () => {
           router.replace(`/vehicle/${vehicleId}/timeline`);
         },
         onError: (error) => {
-          setErrorMessage(error instanceof Error ? error.message : 'Unable to save activity.');
+          setErrorMessage(extractSupabaseErrorMessage(error, 'Unable to save activity right now. Please try again.'));
+          logSupabaseError('NewActivityRoute.handleSave', error, {
+            vehicleId,
+            activityType,
+          });
         },
       }
     );
@@ -93,11 +109,48 @@ export default function NewActivityRoute() {
           </View>
 
           <View className="mt-4">
-            <Input label="Title" value={title} onChangeText={setTitle} />
+            <Input
+              label="Title"
+              value={title}
+              onChangeText={(nextTitle) => {
+                setTitle(nextTitle);
+                setFieldErrors((currentErrors) => ({ ...currentErrors, title: undefined }));
+              }}
+              error={fieldErrors.title}
+            />
             <Input label="Description" value={description} onChangeText={setDescription} multiline numberOfLines={4} />
-            <Input label="Activity Date" value={activityDate} onChangeText={setActivityDate} placeholder="YYYY-MM-DD" />
-            <Input label="Odometer" value={odometer} onChangeText={setOdometer} keyboardType="number-pad" placeholder="Optional" />
-            <Input label="Cost" value={cost} onChangeText={setCost} keyboardType="decimal-pad" placeholder="Optional" />
+            <Input
+              label="Activity Date"
+              value={activityDate}
+              onChangeText={(nextDate) => {
+                setActivityDate(nextDate);
+                setFieldErrors((currentErrors) => ({ ...currentErrors, activityDate: undefined }));
+              }}
+              placeholder="YYYY-MM-DD"
+              error={fieldErrors.activityDate}
+            />
+            <Input
+              label="Odometer"
+              value={odometer}
+              onChangeText={(nextOdometer) => {
+                setOdometer(nextOdometer);
+                setFieldErrors((currentErrors) => ({ ...currentErrors, odometer: undefined }));
+              }}
+              keyboardType="number-pad"
+              placeholder="Optional"
+              error={fieldErrors.odometer}
+            />
+            <Input
+              label="Cost"
+              value={cost}
+              onChangeText={(nextCost) => {
+                setCost(nextCost);
+                setFieldErrors((currentErrors) => ({ ...currentErrors, cost: undefined }));
+              }}
+              keyboardType="decimal-pad"
+              placeholder="Optional"
+              error={fieldErrors.cost}
+            />
           </View>
 
           {errorMessage ? <Text className="mb-4 text-sm text-red-600">{errorMessage}</Text> : null}

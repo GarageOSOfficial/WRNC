@@ -133,6 +133,58 @@ describe('activity service', () => {
     expect(activity.title).toBe('Brake Service');
   });
 
+  it('submits Journal Entry payloads successfully', async () => {
+    mockSingle.mockResolvedValue({
+      data: makeRow({
+        activity_type: 'Journal Entry',
+        title: 'D/S Removal',
+        description: 'drained fuel tank to Volvo, prepping for D/S removal tomorrow',
+        metadata: { odometer: 120020, cost: 0 },
+      }),
+      error: null,
+    });
+
+    const activity = await createActivity({
+      vehicleId: 'veh-1',
+      userId: 'user-1',
+      activityType: 'Journal Entry',
+      title: 'D/S Removal',
+      description: 'drained fuel tank to Volvo, prepping for D/S removal tomorrow',
+      activityDate: '2026-08-11',
+      metadata: { odometer: 120020, cost: 0 },
+    });
+
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activity_type: 'Journal Entry',
+        title: 'D/S Removal',
+        metadata: { odometer: 120020, cost: 0 },
+      })
+    );
+    expect(activity.activityType).toBe('Journal Entry');
+  });
+
+  it('extracts Supabase-style object errors instead of collapsing to a generic message', async () => {
+    mockSingle.mockResolvedValue({
+      data: null,
+      error: {
+        code: '23502',
+        message: 'null value in column "type" violates not-null constraint',
+      },
+    });
+
+    await expect(
+      createActivity({
+        vehicleId: 'veh-1',
+        userId: 'user-1',
+        activityType: 'Journal Entry',
+        title: 'D/S Removal',
+        description: 'desc',
+        activityDate: '2026-08-11',
+      })
+    ).rejects.toThrow('null value in column "type" violates not-null constraint');
+  });
+
   it('archives and restores activities', async () => {
     mockSingle.mockResolvedValueOnce({ data: makeRow({ archived_at: '2026-08-02T00:00:00.000Z' }), error: null });
     mockSingle.mockResolvedValueOnce({ data: makeRow({ archived_at: null }), error: null });
