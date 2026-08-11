@@ -4,15 +4,15 @@ import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native
 const productViews = [
   {
     caption: 'SEE THE WHOLE BUILD AT A GLANCE',
-    source: require('../../assets/marketing/wrnc-build-dashboard.jpeg'),
+    source: require('../../assets/marketing/wrnc-product-inventory-v2.webp'),
   },
   {
     caption: 'TURN EVERY WRENCH INTO HISTORY',
-    source: require('../../assets/marketing/wrnc-activity-timeline.jpeg'),
+    source: require('../../assets/marketing/wrnc-product-activity-v2.webp'),
   },
   {
     caption: 'KEEP EVERY RECORD WITH THE CAR',
-    source: require('../../assets/marketing/wrnc-document-library.jpeg'),
+    source: require('../../assets/marketing/wrnc-product-documents-v2.webp'),
   },
 ];
 
@@ -42,14 +42,6 @@ export function ProductShowcaseSection() {
             <View key={view.caption} style={[styles.card, { width: cardWidth, maxWidth: 380 }]}>
               <View style={[styles.imageFrame, { height: imageHeight }]}>
                 <Image resizeMode="contain" source={view.source} style={styles.image} />
-                <View pointerEvents="none" style={styles.logoMask}>
-                  <Image
-                    accessibilityIgnoresInvertColors
-                    resizeMode="contain"
-                    source={require('../../assets/brand/wrnc-master-logo-hyper-silver-080808.png')}
-                    style={styles.logoMark}
-                  />
-                </View>
               </View>
               <Text style={styles.caption}>{view.caption}</Text>
             </View>
@@ -130,22 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#080808',
     height: '100%',
     width: '100%',
-  },
-  logoMask: {
-    alignItems: 'center',
-    backgroundColor: '#080808',
-    borderBottomRightRadius: 8,
-    left: 0,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 8,
-    position: 'absolute',
-    top: 0,
-  },
-  logoMark: {
-    height: 22,
-    width: 106,
   },
   caption: {
     color: '#FFFFFF',
