@@ -18,34 +18,34 @@ export default function VehicleDocumentsRoute() {
 
   if (!vehicleId) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Vehicle not found.</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Vehicle not found.</Text>
       </SafeAreaView>
     );
   }
 
   if (vehicleLoading || !vehicle) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Loading documents…</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Loading documents…</Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-wrnc-background">
       <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
         <Button label="Back to Passport" variant="secondary" onPress={() => router.back()} />
 
-        <View className="mt-4 rounded-2xl border border-gray-200 bg-white p-5">
-          <Text className="text-2xl font-bold text-gray-900">Documents</Text>
-          <Text className="mt-2 text-sm text-gray-500">
+        <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
+          <Text className="text-2xl font-bold text-wrnc-text-primary">Documents</Text>
+          <Text className="mt-2 text-sm text-wrnc-text-secondary">
             {vehicle.nickname || `${vehicle.year} ${vehicle.make} ${vehicle.model}`}
           </Text>
 
           <View className="mt-4">
             {documentsLoading ? (
-              <Text className="text-sm text-gray-600">Loading document records…</Text>
+              <Text className="text-sm text-wrnc-text-secondary">Loading document records…</Text>
             ) : documents.length === 0 ? (
               <DocumentEmptyState />
             ) : (

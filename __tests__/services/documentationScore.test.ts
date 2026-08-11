@@ -3,9 +3,10 @@ import {
   calculateDocumentationScore,
   generateRecommendations,
 } from '../../services/documentationScore';
+import type { DocumentationScoreInput } from '../../types/documentationScore';
 
 describe('documentation score service', () => {
-  const baseInput = {
+  const baseInput: DocumentationScoreInput = {
     vehicle: {
       id: 'veh-1',
       workspaceId: 'ws-1',
@@ -27,8 +28,14 @@ describe('documentation score service', () => {
       {
         id: 'act-1',
         vehicleId: 'veh-1',
+        userId: 'user-1',
+        activityType: 'Maintenance',
         title: 'Maintenance update',
         description: 'Oil change completed',
+        activityDate: '2024-01-01',
+        photos: [],
+        attachments: [],
+        metadata: null,
         archivedAt: null,
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-01T00:00:00.000Z',

@@ -45,7 +45,11 @@ export async function getVehicle(id: string): Promise<Vehicle> {
 
 /** Create: insert a new vehicle. Year, Make, and Model are required. */
 export async function createVehicle(input: CreateVehicleInput): Promise<Vehicle> {
-  const { valid, errors } = validateVehicleInput(input);
+  const normalizedVin = input.vin?.trim().toUpperCase() || null;
+  const { valid, errors } = validateVehicleInput({
+    ...input,
+    vin: normalizedVin,
+  });
   if (!valid) {
     throw new Error(Object.values(errors).join(' '));
   }
@@ -57,7 +61,7 @@ export async function createVehicle(input: CreateVehicleInput): Promise<Vehicle>
       year: input.year,
       make: input.make.trim(),
       model: input.model.trim(),
-      vin: input.vin ?? null,
+      vin: normalizedVin,
       trim: input.trim ?? null,
       nickname: input.nickname ?? null,
       mileage: input.mileage ?? null,
@@ -107,12 +111,13 @@ export async function updateVehicle(
   }
 
   if (input.vin !== undefined && input.vin !== null) {
-    if (input.vin.length !== VIN_LENGTH) {
+    const normalizedVin = input.vin.trim().toUpperCase();
+    if (normalizedVin.length !== VIN_LENGTH) {
       errors.vin = `VIN must be ${VIN_LENGTH} characters.`;
-    } else if (!/^[A-HJ-NPR-Z0-9]+$/i.test(input.vin)) {
+    } else if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(normalizedVin)) {
       errors.vin = 'VIN contains invalid characters.';
     } else {
-      payload.vin = input.vin;
+      payload.vin = normalizedVin;
     }
   } else if (input.vin !== undefined) {
     payload.vin = input.vin;

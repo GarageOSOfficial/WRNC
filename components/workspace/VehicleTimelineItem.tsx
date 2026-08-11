@@ -26,19 +26,19 @@ function VehicleTimelineItemComponent({
   return (
     <Pressable
       accessibilityRole="button"
-      className="mb-3 rounded-2xl border border-gray-200 bg-white p-4"
+      className="mb-3 rounded-2xl border border-wrnc-border bg-wrnc-surface p-4"
       onPress={() => onPress(activity.id)}
     >
       <View className="flex-row items-start gap-4">
         {previewPhotoUrl ? (
           <Image
             source={{ uri: previewPhotoUrl }}
-            className="h-20 w-20 rounded-xl bg-gray-200"
+            className="h-20 w-20 rounded-xl bg-wrnc-surface-elevated"
             accessibilityLabel={`${activity.title} preview image`}
           />
         ) : (
-          <View className="h-20 w-20 items-center justify-center rounded-xl bg-gray-100">
-            <Text className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <View className="h-20 w-20 items-center justify-center rounded-xl bg-wrnc-surface-elevated">
+            <Text className="text-xs font-semibold uppercase tracking-wide text-wrnc-text-secondary">
               No Photo
             </Text>
           </View>
@@ -46,33 +46,33 @@ function VehicleTimelineItemComponent({
 
         <View className="flex-1">
           <View className="flex-row flex-wrap items-center gap-2">
-            <Text className="rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700">
+            <Text className="rounded-full bg-wrnc-data-accent/20 px-2 py-1 text-xs font-semibold text-wrnc-data-accent">
               {activity.activityType}
             </Text>
             {activity.archivedAt ? (
-              <Text className="rounded-full bg-gray-200 px-2 py-1 text-xs font-semibold text-gray-700">
+              <Text className="rounded-full bg-wrnc-surface-elevated px-2 py-1 text-xs font-semibold text-wrnc-text-secondary">
                 Archived
               </Text>
             ) : null}
           </View>
 
-          <Text className="mt-3 text-lg font-semibold text-gray-900">{activity.title}</Text>
-          <Text className="mt-1 text-sm text-gray-500">{formatTimelineDate(activity.activityDate)}</Text>
-          <Text className="mt-1 text-sm text-gray-500">{vehicleLabel}</Text>
+          <Text className="mt-3 text-lg font-semibold text-wrnc-text-primary">{activity.title}</Text>
+          <Text className="mt-1 text-sm text-wrnc-text-secondary">{formatTimelineDate(activity.activityDate)}</Text>
+          <Text className="mt-1 text-sm text-wrnc-text-secondary">{vehicleLabel}</Text>
 
           {activity.description ? (
-            <Text className="mt-3 text-sm leading-5 text-gray-700">{activity.description}</Text>
+            <Text className="mt-3 text-sm leading-5 text-wrnc-text-secondary">{activity.description}</Text>
           ) : null}
 
           {cost !== null || odometer !== null ? (
             <View className="mt-3 flex-row flex-wrap gap-2">
               {odometer !== null ? (
-                <Text className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                <Text className="rounded-full bg-wrnc-surface-elevated px-3 py-1 text-xs font-medium text-wrnc-text-secondary">
                   {odometer.toLocaleString()} miles
                 </Text>
               ) : null}
               {cost !== null ? (
-                <Text className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                <Text className="rounded-full bg-wrnc-surface-elevated px-3 py-1 text-xs font-medium text-wrnc-text-secondary">
                   ${cost.toFixed(2)}
                 </Text>
               ) : null}

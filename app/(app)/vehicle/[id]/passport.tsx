@@ -17,16 +17,16 @@ export default function VehiclePassportRoute() {
 
   if (!vehicleId) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Vehicle not found.</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Vehicle not found.</Text>
       </SafeAreaView>
     );
   }
 
   if (isLoading || !passport) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-sm text-gray-600">Loading passport…</Text>
+      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
+        <Text className="text-sm text-wrnc-text-secondary">Loading passport…</Text>
       </SafeAreaView>
     );
   }
@@ -34,7 +34,7 @@ export default function VehiclePassportRoute() {
   const { vehicleSummary, timelineSummary, documentationSummary, statistics, recommendations } = passport;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-wrnc-background">
       <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
         <BuildPassportHeader
           vehicleTitle={vehicleSummary.title}

@@ -27,15 +27,15 @@ function renderLink(
 
 export function BuildPassportVehicleSummary({ summary, onNavigate, onBack }: BuildPassportVehicleSummaryProps) {
   return (
-    <View className="rounded-2xl border border-gray-200 bg-white p-5">
-      <Text className="text-lg font-semibold text-gray-900">Vehicle Information</Text>
-      <Text className="mt-1 text-sm text-gray-500">Source vehicle record and core identity fields.</Text>
+    <View className="rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
+      <Text className="text-lg font-semibold text-wrnc-text-primary">Vehicle Information</Text>
+      <Text className="mt-1 text-sm text-wrnc-text-secondary">Source vehicle record and core identity fields.</Text>
 
       <View className="mt-4 gap-2">
         {summary.details.map((detail) => (
-          <View key={detail.label} className="flex-row items-center justify-between rounded-xl bg-gray-50 px-3 py-2">
-            <Text className="text-sm text-gray-500">{detail.label}</Text>
-            <Text className="text-sm font-medium text-gray-900">{detail.value}</Text>
+          <View key={detail.label} className="flex-row items-center justify-between rounded-xl bg-wrnc-background px-3 py-2">
+            <Text className="text-sm text-wrnc-text-secondary">{detail.label}</Text>
+            <Text className="text-sm font-medium text-wrnc-text-primary">{detail.value}</Text>
           </View>
         ))}
       </View>

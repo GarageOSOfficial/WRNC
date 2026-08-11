@@ -57,6 +57,20 @@ export function useUpdateVehicle() {
     mutationFn: ({ id, input }: { id: string; input: UpdateVehicleInput }) =>
       updateVehicle(id, input),
     onSuccess: (vehicle) => {
+      queryClient.setQueryData(vehicleKeys.detail(vehicle.id), vehicle);
+      queryClient.setQueriesData({ queryKey: vehicleKeys.lists() }, (current) => {
+        if (!Array.isArray(current)) {
+          return current;
+        }
+
+        return current.map((item) => {
+          if (!item || typeof item !== 'object' || !('id' in item)) {
+            return item;
+          }
+
+          return (item as { id: string }).id === vehicle.id ? vehicle : item;
+        });
+      });
       queryClient.invalidateQueries({ queryKey: vehicleKeys.detail(vehicle.id) });
       queryClient.invalidateQueries({ queryKey: vehicleKeys.list(vehicle.workspaceId) });
     },

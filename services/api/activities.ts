@@ -6,6 +6,7 @@ import {
   type CreateActivityInput,
   type ListActivitiesOptions,
 } from '../../types/activity';
+import { extractSupabaseErrorMessage, logSupabaseError } from '../../utils/supabaseError';
 
 function validateActivityInput(input: CreateActivityInput) {
   const errors: string[] = [];
@@ -39,7 +40,10 @@ export async function listActivities(
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {
+    logSupabaseError('activities.listActivities', error, { vehicleId, options });
+    throw new Error(extractSupabaseErrorMessage(error, 'Unable to load activities.'));
+  }
   return (data ?? []).map(toActivity);
 }
 
@@ -50,7 +54,10 @@ export async function getActivity(activityId: string): Promise<Activity> {
     .eq('id', activityId)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    logSupabaseError('activities.getActivity', error, { activityId });
+    throw new Error(extractSupabaseErrorMessage(error, 'Unable to load activity.'));
+  }
   return toActivity(data);
 }
 
@@ -73,7 +80,14 @@ export async function createActivity(input: CreateActivityInput): Promise<Activi
     .select('*')
     .single();
 
-  if (error) throw error;
+  if (error) {
+    logSupabaseError('activities.createActivity', error, {
+      vehicleId: input.vehicleId,
+      userId: input.userId,
+      activityType: input.activityType,
+    });
+    throw new Error(extractSupabaseErrorMessage(error, 'Unable to save activity right now. Please try again.'));
+  }
   return toActivity(data);
 }
 
@@ -85,7 +99,10 @@ export async function archiveActivity(activityId: string): Promise<Activity> {
     .select('*')
     .single();
 
-  if (error) throw error;
+  if (error) {
+    logSupabaseError('activities.archiveActivity', error, { activityId });
+    throw new Error(extractSupabaseErrorMessage(error, 'Unable to archive activity.'));
+  }
   return toActivity(data);
 }
 
@@ -97,6 +114,9 @@ export async function restoreActivity(activityId: string): Promise<Activity> {
     .select('*')
     .single();
 
-  if (error) throw error;
+  if (error) {
+    logSupabaseError('activities.restoreActivity', error, { activityId });
+    throw new Error(extractSupabaseErrorMessage(error, 'Unable to restore activity.'));
+  }
   return toActivity(data);
 }

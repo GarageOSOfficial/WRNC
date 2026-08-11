@@ -8,9 +8,9 @@ interface BuildPassportStatisticsProps {
 
 export function BuildPassportStatistics({ statistics }: BuildPassportStatisticsProps) {
   return (
-    <View className="rounded-2xl border border-gray-200 bg-white p-5">
-      <Text className="text-lg font-semibold text-gray-900">Build Statistics</Text>
-      <Text className="mt-1 text-sm text-gray-500">High-level counts derived from the vehicle history.</Text>
+    <View className="rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
+      <Text className="text-lg font-semibold text-wrnc-text-primary">Build Statistics</Text>
+      <Text className="mt-1 text-sm text-wrnc-text-secondary">High-level counts derived from the vehicle history.</Text>
 
       <View className="mt-4 flex-row flex-wrap gap-3">
         <Stat label="Documentation Score" value={`${statistics.documentationScore}/100`} />
@@ -31,9 +31,9 @@ export function BuildPassportStatistics({ statistics }: BuildPassportStatisticsP
 
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
-    <View className="min-w-28 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
-      <Text className="text-xs uppercase tracking-wide text-gray-500">{label}</Text>
-      <Text className="mt-1 text-lg font-semibold text-gray-900">{value}</Text>
+    <View className="min-w-28 flex-1 rounded-xl border border-wrnc-border bg-wrnc-background px-3 py-2">
+      <Text className="text-xs uppercase tracking-wide text-wrnc-text-secondary">{label}</Text>
+      <Text className="mt-1 text-lg font-semibold text-wrnc-text-primary">{value}</Text>
     </View>
   );
 }
@@ -46,15 +46,15 @@ function Breakdown({
   items: BuildPassportStatisticsType['activityTypeBreakdown'];
 }) {
   return (
-    <View className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-      <Text className="text-sm font-semibold text-gray-900">{title}</Text>
+    <View className="rounded-xl border border-wrnc-border bg-wrnc-background p-4">
+      <Text className="text-sm font-semibold text-wrnc-text-primary">{title}</Text>
       <View className="mt-2 flex-row flex-wrap gap-2">
         {items.length === 0 ? (
-          <Text className="text-sm text-gray-500">No records.</Text>
+          <Text className="text-sm text-wrnc-text-secondary">No records.</Text>
         ) : (
           items.map((item) => (
-            <View key={`${title}-${item.label}`} className="rounded-full bg-white px-3 py-1">
-              <Text className="text-xs font-medium text-gray-700">
+            <View key={`${title}-${item.label}`} className="rounded-full bg-wrnc-surface px-3 py-1">
+              <Text className="text-xs font-medium text-wrnc-text-secondary">
                 {item.label} {item.count}
               </Text>
             </View>

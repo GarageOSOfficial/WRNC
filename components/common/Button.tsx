@@ -8,9 +8,9 @@ export interface ButtonProps extends PressableProps {
 }
 
 const VARIANT_STYLES: Record<NonNullable<ButtonProps['variant']>, { bg: string; text: string }> = {
-  primary: { bg: 'bg-blue-600', text: 'text-white' },
-  secondary: { bg: 'bg-gray-200', text: 'text-gray-900' },
-  danger: { bg: 'bg-red-600', text: 'text-white' },
+  primary: { bg: 'bg-wrnc-action-primary', text: 'text-wrnc-text-primary' },
+  secondary: { bg: 'border border-wrnc-border bg-wrnc-surface-elevated', text: 'text-wrnc-text-secondary' },
+  danger: { bg: 'bg-semantic-error', text: 'text-wrnc-text-primary' },
 };
 
 /** Common primary action button, shared across screens. */
@@ -27,7 +27,7 @@ export function Button({ label, variant = 'primary', loading, disabled, ...props
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color="#fff" />
+        <ActivityIndicator color="#FFFFFF" />
       ) : (
         <Text className={`font-semibold ${styles.text}`}>{label}</Text>
       )}

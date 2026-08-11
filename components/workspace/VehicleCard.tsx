@@ -12,17 +12,17 @@ export function VehicleCard({ vehicle, onPress }: VehicleCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
-      className="mb-3 rounded-xl border border-gray-200 bg-white p-4"
+      className="mb-3 rounded-xl border border-wrnc-border bg-wrnc-surface p-4"
       onPress={onPress}
     >
-      <Text className="text-lg font-semibold text-gray-900">
+      <Text className="text-lg font-semibold text-wrnc-text-primary">
         {vehicle.nickname || `${vehicle.year} ${vehicle.make} ${vehicle.model}`}
       </Text>
-      <Text className="mt-1 text-sm text-gray-600">
+      <Text className="mt-1 text-sm text-wrnc-text-secondary">
         {vehicle.year} {vehicle.make} {vehicle.model}
       </Text>
       <View className="mt-2 flex-row items-center">
-        <Text className="rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+        <Text className="rounded-full bg-wrnc-data-accent/20 px-2 py-1 text-xs font-medium text-wrnc-data-accent">
           {vehicle.archivedAt ? 'Archived' : 'Active'}
         </Text>
       </View>

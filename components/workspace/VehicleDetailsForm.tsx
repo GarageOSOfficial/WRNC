@@ -60,10 +60,10 @@ export function VehicleDetailsForm({
   if (!isEditMode) {
     return (
       <View testID="vehicle-details-readonly">
-        <Text className="text-2xl font-bold text-gray-900">
+        <Text className="text-2xl font-bold text-wrnc-text-primary">
           {vehicleData.nickname || `${vehicleData.year} ${vehicleData.make} ${vehicleData.model}`}
         </Text>
-        <Text className="mt-1 text-base text-gray-600">
+        <Text className="mt-1 text-base text-wrnc-text-secondary">
           {vehicleData.year} {vehicleData.make} {vehicleData.model}
           {vehicleData.trim ? ` ${vehicleData.trim}` : ''}
         </Text>
@@ -83,12 +83,13 @@ export function VehicleDetailsForm({
   const handleSubmit = () => {
     const year = Number(form.year);
     const mileage = form.mileage.trim() ? Number(form.mileage) : null;
+    const normalizedVin = form.vin.trim().toUpperCase();
 
     const { valid, errors: validationErrors } = validateVehicleInput({
       year,
       make: form.make,
       model: form.model,
-      vin: form.vin.trim() || null,
+      vin: normalizedVin || null,
       mileage,
     });
 
@@ -104,7 +105,7 @@ export function VehicleDetailsForm({
       model: form.model.trim(),
       trim: form.trim.trim() || null,
       nickname: form.nickname.trim() || null,
-      vin: form.vin.trim() || null,
+      vin: normalizedVin || null,
       engine: form.engine.trim() || null,
       transmission: form.transmission.trim() || null,
       mileage,
@@ -180,9 +181,9 @@ export function VehicleDetailsForm({
 
 function DetailRow({ label, value }: { label: string; value: string | null }) {
   return (
-    <View className="mb-2 flex-row justify-between border-b border-gray-100 py-2">
-      <Text className="text-sm text-gray-500">{label}</Text>
-      <Text className="text-sm text-gray-900">{value || '—'}</Text>
+    <View className="mb-2 flex-row justify-between border-b border-wrnc-border py-2">
+      <Text className="text-sm text-wrnc-text-secondary">{label}</Text>
+      <Text className="text-sm text-wrnc-text-primary">{value || '—'}</Text>
     </View>
   );
 }
