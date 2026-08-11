@@ -29,13 +29,20 @@ export function ProductShowcaseSection() {
         <Text style={[styles.body, isCompact && styles.bodyCompact]}>
           From the first part to the final drive, WRNC turns scattered details into one living record.
         </Text>
-        <View style={[styles.grid, isCompact && styles.gridCompact]}>
-          {productViews.map((view, index) => (
-            <View key={view.caption} style={[styles.card, index === 0 && styles.cardWide]}>
-              <Image resizeMode="cover" source={view.source} style={styles.image} />
-              <Text style={styles.caption}>{view.caption}</Text>
-            </View>
-          ))}
+        <View style={styles.grid}>
+          <View style={[styles.card, styles.cardWide]}>
+            <Image resizeMode="cover" source={productViews[0].source} style={styles.imageWide} />
+            <Text style={styles.caption}>{productViews[0].caption}</Text>
+          </View>
+
+          <View style={[styles.portraitRow, isCompact && styles.portraitRowCompact]}>
+            {productViews.slice(1).map((view) => (
+              <View key={view.caption} style={[styles.card, styles.portraitCard, isCompact && styles.portraitCardCompact]}>
+                <Image resizeMode="contain" source={view.source} style={[styles.imagePortrait, isCompact && styles.imagePortraitCompact]} />
+                <Text style={styles.caption}>{view.caption}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     </View>
@@ -86,13 +93,7 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 18,
     marginTop: 56,
-  },
-  gridCompact: {
-    flexDirection: 'column',
   },
   card: {
     backgroundColor: '#080808',
@@ -104,11 +105,33 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardWide: {
-    flexBasis: '100%',
+    width: '100%',
   },
-  image: {
+  portraitRow: {
+    flexDirection: 'row',
+    gap: 18,
+    marginTop: 18,
+  },
+  portraitRowCompact: {
+    flexDirection: 'column',
+  },
+  portraitCard: {
+    flex: 1,
+  },
+  portraitCardCompact: {
+    width: '100%',
+  },
+  imageWide: {
     aspectRatio: 16 / 8.6,
     width: '100%',
+  },
+  imagePortrait: {
+    backgroundColor: '#080808',
+    height: 520,
+    width: '100%',
+  },
+  imagePortraitCompact: {
+    height: 360,
   },
   caption: {
     color: '#FFFFFF',
