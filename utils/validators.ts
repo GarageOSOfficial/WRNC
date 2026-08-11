@@ -60,17 +60,17 @@ export function validateVehicleInput(
 // ─── Activity validation ──────────────────────────────────────────────────────
 
 export const ACTIVITY_TYPES: ActivityType[] = [
-  'purchased_part',
-  'installed_part',
-  'maintenance',
-  'progress_update',
-  'journal_entry',
-  'record_upload',
+  'Purchased Part',
+  'Installed Part',
+  'Maintenance',
+  'Progress Update',
+  'Journal Entry',
+  'Record Upload',
 ];
 
 export interface ActivityValidationResult {
   valid: boolean;
-  errors: Partial<Record<'vehicleId' | 'type' | 'metadata', string>>;
+  errors: Partial<Record<'vehicleId' | 'activityType' | 'metadata', string>>;
 }
 
 /** Validates required activity fields per WRNC-002 acceptance criteria. */
@@ -83,34 +83,34 @@ export function validateActivityInput(
     errors.vehicleId = 'Vehicle ID is required.';
   }
 
-  if (!input.type) {
-    errors.type = 'Activity type is required.';
-  } else if (!ACTIVITY_TYPES.includes(input.type)) {
-    errors.type = `Activity type must be one of: ${ACTIVITY_TYPES.join(', ')}.`;
+  if (!input.activityType) {
+    errors.activityType = 'Activity type is required.';
+  } else if (!ACTIVITY_TYPES.includes(input.activityType)) {
+    errors.activityType = `Activity type must be one of: ${ACTIVITY_TYPES.join(', ')}.`;
   }
 
-  if (input.type === 'purchased_part') {
+  if (input.activityType === 'Purchased Part') {
     const meta = (input.metadata ?? {}) as Record<string, unknown>;
     if (!meta.partName || !(meta.partName as string).trim()) {
       errors.metadata = 'Part name is required for Purchased Part activities.';
     }
   }
 
-  if (input.type === 'installed_part') {
+  if (input.activityType === 'Installed Part') {
     const meta = (input.metadata ?? {}) as Record<string, unknown>;
     if (!meta.partName || !(meta.partName as string).trim()) {
       errors.metadata = 'Part name is required for Installed Part activities.';
     }
   }
 
-  if (input.type === 'maintenance') {
+  if (input.activityType === 'Maintenance') {
     const meta = (input.metadata ?? {}) as Record<string, unknown>;
     if (!meta.serviceType || !(meta.serviceType as string).trim()) {
       errors.metadata = 'Service type is required for Maintenance activities.';
     }
   }
 
-  if (input.type === 'record_upload') {
+  if (input.activityType === 'Record Upload') {
     const meta = (input.metadata ?? {}) as Record<string, unknown>;
     if (!meta.fileUrl || !(meta.fileUrl as string).trim()) {
       errors.metadata = 'File URL is required for Record Upload activities.';

@@ -51,8 +51,8 @@ export function VehicleWorkspaceShell() {
   const [editError, setEditError] = useState<string | null>(null);
   const documentationScore = useDocumentationScore(activeVehicle?.id);
 
-  const isWorkspacePending = workspaceQuery.isPending ?? workspaceQuery.isLoading;
-  const isVehiclesPending = vehiclesQuery.isPending ?? vehiclesQuery.isLoading;
+  const isWorkspacePending = workspaceQuery.isPending;
+  const isVehiclesPending = vehiclesQuery.isPending;
   const hasVehicleData = vehiclesQuery.data !== undefined;
   const isVehicleInitialLoading = Boolean(workspace) && (isVehiclesPending || vehiclesQuery.isFetching) && !hasVehicleData;
 

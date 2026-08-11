@@ -1,7 +1,11 @@
 import { calculateBuildPassport } from '../../services/buildPassport';
+import type { Activity } from '../../types/activity';
+import type { DocumentationScoreResult } from '../../types/documentationScore';
+import type { Document } from '../../types/document';
+import type { Vehicle } from '../../types/vehicle';
 
 describe('build passport service', () => {
-  const vehicle = {
+  const vehicle: Vehicle = {
     id: 'veh-1',
     workspaceId: 'ws-1',
     vin: '1HGCM82633A004352',
@@ -19,7 +23,7 @@ describe('build passport service', () => {
     updatedAt: '2024-01-01T00:00:00.000Z',
   };
 
-  const activities = [
+  const activities: Activity[] = [
     {
       id: 'act-1',
       vehicleId: 'veh-1',
@@ -52,7 +56,7 @@ describe('build passport service', () => {
     },
   ];
 
-  const documents = [
+  const documents: Document[] = [
     {
       id: 'doc-1',
       workspaceId: 'ws-1',
@@ -91,7 +95,7 @@ describe('build passport service', () => {
     },
   ];
 
-  const documentationScore = {
+  const documentationScore: DocumentationScoreResult = {
     overallScore: 72,
     categories: [
       {

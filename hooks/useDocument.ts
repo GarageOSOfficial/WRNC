@@ -6,9 +6,9 @@ import {
   listDocuments,
   restoreDocument,
   updateDocument,
-  type ListDocumentsOptions,
 } from '../services/api/documents';
 import type { CreateDocumentInput, UpdateDocumentInput } from '../types/document';
+import type { ListDocumentsOptions } from '../types/document';
 
 export const documentKeys = {
   all: ['documents'] as const,

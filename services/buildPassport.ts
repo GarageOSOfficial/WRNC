@@ -51,7 +51,7 @@ function sortDocuments(documents: Document[]) {
   });
 }
 
-function buildBreakdown<T extends { [key: string]: unknown }>(
+function buildBreakdown<T>(
   items: T[],
   keySelector: (item: T) => string
 ): BuildPassportBreakdownItem[] {
