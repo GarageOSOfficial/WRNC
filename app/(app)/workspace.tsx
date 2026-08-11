@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { VehicleWorkspaceShell } from '../../components/workspace/VehicleWorkspaceShell';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 
@@ -38,6 +38,7 @@ export default function WorkspaceScreen() {
       <SafeAreaView style={styles.screen}>
         <View style={styles.loading}>
           <ActivityIndicator color="#FF6400" />
+          <Text style={styles.loadingLabel}>Loading your workspace…</Text>
         </View>
       </SafeAreaView>
     );
@@ -49,4 +50,5 @@ export default function WorkspaceScreen() {
 const styles = StyleSheet.create({
   screen: { backgroundColor: '#080808', flex: 1 },
   loading: { alignItems: 'center', flex: 1, justifyContent: 'center' },
+  loadingLabel: { color: '#C0C0C0', marginTop: 12 },
 });

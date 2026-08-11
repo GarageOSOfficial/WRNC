@@ -103,9 +103,10 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
     mockWorkspaceQuery.isLoading = true;
     mockWorkspaceQuery.isPending = true;
 
-    const { getByText, queryByText } = render(<VehicleWorkspaceShell />);
+    const { getByText, getByTestId, queryByText } = render(<VehicleWorkspaceShell />);
 
     expect(getByText('Loading vehicles…')).toBeTruthy();
+    expect(getByTestId('workspace-shell-dark-state')).toBeTruthy();
     expect(queryByText('No vehicles yet')).toBeNull();
   });
 
@@ -119,10 +120,38 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
     mockVehiclesQuery.isPending = true;
     mockVehiclesQuery.isFetching = true;
 
-    const { getByText, queryByText } = render(<VehicleWorkspaceShell />);
+    const { getByText, getByTestId, queryByText } = render(<VehicleWorkspaceShell />);
 
     expect(getByText('Loading vehicles…')).toBeTruthy();
+    expect(getByTestId('workspace-shell-dark-state')).toBeTruthy();
     expect(queryByText('No vehicles yet')).toBeNull();
+  });
+
+  it('renders workspace query errors inside the dark state container', () => {
+    mockWorkspaceQuery.data = undefined;
+    mockWorkspaceQuery.error = new Error('Workspace failed');
+    mockWorkspaceQuery.isLoading = false;
+    mockWorkspaceQuery.isPending = false;
+
+    const { getByText, getByTestId } = render(<VehicleWorkspaceShell />);
+
+    expect(getByText('Unable to load your garage.')).toBeTruthy();
+    expect(getByText('Workspace failed')).toBeTruthy();
+    expect(getByTestId('workspace-shell-dark-state')).toBeTruthy();
+  });
+
+  it('renders vehicle query errors inside the dark state container when no vehicle data exists', () => {
+    mockVehiclesQuery.data = undefined;
+    mockVehiclesQuery.error = new Error('Vehicles failed');
+    mockVehiclesQuery.isLoading = false;
+    mockVehiclesQuery.isPending = false;
+    mockVehiclesQuery.isFetching = false;
+
+    const { getByText, getByTestId } = render(<VehicleWorkspaceShell />);
+
+    expect(getByText('Unable to load vehicles.')).toBeTruthy();
+    expect(getByText('Vehicles failed')).toBeTruthy();
+    expect(getByTestId('workspace-shell-dark-state')).toBeTruthy();
   });
 
   it('renders empty state when vehicles query resolves with an empty list', () => {

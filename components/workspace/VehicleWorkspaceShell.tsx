@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useCurrentWorkspace } from '../../hooks/useWorkspace';
 import { useVehicles, useCreateVehicle, useArchiveVehicle, useRestoreVehicle, useUpdateVehicle } from '../../hooks/useVehicle';
@@ -12,6 +12,24 @@ import { DocumentationScoreCard } from './DocumentationScoreCard';
 import { Input } from '../common/Input';
 import { validateVehicleInput } from '../../utils/validators';
 import type { Vehicle } from '../../types/vehicle';
+
+interface DarkStatusStateProps {
+  title: string;
+  message?: string;
+}
+
+function DarkStatusState({ title, message }: DarkStatusStateProps) {
+  return (
+    <SafeAreaView testID="workspace-shell-dark-state" className="flex-1 bg-[#080808]">
+      <View className="flex-1 justify-center p-6">
+        <View className="max-w-xl">
+          <Text className="text-lg font-semibold text-[#C0C0C0]">{title}</Text>
+          {message ? <Text className="mt-2 text-sm text-[#C0C0C0]">{message}</Text> : null}
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
 
 export function VehicleWorkspaceShell() {
   const router = useRouter();
@@ -94,10 +112,6 @@ export function VehicleWorkspaceShell() {
     setIsEditMode(false);
   };
 
-  if (isWorkspacePending || isVehicleInitialLoading) {
-    return <Text className="p-4 text-wrnc-text-secondary">Loading vehicles…</Text>;
-  }
-
   const workspaceStatusMessage = workspaceErrorMessage
     ? workspaceErrorMessage
     : !workspace
@@ -107,6 +121,22 @@ export function VehicleWorkspaceShell() {
   const showEmptyState = Boolean(workspace) && !vehiclesErrorMessage && !isVehiclesPending && hasVehicleData && vehicles.length === 0;
   const showVehicleErrorState = Boolean(workspace) && Boolean(vehiclesErrorMessage) && !hasVehicleData;
   const showVehicleErrorBanner = Boolean(workspace) && Boolean(vehiclesErrorMessage) && hasVehicleData;
+
+  if (isWorkspacePending || isVehicleInitialLoading) {
+    return <DarkStatusState title="Loading vehicles…" />;
+  }
+
+  if (workspaceErrorMessage) {
+    return <DarkStatusState title="Unable to load your garage." message={workspaceErrorMessage} />;
+  }
+
+  if (!workspace) {
+    return <DarkStatusState title="Garage unavailable" message="No garage workspace was found for this account. Sign out and back in, or contact support to provision your workspace." />;
+  }
+
+  if (showVehicleErrorState) {
+    return <DarkStatusState title="Unable to load vehicles." message={vehiclesErrorMessage ?? 'Unable to load vehicles.'} />;
+  }
 
   return (
     <ScrollView className="flex-1 bg-wrnc-background p-4">
@@ -147,22 +177,7 @@ export function VehicleWorkspaceShell() {
         </View>
       )}
 
-      {workspaceErrorMessage ? (
-        <View className="rounded-xl border border-semantic-error/40 bg-semantic-error/10 p-4">
-          <Text className="text-sm font-semibold text-semantic-error">Unable to load your garage.</Text>
-          <Text className="mt-1 text-xs text-semantic-error">{workspaceErrorMessage}</Text>
-        </View>
-      ) : !workspace ? (
-        <View className="rounded-xl border border-semantic-warning/40 bg-semantic-warning/10 p-4">
-          <Text className="text-sm font-semibold text-semantic-warning">Garage unavailable</Text>
-          <Text className="mt-1 text-xs text-semantic-warning">No garage workspace was found for this account. Sign out and back in, or contact support to provision your workspace.</Text>
-        </View>
-      ) : showVehicleErrorState ? (
-        <View className="rounded-xl border border-semantic-error/40 bg-semantic-error/10 p-4">
-          <Text className="text-sm font-semibold text-semantic-error">Unable to load vehicles.</Text>
-          <Text className="mt-1 text-xs text-semantic-error">{vehiclesErrorMessage}</Text>
-        </View>
-      ) : showEmptyState ? (
+      {showEmptyState ? (
         <EmptyState title="No vehicles yet" message="Create your first vehicle to begin tracking your build." actionLabel="Create Vehicle" onAction={() => setShowCreate(true)} />
       ) : (
         <>
