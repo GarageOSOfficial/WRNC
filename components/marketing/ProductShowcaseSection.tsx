@@ -40,7 +40,17 @@ export function ProductShowcaseSection() {
         <View style={styles.grid}>
           {productViews.map((view) => (
             <View key={view.caption} style={[styles.card, { width: cardWidth, maxWidth: 380 }]}>
-              <Image resizeMode="contain" source={view.source} style={[styles.image, { height: imageHeight }]} />
+              <View style={[styles.imageFrame, { height: imageHeight }]}>
+                <Image resizeMode="contain" source={view.source} style={styles.image} />
+                <View pointerEvents="none" style={styles.logoMask}>
+                  <Image
+                    accessibilityIgnoresInvertColors
+                    resizeMode="contain"
+                    source={require('../../assets/brand/wrnc-master-logo-hyper-silver-080808.png')}
+                    style={styles.logoMark}
+                  />
+                </View>
+              </View>
               <Text style={styles.caption}>{view.caption}</Text>
             </View>
           ))}
@@ -110,9 +120,32 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: 'hidden',
   },
+  imageFrame: {
+    backgroundColor: '#080808',
+    overflow: 'hidden',
+    position: 'relative',
+    width: '100%',
+  },
   image: {
     backgroundColor: '#080808',
+    height: '100%',
     width: '100%',
+  },
+  logoMask: {
+    alignItems: 'center',
+    backgroundColor: '#080808',
+    borderBottomRightRadius: 8,
+    left: 0,
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 8,
+    position: 'absolute',
+    top: 0,
+  },
+  logoMark: {
+    height: 22,
+    width: 106,
   },
   caption: {
     color: '#FFFFFF',

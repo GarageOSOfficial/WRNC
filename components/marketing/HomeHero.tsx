@@ -26,12 +26,22 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
         </View>
         <View style={[styles.visual, isCompact && styles.visualCompact]}>
           <View style={styles.glow} />
-          <Image
-            accessibilityLabel="WRNC product experience across desktop and mobile"
-            resizeMode="contain"
-            source={require('../../assets/marketing/wrnc-product-ecosystem.jpeg')}
-            style={styles.artwork}
-          />
+          <View style={styles.artworkFrame}>
+            <Image
+              accessibilityLabel="WRNC product experience across desktop and mobile"
+              resizeMode="contain"
+              source={require('../../assets/marketing/wrnc-product-ecosystem.jpeg')}
+              style={styles.artwork}
+            />
+            <View pointerEvents="none" style={styles.logoMask}>
+              <Image
+                accessibilityIgnoresInvertColors
+                resizeMode="contain"
+                source={require('../../assets/brand/wrnc-master-logo-hyper-silver-080808.png')}
+                style={styles.logoMark}
+              />
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -114,6 +124,11 @@ const styles = StyleSheet.create({
   visualCompact: {
     width: '100%',
   },
+  artworkFrame: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    position: 'relative',
+  },
   glow: {
     backgroundColor: '#3B176B',
     borderRadius: 999,
@@ -126,7 +141,22 @@ const styles = StyleSheet.create({
   },
   artwork: {
     aspectRatio: 1.875,
-    borderRadius: 10,
     width: '100%',
+  },
+  logoMask: {
+    alignItems: 'center',
+    backgroundColor: '#080808',
+    borderBottomRightRadius: 10,
+    left: 0,
+    paddingBottom: 12,
+    paddingLeft: 14,
+    paddingRight: 14,
+    paddingTop: 12,
+    position: 'absolute',
+    top: 0,
+  },
+  logoMark: {
+    height: 30,
+    width: 144,
   },
 });
