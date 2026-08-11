@@ -7,6 +7,7 @@ import { HowWrncSection } from '../components/marketing/HowWrncSection';
 import { MarketingHeader } from '../components/marketing/MarketingHeader';
 import { HomeHero } from '../components/marketing/HomeHero';
 import { ProductValueSection } from '../components/marketing/ProductValueSection';
+import { ProductShowcaseSection } from '../components/marketing/ProductShowcaseSection';
 import { WhyWrncSection } from '../components/marketing/WhyWrncSection';
 
 /** Web-only WRNC.app entry point. The native root remains Mission Control. */
@@ -42,6 +43,7 @@ export default function WebsiteHomeScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <MarketingHeader onJoin={openSignup} />
         <HomeHero onGetStarted={openSignup} />
+        <ProductShowcaseSection />
         <WhyWrncSection />
         <HowWrncSection />
         <ProductValueSection />

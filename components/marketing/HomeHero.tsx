@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { MarketingButton } from './MarketingButton';
 
 type HomeHeroProps = {
@@ -14,14 +14,25 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
   return (
     <View style={[styles.section, isCompact && styles.sectionCompact]}>
       <View style={[styles.content, isCompact && styles.contentCompact]}>
-        <Text style={styles.eyebrow}>THE CAR CULTURE PLATFORM</Text>
-        <Text style={[styles.heading, isCompact && styles.headingCompact]}>
-          BUILD SOMETHING WORTH REMEMBERING.
-        </Text>
-        <Text style={[styles.body, isCompact && styles.bodyCompact]}>
-          WRNC, the operating system for people who build, modify, maintain, and obsess over their builds.
-        </Text>
-        <MarketingButton label="GET STARTED" onPress={onGetStarted} style={styles.cta} />
+        <View style={[styles.copy, isCompact && styles.copyCompact]}>
+          <Text style={styles.eyebrow}>THE CAR CULTURE PLATFORM</Text>
+          <Text style={[styles.heading, isCompact && styles.headingCompact]}>
+            BUILD SOMETHING WORTH REMEMBERING.
+          </Text>
+          <Text style={[styles.body, isCompact && styles.bodyCompact]}>
+            The operating system for people who build, modify, maintain, and obsess over their cars.
+          </Text>
+          <MarketingButton label="GET STARTED" onPress={onGetStarted} style={styles.cta} />
+        </View>
+        <View style={[styles.visual, isCompact && styles.visualCompact]}>
+          <View style={styles.glow} />
+          <Image
+            accessibilityLabel="WRNC product experience across desktop and mobile"
+            resizeMode="contain"
+            source={require('../../assets/marketing/wrnc-product-ecosystem.jpeg')}
+            style={styles.artwork}
+          />
+        </View>
       </View>
     </View>
   );
@@ -29,23 +40,36 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
 
 const styles = StyleSheet.create({
   section: {
-    backgroundColor: '#1A1D22',
-    minHeight: 720,
-    paddingBottom: 84,
-    paddingHorizontal: 0,
-    justifyContent: 'flex-end',
+    backgroundColor: '#0D0F12',
+    minHeight: 760,
+    paddingHorizontal: 48,
+    paddingVertical: 88,
+    justifyContent: 'center',
   },
   sectionCompact: {
-    minHeight: 640,
-    paddingBottom: 48,
+    minHeight: 0,
     paddingHorizontal: 24,
+    paddingVertical: 64,
   },
   content: {
-    maxWidth: 1200,
-    minHeight: 300,
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    gap: 48,
+    maxWidth: 1344,
+    width: '100%',
   },
   contentCompact: {
-    minHeight: 0,
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    gap: 48,
+  },
+  copy: {
+    flex: 0.92,
+    maxWidth: 610,
+  },
+  copyCompact: {
+    maxWidth: undefined,
   },
   eyebrow: {
     color: '#C0C0C0',
@@ -53,15 +77,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 17,
     marginBottom: 28,
-    minHeight: 34,
+    letterSpacing: 1.2,
   },
   heading: {
     color: '#FFFFFF',
-    fontSize: 48,
-    fontWeight: '600',
-    letterSpacing: 0,
-    lineHeight: 55,
-    maxWidth: 1200,
+    fontSize: 54,
+    fontWeight: '700',
+    letterSpacing: -1,
+    lineHeight: 59,
   },
   headingCompact: {
     fontSize: 38,
@@ -82,6 +105,28 @@ const styles = StyleSheet.create({
     minHeight: 0,
   },
   cta: {
-    marginTop: 77,
+    marginTop: 42,
+  },
+  visual: {
+    flex: 1.25,
+    position: 'relative',
+  },
+  visualCompact: {
+    width: '100%',
+  },
+  glow: {
+    backgroundColor: '#3B176B',
+    borderRadius: 999,
+    bottom: '10%',
+    left: '12%',
+    opacity: 0.32,
+    position: 'absolute',
+    right: '12%',
+    top: '10%',
+  },
+  artwork: {
+    aspectRatio: 1.875,
+    borderRadius: 10,
+    width: '100%',
   },
 });

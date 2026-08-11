@@ -46,7 +46,8 @@ export function HowWrncSection() {
 const styles = StyleSheet.create({
   section: {
     backgroundColor: '#080808',
-    minHeight: 1000,
+    paddingHorizontal: 48,
+    paddingVertical: 120,
   },
   sectionCompact: {
     minHeight: 0,
@@ -54,7 +55,9 @@ const styles = StyleSheet.create({
     paddingVertical: 96,
   },
   content: {
-    height: 772,
+    alignSelf: 'center',
+    height: 510,
+    maxWidth: 1344,
     position: 'relative',
     width: '100%',
   },
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
     left: 0,
     lineHeight: 48,
     position: 'absolute',
-    top: 264,
+    top: 120,
   },
   headingCompact: {
     fontSize: 32,
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     maxWidth: 1157,
     position: 'absolute',
-    top: 334,
+    top: 190,
   },
   bodyCompact: {
     fontSize: 18,
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     gap: 42,
     left: 0,
     position: 'absolute',
-    top: 389,
+    top: 270,
   },
   pillarsCompact: {
     flexDirection: 'column',

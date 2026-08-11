@@ -17,7 +17,7 @@ export function FinalCtaSection({ onJoin }: FinalCtaSectionProps) {
         <Text style={[styles.eyebrow, isCompact && styles.eyebrowCompact]}>READY TO BUILD?</Text>
         <Text style={[styles.heading, isCompact && styles.headingCompact]}>BUILD SOMETHING WORTH REMEMBERING</Text>
         <Text style={[styles.body, isCompact && styles.bodyCompact]}>
-          WRNC keeps the parts, work, passion, documentation, progress, and history of your build conencted - from the first wrench to the final drive.
+          WRNC keeps the parts, work, passion, documentation, progress, and history of your build connected — from the first wrench to the final drive.
         </Text>
         <MarketingButton label="JOIN THE GARAGE" onPress={onJoin} style={[styles.cta, isCompact && styles.ctaCompact]} />
       </View>
@@ -28,7 +28,8 @@ export function FinalCtaSection({ onJoin }: FinalCtaSectionProps) {
 const styles = StyleSheet.create({
   section: {
     backgroundColor: '#080808',
-    minHeight: 500,
+    paddingHorizontal: 48,
+    paddingVertical: 120,
   },
   sectionCompact: {
     minHeight: 0,
@@ -36,9 +37,11 @@ const styles = StyleSheet.create({
     paddingVertical: 96,
   },
   content: {
+    alignSelf: 'center',
     height: 217,
+    maxWidth: 1344,
     position: 'relative',
-    width: 1344,
+    width: '100%',
   },
   contentCompact: {
     height: undefined,
