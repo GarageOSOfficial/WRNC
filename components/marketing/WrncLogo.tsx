@@ -15,7 +15,7 @@ export function WrncLogo({ style }: WrncLogoProps) {
       <Image
         accessibilityIgnoresInvertColors
         resizeMode="contain"
-        source={require('../../assets/brand/wrnc-master-logo-hyper-silver-080808.png')}
+        source={require('../../assets/brand/wrnc-master-logo-hyper-silver-transparent-placement.png')}
         style={styles.artwork}
       />
     </View>
@@ -25,15 +25,10 @@ export function WrncLogo({ style }: WrncLogoProps) {
 const styles = StyleSheet.create({
   frame: {
     height: 32,
-    overflow: 'hidden',
-    position: 'relative',
     width: 145,
   },
   artwork: {
-    height: 107,
-    left: -10,
-    position: 'absolute',
-    top: -35,
-    width: 160,
+    height: '100%',
+    width: '100%',
   },
 });
