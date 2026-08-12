@@ -3,15 +3,18 @@ import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native
 
 const productViews = [
   {
-    caption: 'SEE THE WHOLE BUILD AT A GLANCE',
+    caption: 'BUILD PASSPORT™',
+    description: 'A permanent record of every part, milestone, receipt, and decision behind the build.',
     source: require('../../assets/marketing/wrnc-product-inventory-v2.webp'),
   },
   {
-    caption: 'TURN EVERY WRENCH INTO HISTORY',
+    caption: 'PARTS INVENTORY',
+    description: 'Know what you own, where it lives, what it cost, and what still needs attention.',
     source: require('../../assets/marketing/wrnc-product-activity-v2.webp'),
   },
   {
-    caption: 'KEEP EVERY RECORD WITH THE CAR',
+    caption: 'DOCUMENTATION SCORE™',
+    description: 'See what is captured, what is missing, and how complete the vehicle story really is.',
     source: require('../../assets/marketing/wrnc-product-documents-v2.webp'),
   },
 ];
@@ -43,7 +46,10 @@ export function ProductShowcaseSection() {
               <View style={[styles.imageFrame, { height: imageHeight }]}>
                 <Image resizeMode="contain" source={view.source} style={styles.image} />
               </View>
-              <Text style={styles.caption}>{view.caption}</Text>
+              <View style={styles.cardCopy}>
+                <Text style={styles.caption}>{view.caption}</Text>
+                <Text style={styles.description}>{view.description}</Text>
+              </View>
             </View>
           ))}
         </View>
@@ -128,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    paddingHorizontal: 18,
-    paddingVertical: 16,
   },
+  cardCopy: { borderTopColor: '#282B31', borderTopWidth: 1, minHeight: 112, paddingHorizontal: 18, paddingVertical: 16 },
+  description: { color: '#8F929A', fontSize: 12, lineHeight: 18, marginTop: 9 },
 });
