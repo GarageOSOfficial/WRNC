@@ -10,7 +10,7 @@ type HomeHeroProps = {
 export function HomeHero({ onGetStarted }: HomeHeroProps) {
   const { width } = useWindowDimensions();
   const isCompact = width < 768;
-  const isStacked = width < 1280;
+  const isStacked = width < 1360;
 
   return (
     <View style={[styles.section, isCompact && styles.sectionCompact]}>
