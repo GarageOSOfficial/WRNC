@@ -10,11 +10,11 @@ type HomeHeroProps = {
 export function HomeHero({ onGetStarted }: HomeHeroProps) {
   const { width } = useWindowDimensions();
   const isCompact = width < 768;
-  const isTablet = width >= 768 && width < 1100;
+  const isStacked = width < 1280;
 
   return (
     <View style={[styles.section, isCompact && styles.sectionCompact]}>
-      <View style={[styles.content, (isCompact || isTablet) && styles.contentStacked]}>
+      <View style={[styles.content, isStacked && styles.contentStacked]}>
         <View style={[styles.copy, isCompact && styles.copyCompact]}>
           <View style={styles.eyebrowRow}>
             <View style={styles.eyebrowRule} />
@@ -35,7 +35,7 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
             <View style={styles.proofItem}><Text style={styles.proofTitle}>ONE LEGACY</Text><Text style={styles.proofCopy}>Built to last</Text></View>
           </View>
         </View>
-        <View style={[styles.visual, (isCompact || isTablet) && styles.visualStacked]}>
+        <View style={[styles.visual, isStacked && styles.visualStacked]}>
           <View style={styles.stageGrid} />
           <View style={styles.desktopFrame}>
             <View style={styles.frameBar}><View style={styles.frameDot} /><View style={styles.frameDot} /><View style={styles.frameDot} /><Text style={styles.frameLabel}>WRNC / INVENTORY</Text></View>
