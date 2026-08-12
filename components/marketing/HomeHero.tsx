@@ -36,8 +36,9 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
           </View>
         </View>
         <View style={[styles.visual, isStacked && styles.visualStacked]}>
-          <View style={styles.stageGrid} />
-          <View style={styles.desktopFrame}>
+          <View style={styles.proofStage} testID="hero-proof-stage">
+            <View style={styles.stageGrid} testID="hero-proof-grid" />
+            <View style={styles.desktopFrame} testID="hero-proof-dashboard-frame">
             <View style={styles.frameBar}><View style={styles.frameDot} /><View style={styles.frameDot} /><View style={styles.frameDot} /><Text style={styles.frameLabel}>WRNC / INVENTORY</Text></View>
             <Image
               accessibilityLabel="WRNC inventory dashboard"
@@ -45,11 +46,12 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
               source={require('../../assets/marketing/wrnc-product-inventory-v2.webp')}
               style={styles.desktopArtwork}
             />
+            </View>
+            <View style={[styles.phoneFrame, isCompact && styles.phoneFrameCompact]} testID="hero-proof-phone-frame">
+              <Image accessibilityLabel="WRNC activity timeline" resizeMode="cover" source={require('../../assets/marketing/wrnc-product-activity-v2.webp')} style={styles.phoneArtwork} />
+            </View>
+            <View style={styles.scoreCard} testID="hero-proof-score-card"><Text style={styles.scoreLabel}>DOCUMENTATION SCORE</Text><Text style={styles.scoreValue}>94%</Text><Text style={styles.scoreStatus}>EXCELLENT</Text></View>
           </View>
-          <View style={[styles.phoneFrame, isCompact && styles.phoneFrameCompact]}>
-            <Image accessibilityLabel="WRNC activity timeline" resizeMode="cover" source={require('../../assets/marketing/wrnc-product-activity-v2.webp')} style={styles.phoneArtwork} />
-          </View>
-          <View style={styles.scoreCard}><Text style={styles.scoreLabel}>DOCUMENTATION SCORE</Text><Text style={styles.scoreValue}>94%</Text><Text style={styles.scoreStatus}>EXCELLENT</Text></View>
         </View>
       </View>
     </View>
@@ -131,14 +133,21 @@ const styles = StyleSheet.create({
   },
   visual: {
     flex: 1.25,
-    minHeight: 590,
+    minHeight: 520,
     minWidth: 0,
-    overflow: 'hidden',
     position: 'relative',
   },
   visualStacked: {
     alignSelf: 'center',
-    maxWidth: 800,
+    maxWidth: 860,
+    width: '100%',
+  },
+  proofStage: {
+    alignSelf: 'flex-end',
+    aspectRatio: 1.42,
+    maxWidth: 820,
+    minHeight: 420,
+    position: 'relative',
     width: '100%',
   },
   stageGrid: {
@@ -149,41 +158,52 @@ const styles = StyleSheet.create({
   },
   desktopFrame: {
     backgroundColor: '#101014',
+    aspectRatio: 1.7,
     borderColor: '#3B3B44',
     borderWidth: 1,
     left: '2%',
     overflow: 'hidden',
     padding: 8,
     position: 'absolute',
-    top: 60,
+    top: '10%',
     width: '82%',
   },
   frameBar: { alignItems: 'center', flexDirection: 'row', gap: 5, height: 22, paddingHorizontal: 4 },
   frameDot: { backgroundColor: '#48484E', borderRadius: 4, height: 5, width: 5 },
   frameLabel: { color: '#77777D', fontSize: 8, marginLeft: 7 },
-  desktopArtwork: { height: 440, width: '100%' },
+  desktopArtwork: {
+    ...StyleSheet.absoluteFillObject,
+    height: '100%',
+    width: '100%',
+  },
   phoneFrame: {
+    aspectRatio: 711 / 1536,
     backgroundColor: '#050506',
     borderColor: '#53535B',
     borderRadius: 24,
     borderWidth: 1,
-    bottom: 4,
+    bottom: '3%',
     overflow: 'hidden',
     padding: 5,
     position: 'absolute',
-    right: 0,
-    width: 150,
+    right: '2%',
+    width: '19%',
   },
-  phoneFrameCompact: { width: 105 },
-  phoneArtwork: { aspectRatio: 711 / 1536, borderRadius: 19, width: '100%' },
+  phoneFrameCompact: { width: '27%' },
+  phoneArtwork: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 19,
+    height: '100%',
+    width: '100%',
+  },
   scoreCard: {
     backgroundColor: '#101014',
     borderColor: '#34343A',
     borderLeftColor: '#FF6400',
     borderLeftWidth: 2,
     borderWidth: 1,
-    bottom: 10,
-    left: 0,
+    bottom: '4%',
+    left: '2%',
     paddingHorizontal: 16,
     paddingVertical: 13,
     position: 'absolute',
