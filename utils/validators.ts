@@ -130,14 +130,11 @@ export const SUPPORTED_MIME_TYPES = [
   'image/png',
   'image/jpeg',
   'image/webp',
-  'text/plain',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ] as const;
 
 export interface DocumentValidationResult {
   valid: boolean;
-  errors: Partial<Record<'title' | 'documentType' | 'fileUrl' | 'mimeType' | 'fileSize', string>>;
+  errors: Partial<Record<'title' | 'documentType' | 'filePath' | 'mimeType' | 'fileSize', string>>;
 }
 
 export function validateDocumentInput(
@@ -153,8 +150,8 @@ export function validateDocumentInput(
     errors.documentType = 'Document type is required.';
   }
 
-  if (!input.fileUrl || !input.fileUrl.trim()) {
-    errors.fileUrl = 'File URL is required.';
+  if (!input.filePath || !input.filePath.trim()) {
+    errors.filePath = 'File path is required.';
   }
 
   if (input.mimeType && !SUPPORTED_MIME_TYPES.includes(input.mimeType as (typeof SUPPORTED_MIME_TYPES)[number])) {
@@ -163,6 +160,8 @@ export function validateDocumentInput(
 
   if (input.fileSize !== undefined && input.fileSize !== null && input.fileSize <= 0) {
     errors.fileSize = 'File size must be greater than 0.';
+  } else if ((input.fileSize ?? 0) > 25 * 1024 * 1024) {
+    errors.fileSize = 'File size must be 25 MB or smaller.';
   }
 
   return { valid: Object.keys(errors).length === 0, errors };

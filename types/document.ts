@@ -10,7 +10,8 @@ export interface Document {
   documentType: string;
   title: string;
   description: string | null;
-  fileUrl: string;
+  filePath: string;
+  signedUrl?: string | null;
   thumbnailUrl: string | null;
   mimeType: string;
   fileSize: number;
@@ -28,7 +29,7 @@ export interface CreateDocumentInput {
   documentType: string;
   title: string;
   description?: string | null;
-  fileUrl: string;
+  filePath: string;
   thumbnailUrl?: string | null;
   mimeType: string;
   fileSize: number;
@@ -52,7 +53,8 @@ export function toDocument(row: DocumentRow): Document {
     documentType: row.document_type,
     title: row.title,
     description: row.description,
-    fileUrl: row.file_url,
+    filePath: row.file_path,
+    signedUrl: null,
     thumbnailUrl: row.thumbnail_url,
     mimeType: row.mime_type,
     fileSize: row.file_size,

@@ -50,7 +50,7 @@ describe('documentation score service', () => {
         documentType: 'Receipt',
         title: 'Receipt',
         description: null,
-        fileUrl: 'https://example.com/receipt.pdf',
+        filePath: 'user-1/vehicle-1/receipt.pdf',
         thumbnailUrl: null,
         mimeType: 'application/pdf',
         fileSize: 1024,

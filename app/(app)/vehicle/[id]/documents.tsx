@@ -1,11 +1,13 @@
-import React from 'react';
-import { Linking, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Linking, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../components/common/Button';
 import { DocumentCard } from '../../../../components/workspace/DocumentCard';
 import { DocumentEmptyState } from '../../../../components/workspace/DocumentEmptyState';
-import { useDocuments } from '../../../../hooks/useDocument';
+import { useDocuments, useUploadVehicleDocument } from '../../../../hooks/useDocument';
 import { useVehicle } from '../../../../hooks/useVehicle';
+import { pickVehicleDocument } from '../../../../services/documentPicker';
+import { supabase } from '../../../../lib/supabase';
 
 export default function VehicleDocumentsRoute() {
   const router = useRouter();
@@ -13,8 +15,28 @@ export default function VehicleDocumentsRoute() {
   const vehicleId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { data: vehicle, isLoading: vehicleLoading } = useVehicle(vehicleId);
   const { data: documents = [], isLoading: documentsLoading } = useDocuments(vehicle?.workspaceId, {
-    includeArchived: true,
+    includeArchived: false,
   });
+  const upload = useUploadVehicleDocument();
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const chooseAndUpload = async () => {
+    setUploadError(null);
+    try {
+      const file = await pickVehicleDocument();
+      if (!file || !vehicleId || !vehicle) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Sign in again before uploading.');
+      await upload.mutateAsync({
+        workspaceId: vehicle.workspaceId, vehicleId, userId: user.id, file,
+        title: file.name.replace(/\.[^.]+$/, ''), documentType: file.mimeType === 'application/pdf' ? 'Document' : 'Photo',
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Upload failed. Please try again.';
+      setUploadError(message);
+      Alert.alert('Upload failed', message);
+    }
+  };
 
   if (!vehicleId) {
     return (
@@ -42,6 +64,10 @@ export default function VehicleDocumentsRoute() {
           <Text className="mt-2 text-sm text-wrnc-text-secondary">
             {vehicle.nickname || `${vehicle.year} ${vehicle.make} ${vehicle.model}`}
           </Text>
+          <View className="mt-4">
+            <Button label={upload.isPending ? 'Uploading…' : 'Upload document or photo'} onPress={() => void chooseAndUpload()} disabled={upload.isPending} />
+            {uploadError ? <Text accessibilityRole="alert" className="mt-2 text-sm text-red-400">{uploadError}</Text> : null}
+          </View>
 
           <View className="mt-4">
             {documentsLoading ? (
@@ -57,7 +83,8 @@ export default function VehicleDocumentsRoute() {
                   mimeType={document.mimeType}
                   fileSize={document.fileSize}
                   onPress={() => {
-                    void Linking.openURL(document.fileUrl);
+                    if (document.signedUrl) void Linking.openURL(document.signedUrl);
+                    else setUploadError('Secure preview expired. Refresh the page and try again.');
                   }}
                 />
               ))

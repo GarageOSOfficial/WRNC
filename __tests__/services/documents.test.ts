@@ -5,7 +5,15 @@ import {
   archiveDocument,
   restoreDocument,
   listDocuments,
+  uploadVehicleDocument,
+  replaceDocumentFile,
 } from '../../services/api/documents';
+import {
+  createDocumentObjectPath,
+  createDocumentSignedUrl,
+  removeDocumentObject,
+  uploadDocumentObject,
+} from '../../services/documentStorage';
 
 process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
 process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
@@ -25,6 +33,13 @@ jest.mock('../../lib/supabase', () => ({
   },
 }));
 
+jest.mock('../../services/documentStorage', () => ({
+  createDocumentObjectPath: jest.fn(() => 'user-1/vehicle-1/new.pdf'),
+  createDocumentSignedUrl: jest.fn(() => Promise.resolve('https://signed.example/file')),
+  removeDocumentObject: jest.fn(() => Promise.resolve()),
+  uploadDocumentObject: jest.fn(() => Promise.resolve()),
+}));
+
 const mockFrom = supabase.from as jest.Mock;
 
 const makeRow = (overrides: Record<string, unknown> = {}) => ({
@@ -35,7 +50,7 @@ const makeRow = (overrides: Record<string, unknown> = {}) => ({
   document_type: 'manual',
   title: 'Service Manual',
   description: null,
-  file_url: 'https://cdn.example.com/manual.pdf',
+  file_path: 'user-1/vehicle-1/manual.pdf',
   thumbnail_url: null,
   mime_type: 'application/pdf',
   file_size: 1024,
@@ -97,6 +112,8 @@ describe('document CRUD service', () => {
     expect(documents).toHaveLength(1);
     expect(documents[0].title).toBe('Service Manual');
     expect(mockIs).toHaveBeenCalledWith('archived_at', null);
+    expect(createDocumentSignedUrl).toHaveBeenCalledWith('user-1/vehicle-1/manual.pdf');
+    expect(documents[0].signedUrl).toBe('https://signed.example/file');
   });
 
   it('creates a document and maps the Supabase row', async () => {
@@ -106,7 +123,7 @@ describe('document CRUD service', () => {
       workspaceId: 'ws-1',
       title: 'Invoice',
       documentType: 'invoice',
-      fileUrl: 'https://cdn.example.com/invoice.pdf',
+      filePath: 'user-1/vehicle-1/invoice.pdf',
       mimeType: 'application/pdf',
       fileSize: 200,
       uploadedBy: 'user-1',
@@ -141,11 +158,31 @@ describe('document CRUD service', () => {
         workspaceId: 'ws-1',
         title: '   ',
         documentType: 'manual',
-        fileUrl: '',
+        filePath: '',
         mimeType: 'application/pdf',
         fileSize: 100,
         uploadedBy: 'user-1',
       })
     ).rejects.toThrow(/Title is required/);
+  });
+
+  it('removes an uploaded object when metadata creation fails', async () => {
+    mockSingle.mockResolvedValue({ data: null, error: new Error('metadata failed') });
+    const file = { uri: 'file:///manual.pdf', name: 'manual.pdf', mimeType: 'application/pdf', size: 100 };
+    await expect(uploadVehicleDocument({
+      workspaceId: 'ws-1', vehicleId: 'vehicle-1', userId: 'user-1', title: 'Manual', documentType: 'Manual', file,
+    })).rejects.toThrow('metadata failed');
+    expect(uploadDocumentObject).toHaveBeenCalledWith('user-1/vehicle-1/new.pdf', file);
+    expect(removeDocumentObject).toHaveBeenCalledWith('user-1/vehicle-1/new.pdf');
+  });
+
+  it('removes the replacement object when the metadata update fails', async () => {
+    mockSingle
+      .mockResolvedValueOnce({ data: makeRow({ vehicle_id: 'vehicle-1' }), error: null })
+      .mockResolvedValueOnce({ data: null, error: new Error('update failed') });
+    const file = { uri: 'file:///new.pdf', name: 'new.pdf', mimeType: 'application/pdf', size: 200 };
+    await expect(replaceDocumentFile('doc-1', file, 'user-1')).rejects.toThrow('update failed');
+    expect(createDocumentObjectPath).toHaveBeenCalled();
+    expect(removeDocumentObject).toHaveBeenCalledWith('user-1/vehicle-1/new.pdf');
   });
 });

@@ -162,7 +162,8 @@ export interface Database {
           document_type: string;
           title: string;
           description: string | null;
-          file_url: string;
+          file_url: string | null;
+          file_path: string;
           thumbnail_url: string | null;
           mime_type: string;
           file_size: number;
@@ -180,7 +181,8 @@ export interface Database {
           document_type: string;
           title: string;
           description?: string | null;
-          file_url: string;
+          file_url?: string | null;
+          file_path: string;
           thumbnail_url?: string | null;
           mime_type: string;
           file_size: number;
@@ -198,7 +200,8 @@ export interface Database {
           document_type?: string;
           title?: string;
           description?: string | null;
-          file_url?: string;
+          file_url?: string | null;
+          file_path?: string;
           thumbnail_url?: string | null;
           mime_type?: string;
           file_size?: number;

@@ -7,7 +7,6 @@ interface DocumentFormProps {
   initialValues?: {
     title?: string;
     documentType?: string;
-    fileUrl?: string;
     description?: string;
     mimeType?: string;
     fileSize?: number;
@@ -18,7 +17,6 @@ interface DocumentFormProps {
 export function DocumentForm({ initialValues = {}, onSubmit }: DocumentFormProps) {
   const [title, setTitle] = useState(initialValues.title ?? '');
   const [documentType, setDocumentType] = useState(initialValues.documentType ?? '');
-  const [fileUrl, setFileUrl] = useState(initialValues.fileUrl ?? '');
   const [description, setDescription] = useState(initialValues.description ?? '');
   const [mimeType, setMimeType] = useState(initialValues.mimeType ?? 'application/pdf');
   const [fileSize, setFileSize] = useState(initialValues.fileSize ?? 0);
@@ -27,7 +25,6 @@ export function DocumentForm({ initialValues = {}, onSubmit }: DocumentFormProps
     <View>
       <Input label="Title" value={title} onChangeText={setTitle} />
       <Input label="Document Type" value={documentType} onChangeText={setDocumentType} />
-      <Input label="File URL" value={fileUrl} onChangeText={setFileUrl} />
       <Input label="Description" value={description} onChangeText={setDescription} />
       <Input label="MIME Type" value={mimeType} onChangeText={setMimeType} />
       <Input label="File Size" value={String(fileSize)} onChangeText={(value) => setFileSize(Number(value || 0))} keyboardType="numeric" />
@@ -37,7 +34,6 @@ export function DocumentForm({ initialValues = {}, onSubmit }: DocumentFormProps
           onSubmit?.({
             title,
             documentType,
-            fileUrl,
             description,
             mimeType,
             fileSize,

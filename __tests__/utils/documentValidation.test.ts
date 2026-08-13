@@ -1,12 +1,12 @@
 import { validateDocumentInput } from '../../utils/validators';
 
 describe('document validation', () => {
-  it('requires a title, document type, and file URL', () => {
+  it('requires a title, document type, and secure file path', () => {
     const result = validateDocumentInput({
       workspaceId: 'ws-1',
       title: '   ',
       documentType: '' as never,
-      fileUrl: '',
+      filePath: '',
       mimeType: 'application/pdf',
       fileSize: 100,
     });
@@ -14,7 +14,7 @@ describe('document validation', () => {
     expect(result.valid).toBe(false);
     expect(result.errors.title).toBe('Title is required.');
     expect(result.errors.documentType).toBe('Document type is required.');
-    expect(result.errors.fileUrl).toBe('File URL is required.');
+    expect(result.errors.filePath).toBe('File path is required.');
   });
 
   it('rejects unsupported MIME types', () => {
@@ -22,7 +22,7 @@ describe('document validation', () => {
       workspaceId: 'ws-1',
       title: 'Invoice',
       documentType: 'invoice',
-      fileUrl: 'https://cdn.example.com/invoice.pdf',
+      filePath: 'user-1/vehicle-1/invoice.pdf',
       mimeType: 'application/octet-stream',
       fileSize: 100,
     });
@@ -36,7 +36,7 @@ describe('document validation', () => {
       workspaceId: 'ws-1',
       title: 'Receipt',
       documentType: 'receipt',
-      fileUrl: 'https://cdn.example.com/receipt.pdf',
+      filePath: 'user-1/vehicle-1/receipt.pdf',
       mimeType: 'application/pdf',
       fileSize: 0,
     });
@@ -50,7 +50,7 @@ describe('document validation', () => {
       workspaceId: 'ws-1',
       title: 'Service Record',
       documentType: 'manual',
-      fileUrl: 'https://cdn.example.com/service-record.pdf',
+      filePath: 'user-1/vehicle-1/service-record.pdf',
       mimeType: 'application/pdf',
       fileSize: 2048,
     });

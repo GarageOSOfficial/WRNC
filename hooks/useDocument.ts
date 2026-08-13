@@ -6,8 +6,10 @@ import {
   listDocuments,
   restoreDocument,
   updateDocument,
+  uploadVehicleDocument,
 } from '../services/api/documents';
 import type { CreateDocumentInput, UpdateDocumentInput } from '../types/document';
+import type { UploadVehicleDocumentInput } from '../services/api/documents';
 import type { ListDocumentsOptions } from '../types/document';
 
 export const documentKeys = {
@@ -24,7 +26,16 @@ export function useDocuments(workspaceId: string | undefined, options: ListDocum
     queryKey: documentKeys.list(workspaceId ?? '', options),
     queryFn: () => listDocuments(workspaceId as string, options),
     enabled: Boolean(workspaceId),
-    staleTime: 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    refetchInterval: 10 * 60 * 1000,
+  });
+}
+
+export function useUploadVehicleDocument() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: UploadVehicleDocumentInput) => uploadVehicleDocument(input),
+    onSuccess: (document) => queryClient.invalidateQueries({ queryKey: documentKeys.lists() }),
   });
 }
 
