@@ -28,7 +28,11 @@ export function HomeHero({ onGetStarted }: HomeHeroProps) {
             WRNC brings your parts, progress, documents, maintenance, and memories together—so the full story
             of every vehicle lasts as long as the vehicle does.
           </Text>
-          <MarketingButton label="START YOUR BUILD" onPress={onGetStarted} style={styles.cta} />
+          <MarketingButton
+            label="START YOUR BUILD"
+            onPress={onGetStarted}
+            style={[styles.cta, isStacked && styles.ctaStacked]}
+          />
           <View style={[styles.proofRow, isCompact && styles.proofRowCompact]}>
             <View style={styles.proofItem}><Text style={styles.proofTitle}>ONE GARAGE</Text><Text style={styles.proofCopy}>Every vehicle</Text></View>
             <View style={styles.proofItem}><Text style={styles.proofTitle}>ONE TIMELINE</Text><Text style={styles.proofCopy}>Every milestone</Text></View>
@@ -101,7 +105,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
   eyebrowRow: { alignItems: 'center', flexDirection: 'row', gap: 12, marginBottom: 28 },
-  eyebrowRule: { backgroundColor: '#FF6400', height: 2, width: 24 },
+  eyebrowRule: { backgroundColor: '#C0C0C0', height: 2, width: 24 },
   heading: {
     color: '#FFFFFF',
     fontSize: 64,
@@ -130,6 +134,9 @@ const styles = StyleSheet.create({
   },
   cta: {
     marginTop: 42,
+  },
+  ctaStacked: {
+    marginTop: 58,
   },
   visual: {
     flex: 1.25,
@@ -199,7 +206,7 @@ const styles = StyleSheet.create({
   scoreCard: {
     backgroundColor: '#101014',
     borderColor: '#34343A',
-    borderLeftColor: '#FF6400',
+    borderLeftColor: '#7C3AED',
     borderLeftWidth: 2,
     borderWidth: 1,
     bottom: '4%',
