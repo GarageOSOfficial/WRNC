@@ -7,12 +7,16 @@ import {
   useUpdateDocument,
   useArchiveDocument,
   useRestoreDocument,
+  useUploadDocument,
+  useDocumentSignedUrl,
 } from '../../hooks/useDocument';
 import {
   createDocument,
   updateDocument,
   archiveDocument,
   restoreDocument,
+  uploadDocument,
+  getDocumentSignedUrl,
 } from '../../services/api/documents';
 
 const queryClients: QueryClient[] = [];
@@ -24,6 +28,8 @@ jest.mock('../../services/api/documents', () => ({
   restoreDocument: jest.fn(),
   listDocuments: jest.fn(),
   getDocument: jest.fn(),
+  uploadDocument: jest.fn(),
+  getDocumentSignedUrl: jest.fn(),
 }));
 
 const mockDocument = {
@@ -117,5 +123,46 @@ describe('document hooks', () => {
     await waitFor(() => expect(restoreHook.result.current.isSuccess).toBe(true));
 
     expect(invalidateSpy).toHaveBeenCalled();
+  });
+});
+
+describe('useUploadDocument', () => {
+  it('invalidates the document list for the workspace on success', async () => {
+    (uploadDocument as jest.Mock).mockResolvedValue(mockDocument);
+    const { queryClient, wrapper } = makeWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+
+    const hook = renderHook(() => useUploadDocument(), { wrapper });
+    act(() => {
+      hook.result.current.mutate({
+        workspaceId: 'ws-1',
+        vehicleId: 'veh-1',
+        userId: 'user-1',
+        title: 'Receipt',
+        category: 'receipt',
+        file: { name: 'r.pdf', mimeType: 'application/pdf', size: 100 },
+      });
+    });
+
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: documentKeys.list('ws-1') });
+  });
+});
+
+describe('useDocumentSignedUrl', () => {
+  it('fetches a signed url when a path is provided', async () => {
+    (getDocumentSignedUrl as jest.Mock).mockResolvedValue('https://cdn.example.com/signed.pdf');
+    const { wrapper } = makeWrapper();
+
+    const hook = renderHook(() => useDocumentSignedUrl('user-1/veh-1/receipt/x.pdf'), { wrapper });
+
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
+    expect(hook.result.current.data).toBe('https://cdn.example.com/signed.pdf');
+  });
+
+  it('does not fetch when no path is provided', () => {
+    const { wrapper } = makeWrapper();
+    const hook = renderHook(() => useDocumentSignedUrl(undefined), { wrapper });
+    expect(hook.result.current.fetchStatus).toBe('idle');
   });
 });

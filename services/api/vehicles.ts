@@ -134,6 +134,7 @@ export async function updateVehicle(
   if (input.engine !== undefined) payload.engine = input.engine;
   if (input.transmission !== undefined) payload.transmission = input.transmission;
   if (input.coverPhotoUrl !== undefined) payload.cover_photo_url = input.coverPhotoUrl;
+  if (input.coverPhotoPath !== undefined) payload.cover_photo_path = input.coverPhotoPath;
 
   if (Object.keys(errors).length > 0) {
     throw new Error(Object.values(errors).join(' '));

@@ -3,9 +3,12 @@ import {
   archiveDocument,
   createDocument,
   getDocument,
+  getDocumentSignedUrl,
   listDocuments,
   restoreDocument,
   updateDocument,
+  uploadDocument,
+  type UploadDocumentInput,
 } from '../services/api/documents';
 import type { CreateDocumentInput, UpdateDocumentInput } from '../types/document';
 import type { ListDocumentsOptions } from '../types/document';
@@ -44,6 +47,25 @@ export function useCreateDocument() {
     onSuccess: (document) => {
       queryClient.invalidateQueries({ queryKey: documentKeys.list(document.workspaceId) });
     },
+  });
+}
+
+export function useUploadDocument() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: UploadDocumentInput) => uploadDocument(input),
+    onSuccess: (document) => {
+      queryClient.invalidateQueries({ queryKey: documentKeys.list(document.workspaceId) });
+    },
+  });
+}
+
+export function useDocumentSignedUrl(path: string | null | undefined) {
+  return useQuery({
+    queryKey: ['documents', 'signed-url', path ?? 'none'],
+    queryFn: () => (path ? getDocumentSignedUrl(path) : Promise.resolve(null)),
+    enabled: Boolean(path),
+    staleTime: 45 * 1000,
   });
 }
 
