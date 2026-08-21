@@ -44,6 +44,12 @@ function expectNoRows(result, operation) {
   if ((result.data ?? []).length !== 0) throw new Error(`${operation} affected or exposed an owner row.`);
 }
 
+function storageErrorCategory(error) {
+  const status = error?.statusCode ?? error?.status ?? 'unknown';
+  const type = error?.error ?? error?.name ?? 'storage_error';
+  return `${status}/${type}`.replace(/[^a-zA-Z0-9_./ -]/g, '').slice(0, 100);
+}
+
 async function signIn(client, label, email, password) {
   const { data, error } = await client.auth.signInWithPassword({ email, password });
   if (error || !data.user) {
@@ -62,6 +68,18 @@ async function ownedWorkspace(client) {
 async function objectExists(client, bucket, path) {
   const { data, error } = await client.storage.from(bucket).download(path);
   return !error && Boolean(data);
+}
+
+async function objectIsListed(client, bucket, path) {
+  const segments = path.split('/');
+  const fileName = segments.pop();
+  const folder = segments.join('/');
+  const { data, error } = await client.storage.from(bucket).list(folder, {
+    limit: 2,
+    search: fileName,
+  });
+  if (error) throw new Error(`Unable to verify ${bucket} cleanup metadata.`);
+  return (data ?? []).some((entry) => entry.name === fileName);
 }
 
 async function removeKnown(client, bucket, paths) {
@@ -128,7 +146,7 @@ try {
   if (replacementPersist.error || replacementPersist.data.length !== 1) throw new Error('Replacement photo metadata persistence failed.');
   const oldPhotoRemoval = await accountA.storage.from('vehicle-photos').remove([firstPhoto]);
   if (oldPhotoRemoval.error) throw new Error('Previous photo removal returned an API error.');
-  record('Photo replacement cleanup', !(await objectExists(accountA, 'vehicle-photos', firstPhoto)));
+  record('Photo replacement cleanup', !(await objectIsListed(accountA, 'vehicle-photos', firstPhoto)));
 
   const firstDocument = `${userA.id}/${vehicleId}/receipt/${runId}-first.pdf`;
   const nextDocument = `${userA.id}/${vehicleId}/receipt/${runId}-next.pdf`;
@@ -157,7 +175,9 @@ try {
   const documentReplacementUpload = await accountA.storage.from('vehicle-documents').upload(nextDocument, pdfBytes, {
     contentType: 'application/pdf', upsert: false,
   });
-  if (documentReplacementUpload.error) throw new Error('Replacement document upload failed.');
+  if (documentReplacementUpload.error) {
+    throw new Error(`Replacement document upload failed (${storageErrorCategory(documentReplacementUpload.error)}).`);
+  }
   const documentReplacementPersist = await accountA.from('documents').update({
     storage_path: nextDocument,
     original_file_name: 'next.pdf',
@@ -168,7 +188,7 @@ try {
   }
   const oldDocumentRemoval = await accountA.storage.from('vehicle-documents').remove([firstDocument]);
   if (oldDocumentRemoval.error) throw new Error('Previous document removal returned an API error.');
-  record('Document replacement cleanup', !(await objectExists(accountA, 'vehicle-documents', firstDocument)));
+  record('Document replacement cleanup', !(await objectIsListed(accountA, 'vehicle-documents', firstDocument)));
 
   const crossRead = await accountB.from('vehicles').select('id').eq('id', vehicleId);
   expectNoRows(crossRead, 'Cross-user vehicle read');
@@ -211,7 +231,7 @@ try {
     .eq('id', randomUUID()).select('id');
   expectNoRows(failedPersist, 'Expected failed replacement metadata persistence');
   await accountA.storage.from('vehicle-photos').remove([rollbackPath]);
-  record('Failed-operation rollback/orphan cleanup', !(await objectExists(accountA, 'vehicle-photos', rollbackPath)));
+  record('Failed-operation rollback/orphan cleanup', !(await objectIsListed(accountA, 'vehicle-photos', rollbackPath)));
 
   const detachPhoto = await accountA.from('vehicles').update({ cover_photo_path: null })
     .eq('id', vehicleId).select('cover_photo_path').single();
@@ -219,7 +239,7 @@ try {
     throw new Error('Owner photo metadata cleanup failed.');
   }
   await accountA.storage.from('vehicle-photos').remove([nextPhoto]);
-  record('Owner photo deletion/metadata cleanup', !(await objectExists(accountA, 'vehicle-photos', nextPhoto)));
+  record('Owner photo deletion/metadata cleanup', !(await objectIsListed(accountA, 'vehicle-photos', nextPhoto)));
 
   const archiveDocument = await accountA.from('documents').update({ archived_at: new Date().toISOString() })
     .eq('id', documentId).select('archived_at').single();
@@ -227,7 +247,7 @@ try {
     throw new Error('Owner document metadata cleanup failed.');
   }
   await accountA.storage.from('vehicle-documents').remove([nextDocument]);
-  record('Owner document deletion/metadata cleanup', !(await objectExists(accountA, 'vehicle-documents', nextDocument)));
+  record('Owner document deletion/metadata cleanup', !(await objectIsListed(accountA, 'vehicle-documents', nextDocument)));
 } catch (error) {
   record('Live QA flow', false, error instanceof Error ? error.message : 'Unknown failure');
 } finally {
