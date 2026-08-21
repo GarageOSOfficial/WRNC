@@ -21,6 +21,7 @@ const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 const runId = randomUUID();
 const photoPaths = [];
 const documentPaths = [];
+const accountBPaths = [];
 let vehicleId;
 let documentId;
 
@@ -68,6 +69,7 @@ async function removeKnown(client, bucket, paths) {
 async function cleanup() {
   await removeKnown(accountA, 'vehicle-photos', photoPaths);
   await removeKnown(accountA, 'vehicle-documents', documentPaths);
+  await removeKnown(accountB, 'vehicle-photos', accountBPaths);
 
   if (documentId) {
     await accountA.from('documents').update({ archived_at: new Date().toISOString() }).eq('id', documentId);
@@ -166,10 +168,23 @@ try {
   const crossPhotoRead = await objectExists(accountB, 'vehicle-photos', nextPhoto);
   const crossDocumentRead = await objectExists(accountB, 'vehicle-documents', nextDocument);
   const forbiddenInsert = `${userB.id}/${vehicleId}/cover/${runId}-forbidden.jpg`;
+  accountBPaths.push(forbiddenInsert);
   const crossInsert = await accountB.storage.from('vehicle-photos').upload(forbiddenInsert, photoBytes, {
     contentType: 'image/jpeg', upsert: false,
   });
-  record('Account B isolation', !crossPhotoRead && !crossDocumentRead && Boolean(crossInsert.error));
+  const crossOverwrite = await accountB.storage.from('vehicle-photos').update(nextPhoto, photoBytes, {
+    contentType: 'image/jpeg', upsert: true,
+  });
+  await accountB.storage.from('vehicle-photos').remove([nextPhoto]);
+  const ownerPhotoSurvived = await objectExists(accountA, 'vehicle-photos', nextPhoto);
+  record(
+    'Account B isolation',
+    !crossPhotoRead
+      && !crossDocumentRead
+      && Boolean(crossInsert.error)
+      && Boolean(crossOverwrite.error)
+      && ownerPhotoSurvived
+  );
 
   const anonymousPhoto = await objectExists(anonymous, 'vehicle-photos', nextPhoto);
   const anonymousDocument = await objectExists(anonymous, 'vehicle-documents', nextDocument);
@@ -186,6 +201,22 @@ try {
   expectNoRows(failedPersist, 'Expected failed replacement metadata persistence');
   await accountA.storage.from('vehicle-photos').remove([rollbackPath]);
   record('Failed-operation rollback/orphan cleanup', !(await objectExists(accountA, 'vehicle-photos', rollbackPath)));
+
+  const detachPhoto = await accountA.from('vehicles').update({ cover_photo_path: null })
+    .eq('id', vehicleId).select('cover_photo_path').single();
+  if (detachPhoto.error || detachPhoto.data.cover_photo_path !== null) {
+    throw new Error('Owner photo metadata cleanup failed.');
+  }
+  await accountA.storage.from('vehicle-photos').remove([nextPhoto]);
+  record('Owner photo deletion/metadata cleanup', !(await objectExists(accountA, 'vehicle-photos', nextPhoto)));
+
+  const archiveDocument = await accountA.from('documents').update({ archived_at: new Date().toISOString() })
+    .eq('id', documentId).select('archived_at').single();
+  if (archiveDocument.error || !archiveDocument.data.archived_at) {
+    throw new Error('Owner document metadata cleanup failed.');
+  }
+  await accountA.storage.from('vehicle-documents').remove([nextDocument]);
+  record('Owner document deletion/metadata cleanup', !(await objectExists(accountA, 'vehicle-documents', nextDocument)));
 } catch (error) {
   record('Live QA flow', false, error instanceof Error ? error.message : 'Unknown failure');
 } finally {
