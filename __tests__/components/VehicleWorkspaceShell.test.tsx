@@ -20,7 +20,7 @@ const mockWorkspaceQuery: {
 };
 
 const mockVehiclesQuery: {
-  data: Array<{
+  data: {
     id: string;
     workspaceId: string;
     year: number;
@@ -36,7 +36,7 @@ const mockVehiclesQuery: {
     archivedAt: string | null;
     createdAt: string;
     updatedAt: string;
-  }> | undefined;
+  }[] | undefined;
   error: Error | null;
   isLoading: boolean;
   isPending: boolean;

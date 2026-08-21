@@ -19,6 +19,13 @@ const monthFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 function parseDateValue(value: string) {
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (dateOnly) {
+    const [, year, month, day] = dateOnly;
+    const parsed = new Date(Number(year), Number(month) - 1, Number(day));
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
