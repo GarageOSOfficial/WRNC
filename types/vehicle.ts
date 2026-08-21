@@ -16,6 +16,7 @@ export interface Vehicle {
   transmission: string | null;
   mileage: number | null;
   coverPhotoUrl: string | null;
+  coverPhotoPath?: string | null;
   archivedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -34,6 +35,7 @@ export interface CreateVehicleInput {
   engine?: string | null;
   transmission?: string | null;
   coverPhotoUrl?: string | null;
+  coverPhotoPath?: string | null;
 }
 
 /** Any vehicle field may be edited (Update Vehicle acceptance criteria). */
@@ -55,6 +57,7 @@ export function toVehicle(row: VehicleRow): Vehicle {
     transmission: row.transmission,
     mileage: row.mileage,
     coverPhotoUrl: row.cover_photo_url,
+    coverPhotoPath: row.cover_photo_path,
     archivedAt: row.archived_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,

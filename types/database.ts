@@ -58,6 +58,7 @@ export interface Database {
           transmission: string | null;
           mileage: number | null;
           cover_photo_url: string | null;
+          cover_photo_path: string | null;
           archived_at: string | null;
           created_at: string;
           updated_at: string;
@@ -75,6 +76,7 @@ export interface Database {
           transmission?: string | null;
           mileage?: number | null;
           cover_photo_url?: string | null;
+          cover_photo_path?: string | null;
           archived_at?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -92,6 +94,7 @@ export interface Database {
           transmission?: string | null;
           mileage?: number | null;
           cover_photo_url?: string | null;
+          cover_photo_path?: string | null;
           archived_at?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -162,7 +165,9 @@ export interface Database {
           document_type: string;
           title: string;
           description: string | null;
-          file_url: string;
+          file_url: string | null;
+          storage_path: string | null;
+          original_file_name: string | null;
           thumbnail_url: string | null;
           mime_type: string;
           file_size: number;
@@ -180,7 +185,9 @@ export interface Database {
           document_type: string;
           title: string;
           description?: string | null;
-          file_url: string;
+          file_url?: string | null;
+          storage_path?: string | null;
+          original_file_name?: string | null;
           thumbnail_url?: string | null;
           mime_type: string;
           file_size: number;
@@ -198,7 +205,9 @@ export interface Database {
           document_type?: string;
           title?: string;
           description?: string | null;
-          file_url?: string;
+          file_url?: string | null;
+          storage_path?: string | null;
+          original_file_name?: string | null;
           thumbnail_url?: string | null;
           mime_type?: string;
           file_size?: number;

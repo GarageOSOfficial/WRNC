@@ -5,7 +5,10 @@ import {
   archiveDocument,
   restoreDocument,
   listDocuments,
+  replaceDocumentFile,
+  uploadDocument,
 } from '../../services/api/documents';
+import * as attachmentStorage from '../../services/api/attachmentStorage';
 
 process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
 process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
@@ -25,7 +28,18 @@ jest.mock('../../lib/supabase', () => ({
   },
 }));
 
+jest.mock('../../services/api/attachmentStorage', () => {
+  const actual = jest.requireActual('../../services/api/attachmentStorage');
+  return {
+    ...actual,
+    uploadAttachmentObject: jest.fn(),
+    removeAttachmentObjects: jest.fn(),
+  };
+});
+
 const mockFrom = supabase.from as jest.Mock;
+const mockUploadObject = attachmentStorage.uploadAttachmentObject as jest.Mock;
+const mockRemoveObjects = attachmentStorage.removeAttachmentObjects as jest.Mock;
 
 const makeRow = (overrides: Record<string, unknown> = {}) => ({
   id: 'doc-1',
@@ -147,5 +161,141 @@ describe('document CRUD service', () => {
         uploadedBy: 'user-1',
       })
     ).rejects.toThrow(/Title is required/);
+  });
+});
+
+describe('uploadDocument', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUploadObject.mockResolvedValue(undefined);
+    mockRemoveObjects.mockResolvedValue(true);
+    mockFrom.mockReturnValue({ insert: mockInsert });
+    mockInsert.mockReturnValue({ select: mockSelect });
+    mockSelect.mockReturnValue({ single: mockSingle });
+  });
+
+  it('uploads the file then inserts the document metadata row', async () => {
+    mockSingle.mockResolvedValue({
+      data: makeRow({ storage_path: 'user-1/veh-1/receipt/x-r.pdf', original_file_name: 'r.pdf', document_type: 'receipt' }),
+      error: null,
+    });
+
+    const document = await uploadDocument({
+      workspaceId: 'ws-1',
+      vehicleId: 'veh-1',
+      userId: 'user-1',
+      title: 'Brake receipt',
+      category: 'receipt',
+      file: { name: 'r.pdf', mimeType: 'application/pdf', size: 1024, webFile: new Blob(['x']) },
+    });
+
+    expect(mockUploadObject).toHaveBeenCalled();
+    expect(mockInsert).toHaveBeenCalled();
+    expect(document.storagePath).toBe('user-1/veh-1/receipt/x-r.pdf');
+  });
+
+  it('rolls back the uploaded object when the database insert fails', async () => {
+    mockSingle.mockResolvedValue({ data: null, error: { message: 'insert failed' } });
+
+    await expect(
+      uploadDocument({
+        workspaceId: 'ws-1',
+        vehicleId: 'veh-1',
+        userId: 'user-1',
+        title: 'Brake receipt',
+        category: 'receipt',
+        file: { name: 'r.pdf', mimeType: 'application/pdf', size: 1024, webFile: new Blob(['x']) },
+      })
+    ).rejects.toThrow(/unable to save this document/i);
+
+    expect(mockRemoveObjects).toHaveBeenCalledWith('vehicle-documents', [expect.stringContaining('user-1/veh-1/receipt/')]);
+  });
+
+  it('rejects an unsupported file type before uploading', async () => {
+    await expect(
+      uploadDocument({
+        workspaceId: 'ws-1',
+        vehicleId: 'veh-1',
+        userId: 'user-1',
+        title: 'Bad file',
+        category: 'other',
+        file: { name: 'x.exe', mimeType: 'application/octet-stream', size: 1024 },
+      })
+    ).rejects.toThrow();
+
+    expect(mockUploadObject).not.toHaveBeenCalled();
+  });
+});
+
+describe('replaceDocumentFile', () => {
+  const replacement = {
+    name: 'new-manual.pdf',
+    mimeType: 'application/pdf',
+    size: 2048,
+    webFile: new Blob(['new']),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUploadObject.mockResolvedValue(undefined);
+    mockRemoveObjects.mockResolvedValue(true);
+    mockFrom.mockReturnValue({ select: mockSelect, update: mockUpdate });
+    mockSelect.mockReturnValue({ eq: mockEq, single: mockSingle });
+    mockEq.mockReturnValue({ single: mockSingle, select: mockSelect });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+  });
+
+  it('persists the replacement before removing the previous object', async () => {
+    mockSingle
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/old.pdf' }),
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/new.pdf' }),
+        error: null,
+      });
+
+    const document = await replaceDocumentFile('doc-1', replacement, 'user-1');
+
+    expect(document.storagePath).toBe('user-1/veh-1/manual/new.pdf');
+    expect(mockRemoveObjects).toHaveBeenCalledWith('vehicle-documents', ['user-1/veh-1/manual/old.pdf']);
+  });
+
+  it('rolls back the new object when replacement metadata is not persisted', async () => {
+    mockSingle
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/old.pdf' }),
+        error: null,
+      })
+      .mockResolvedValueOnce({ data: null, error: { message: 'zero rows' } });
+
+    await expect(replaceDocumentFile('doc-1', replacement, 'user-1')).rejects.toBeTruthy();
+
+    expect(mockRemoveObjects).toHaveBeenCalledTimes(1);
+    expect(mockRemoveObjects).toHaveBeenCalledWith(
+      'vehicle-documents',
+      [expect.stringMatching(/^user-1\/veh-1\/manual\//)]
+    );
+  });
+
+  it('surfaces previous-object cleanup failure without rolling back the persisted replacement', async () => {
+    mockSingle
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/old.pdf' }),
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/new.pdf' }),
+        error: null,
+      });
+    mockRemoveObjects.mockResolvedValue(false);
+
+    await expect(replaceDocumentFile('doc-1', replacement, 'user-1')).rejects.toThrow(
+      /previous file still needs cleanup/i
+    );
+
+    expect(mockRemoveObjects).toHaveBeenCalledTimes(1);
+    expect(mockRemoveObjects).toHaveBeenCalledWith('vehicle-documents', ['user-1/veh-1/manual/old.pdf']);
   });
 });

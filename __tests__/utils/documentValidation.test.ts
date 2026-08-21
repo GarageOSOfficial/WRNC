@@ -1,7 +1,7 @@
 import { validateDocumentInput } from '../../utils/validators';
 
 describe('document validation', () => {
-  it('requires a title, document type, and file URL', () => {
+  it('requires a title, document type, and file reference', () => {
     const result = validateDocumentInput({
       workspaceId: 'ws-1',
       title: '   ',
@@ -14,7 +14,7 @@ describe('document validation', () => {
     expect(result.valid).toBe(false);
     expect(result.errors.title).toBe('Title is required.');
     expect(result.errors.documentType).toBe('Document type is required.');
-    expect(result.errors.fileUrl).toBe('File URL is required.');
+    expect(result.errors.fileUrl).toBe('A file URL or storage path is required.');
   });
 
   it('rejects unsupported MIME types', () => {

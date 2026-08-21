@@ -7,13 +7,22 @@ import { BuildPassportTimelineSummary } from '../../../../components/workspace/B
 import { BuildPassportDocumentationSummary } from '../../../../components/workspace/BuildPassportDocumentationSummary';
 import { BuildPassportRecommendations } from '../../../../components/workspace/BuildPassportRecommendations';
 import { BuildPassportStatistics } from '../../../../components/workspace/BuildPassportStatistics';
+import { VehicleCoverPhoto } from '../../../../components/workspace/VehicleCoverPhoto';
 import { useBuildPassport } from '../../../../hooks/useBuildPassport';
+import { useVehicle } from '../../../../hooks/useVehicle';
+import { useVehiclePhotoUrl, useUploadVehiclePhoto, useReplaceVehiclePhoto, useRemoveVehiclePhoto } from '../../../../hooks/useVehiclePhotos';
+import { supabase } from '../../../../lib/supabase';
 
 export default function VehiclePassportRoute() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
   const vehicleId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { data: passport, isLoading } = useBuildPassport(vehicleId);
+  const { data: vehicle } = useVehicle(vehicleId);
+  const { data: signedUrl, isLoading: isLoadingUrl } = useVehiclePhotoUrl(vehicle?.coverPhotoPath);
+  const uploadPhoto = useUploadVehiclePhoto();
+  const replacePhoto = useReplaceVehiclePhoto();
+  const removePhoto = useRemoveVehiclePhoto();
 
   if (!vehicleId) {
     return (
@@ -42,6 +51,29 @@ export default function VehiclePassportRoute() {
           overallScore={documentationSummary.overallScore}
           onBack={() => router.back()}
         />
+
+        {vehicle ? (
+          <VehicleCoverPhoto
+            signedUrl={signedUrl}
+            hasPhoto={Boolean(vehicle.coverPhotoPath)}
+            isLoadingUrl={isLoadingUrl}
+            isUploading={uploadPhoto.isPending}
+            isRemoving={removePhoto.isPending}
+            onUpload={async (file) => {
+              const { data: userData } = await supabase.auth.getUser();
+              const userId = userData.user?.id;
+              if (!userId) throw new Error('You must be signed in to upload a photo.');
+              if (vehicle.coverPhotoPath) {
+                await replacePhoto.mutateAsync({ vehicleId, file, userId });
+              } else {
+                await uploadPhoto.mutateAsync({ vehicleId, file, userId });
+              }
+            }}
+            onRemove={async () => {
+              await removePhoto.mutateAsync({ vehicleId });
+            }}
+          />
+        ) : null}
 
         <BuildPassportVehicleSummary
           summary={vehicleSummary}

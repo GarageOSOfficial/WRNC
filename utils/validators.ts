@@ -153,8 +153,8 @@ export function validateDocumentInput(
     errors.documentType = 'Document type is required.';
   }
 
-  if (!input.fileUrl || !input.fileUrl.trim()) {
-    errors.fileUrl = 'File URL is required.';
+  if (!input.fileUrl?.trim() && !input.storagePath?.trim()) {
+    errors.fileUrl = 'A file URL or storage path is required.';
   }
 
   if (input.mimeType && !SUPPORTED_MIME_TYPES.includes(input.mimeType as (typeof SUPPORTED_MIME_TYPES)[number])) {

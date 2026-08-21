@@ -14,7 +14,8 @@
     "build": "npm run build:web",
     "build:android": "eas build --platform android",
     "build:ios": "eas build --platform ios",
-    "build:web": "expo export --platform web"
+    "build:web": "expo export --platform web",
+    "qa:attachments:live": "node scripts/live-attachment-qa.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.23.1",
@@ -24,6 +25,7 @@
     "@tanstack/react-query": "^5.35.1",
     "axios": "^1.6.5",
     "expo": "^50.0.0",
+    "expo-document-picker": "~11.10.1",
     "expo-file-system": "~16.0.6",
     "expo-image-picker": "~14.7.1",
     "expo-router": "^3.4.0",
