@@ -3,6 +3,13 @@
 Status: ACTIVE
 Owner: Development + Design Studio
 Founder direction: execute reversible launch-critical corrections only.
+Tracking: GitHub Issue #44
+
+## Development handoff artifacts
+
+- `docs/launch/SEPT1_VISUAL_LAUNCH_GATE.md` — controlling implementation brief
+- `docs/launch/WRNC_ASSET_VERIFICATION_TEMPLATE.md` — brand/app asset provenance gate
+- `docs/launch/WRNC_VISUAL_QA_CHECKLIST.md` — desktop/tablet/390px release QA
 
 ## Source of truth
 
