@@ -44,9 +44,12 @@ function expectNoRows(result, operation) {
   if ((result.data ?? []).length !== 0) throw new Error(`${operation} affected or exposed an owner row.`);
 }
 
-async function signIn(client, email, password) {
+async function signIn(client, label, email, password) {
   const { data, error } = await client.auth.signInWithPassword({ email, password });
-  if (error || !data.user) throw new Error('QA account sign-in failed.');
+  if (error || !data.user) {
+    const category = error?.code ?? `http_${error?.status ?? 'unknown'}`;
+    throw new Error(`${label} sign-in failed (${category}).`);
+  }
   return data.user;
 }
 
@@ -82,10 +85,18 @@ async function cleanup() {
 }
 
 try {
-  const [userA, userB] = await Promise.all([
-    signIn(accountA, process.env.WRNC_QA_ACCOUNT_A_EMAIL, process.env.WRNC_QA_ACCOUNT_A_PASSWORD),
-    signIn(accountB, process.env.WRNC_QA_ACCOUNT_B_EMAIL, process.env.WRNC_QA_ACCOUNT_B_PASSWORD),
-  ]);
+  const userA = await signIn(
+    accountA,
+    'Account A',
+    process.env.WRNC_QA_ACCOUNT_A_EMAIL,
+    process.env.WRNC_QA_ACCOUNT_A_PASSWORD
+  );
+  const userB = await signIn(
+    accountB,
+    'Account B',
+    process.env.WRNC_QA_ACCOUNT_B_EMAIL,
+    process.env.WRNC_QA_ACCOUNT_B_PASSWORD
+  );
   const workspaceA = await ownedWorkspace(accountA);
 
   const vehicle = await accountA
