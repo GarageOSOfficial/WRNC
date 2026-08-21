@@ -96,6 +96,51 @@ export async function uploadDocument(input: UploadDocumentInput): Promise<Docume
   }
 }
 
+/**
+ * Replaces a private document object without deleting the working file first.
+ * A metadata failure rolls back the new object. A later old-object cleanup
+ * failure is surfaced explicitly while the newly persisted document remains
+ * valid and accessible.
+ */
+export async function replaceDocumentFile(
+  id: string,
+  file: AttachmentFileInput,
+  userId: string
+): Promise<Document> {
+  const validation = validateDocumentFile(file);
+  if (!validation.valid) {
+    throw new Error(validation.errors.join(' '));
+  }
+
+  const current = await getDocument(id);
+  if (!current.vehicleId || !current.storagePath) {
+    throw new Error('This document does not have a replaceable private file.');
+  }
+
+  const nextPath = buildAttachmentPath(userId, current.vehicleId, current.documentType as AttachmentCategory, file.name);
+  await uploadAttachmentObject(VEHICLE_DOCUMENTS_BUCKET, nextPath, file);
+
+  let updated: Document;
+  try {
+    updated = await updateDocument(id, {
+      storagePath: nextPath,
+      originalFileName: file.name,
+      mimeType: file.mimeType,
+      fileSize: file.size,
+    });
+  } catch (error) {
+    await removeAttachmentObjects(VEHICLE_DOCUMENTS_BUCKET, [nextPath]);
+    throw error;
+  }
+
+  const removed = await removeAttachmentObjects(VEHICLE_DOCUMENTS_BUCKET, [current.storagePath]);
+  if (!removed) {
+    throw new Error('The replacement document was saved, but the previous file still needs cleanup.');
+  }
+
+  return updated;
+}
+
 export async function listDocuments(
   workspaceId: string,
   options: ListDocumentsOptions = {}

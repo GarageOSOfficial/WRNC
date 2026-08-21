@@ -5,6 +5,7 @@ import {
   archiveDocument,
   restoreDocument,
   listDocuments,
+  replaceDocumentFile,
   uploadDocument,
 } from '../../services/api/documents';
 import * as attachmentStorage from '../../services/api/attachmentStorage';
@@ -223,5 +224,78 @@ describe('uploadDocument', () => {
     ).rejects.toThrow();
 
     expect(mockUploadObject).not.toHaveBeenCalled();
+  });
+});
+
+describe('replaceDocumentFile', () => {
+  const replacement = {
+    name: 'new-manual.pdf',
+    mimeType: 'application/pdf',
+    size: 2048,
+    webFile: new Blob(['new']),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUploadObject.mockResolvedValue(undefined);
+    mockRemoveObjects.mockResolvedValue(true);
+    mockFrom.mockReturnValue({ select: mockSelect, update: mockUpdate });
+    mockSelect.mockReturnValue({ eq: mockEq, single: mockSingle });
+    mockEq.mockReturnValue({ single: mockSingle, select: mockSelect });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+  });
+
+  it('persists the replacement before removing the previous object', async () => {
+    mockSingle
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/old.pdf' }),
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/new.pdf' }),
+        error: null,
+      });
+
+    const document = await replaceDocumentFile('doc-1', replacement, 'user-1');
+
+    expect(document.storagePath).toBe('user-1/veh-1/manual/new.pdf');
+    expect(mockRemoveObjects).toHaveBeenCalledWith('vehicle-documents', ['user-1/veh-1/manual/old.pdf']);
+  });
+
+  it('rolls back the new object when replacement metadata is not persisted', async () => {
+    mockSingle
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/old.pdf' }),
+        error: null,
+      })
+      .mockResolvedValueOnce({ data: null, error: { message: 'zero rows' } });
+
+    await expect(replaceDocumentFile('doc-1', replacement, 'user-1')).rejects.toBeTruthy();
+
+    expect(mockRemoveObjects).toHaveBeenCalledTimes(1);
+    expect(mockRemoveObjects).toHaveBeenCalledWith(
+      'vehicle-documents',
+      [expect.stringMatching(/^user-1\/veh-1\/manual\//)]
+    );
+  });
+
+  it('surfaces previous-object cleanup failure without rolling back the persisted replacement', async () => {
+    mockSingle
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/old.pdf' }),
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: makeRow({ vehicle_id: 'veh-1', storage_path: 'user-1/veh-1/manual/new.pdf' }),
+        error: null,
+      });
+    mockRemoveObjects.mockResolvedValue(false);
+
+    await expect(replaceDocumentFile('doc-1', replacement, 'user-1')).rejects.toThrow(
+      /previous file still needs cleanup/i
+    );
+
+    expect(mockRemoveObjects).toHaveBeenCalledTimes(1);
+    expect(mockRemoveObjects).toHaveBeenCalledWith('vehicle-documents', ['user-1/veh-1/manual/old.pdf']);
   });
 });

@@ -154,6 +154,26 @@ describe('replaceVehiclePhoto', () => {
     expect(mockRemove).toHaveBeenCalledWith('vehicle-photos', [expect.stringContaining('user-1/veh-1/cover/')]);
     expect(mockRemove).not.toHaveBeenCalledWith('vehicle-photos', ['user-1/veh-1/cover/old.jpg']);
   });
+
+  it('surfaces old-object cleanup failure without deleting the persisted replacement', async () => {
+    mockedGetVehicle.mockResolvedValue({ id: 'veh-1', workspaceId: 'ws-1', coverPhotoPath: 'user-1/veh-1/cover/old.jpg' });
+    mockUpdateChain({
+      data: { id: 'veh-1', workspace_id: 'ws-1', cover_photo_path: 'user-1/veh-1/cover/new.jpg' },
+      error: null,
+    });
+    mockRemove.mockResolvedValue(false);
+
+    await expect(
+      replaceVehiclePhoto(
+        'veh-1',
+        { name: 'new.jpg', mimeType: 'image/jpeg', size: 1024, webFile: new Blob(['x']) },
+        'user-1'
+      )
+    ).rejects.toThrow(/previous file still needs cleanup/i);
+
+    expect(mockRemove).toHaveBeenCalledTimes(1);
+    expect(mockRemove).toHaveBeenCalledWith('vehicle-photos', ['user-1/veh-1/cover/old.jpg']);
+  });
 });
 
 describe('removeVehiclePhoto', () => {
@@ -179,6 +199,14 @@ describe('removeVehiclePhoto', () => {
 
     expect(result.path).toBe('');
     expect(mockRemove).not.toHaveBeenCalled();
+  });
+
+  it('surfaces stored-object cleanup failure after detaching the photo', async () => {
+    mockedGetVehicle.mockResolvedValue({ id: 'veh-1', workspaceId: 'ws-1', coverPhotoPath: 'user-1/veh-1/cover/x.jpg' });
+    mockUpdateChain({ data: { id: 'veh-1', workspace_id: 'ws-1', cover_photo_path: null }, error: null });
+    mockRemove.mockResolvedValue(false);
+
+    await expect(removeVehiclePhoto('veh-1')).rejects.toThrow(/stored file still needs cleanup/i);
   });
 });
 

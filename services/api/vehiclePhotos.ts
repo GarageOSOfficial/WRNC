@@ -94,6 +94,7 @@ export async function replaceVehiclePhoto(
 
   await uploadAttachmentObject(VEHICLE_PHOTOS_BUCKET, nextPath, file);
 
+  let persisted: VehiclePhotoUploadResult;
   try {
     const { data, error } = await supabase
       .from('vehicles')
@@ -106,11 +107,7 @@ export async function replaceVehiclePhoto(
       throw new Error('Unable to save the replacement vehicle photo. Please try again.');
     }
 
-    if (previousPath && previousPath !== nextPath) {
-      await removeAttachmentObjects(VEHICLE_PHOTOS_BUCKET, [previousPath]);
-    }
-
-    return {
+    persisted = {
       path: nextPath,
       vehicle: {
         id: data.id,
@@ -122,6 +119,15 @@ export async function replaceVehiclePhoto(
     await removeAttachmentObjects(VEHICLE_PHOTOS_BUCKET, [nextPath]);
     throw error;
   }
+
+  if (previousPath && previousPath !== nextPath) {
+    const removed = await removeAttachmentObjects(VEHICLE_PHOTOS_BUCKET, [previousPath]);
+    if (!removed) {
+      throw new Error('The replacement photo was saved, but the previous file still needs cleanup.');
+    }
+  }
+
+  return persisted;
 }
 
 export async function removeVehiclePhoto(
@@ -153,7 +159,10 @@ export async function removeVehiclePhoto(
     throw new Error('Unable to remove the vehicle photo. Please try again.');
   }
 
-  await removeAttachmentObjects(VEHICLE_PHOTOS_BUCKET, [objectPath]);
+  const removed = await removeAttachmentObjects(VEHICLE_PHOTOS_BUCKET, [objectPath]);
+  if (!removed) {
+    throw new Error('The photo was detached, but its stored file still needs cleanup.');
+  }
 
   return {
     path: objectPath,
