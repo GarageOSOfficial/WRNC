@@ -60,7 +60,7 @@
   },
   "private": true,
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "jest": {
     "preset": "jest-expo",
