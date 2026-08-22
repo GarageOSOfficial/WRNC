@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import { Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { DOCUMENT_CATEGORIES, type DocumentCategory } from '../../services/api/documents';
@@ -32,11 +32,14 @@ async function pickDocument(): Promise<AttachmentFileInput | null> {
   }
 
   const asset = result.assets[0];
+  const webFile = Platform.OS === 'web' ? asset.file : undefined;
+
   return {
-    name: asset.name,
-    mimeType: asset.mimeType || 'application/octet-stream',
-    size: asset.size ?? 0,
+    name: webFile?.name || asset.name,
+    mimeType: webFile?.type || asset.mimeType || 'application/octet-stream',
+    size: webFile?.size ?? asset.size ?? 0,
     uri: asset.uri,
+    webFile,
   };
 }
 
