@@ -42,7 +42,12 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.container}>
           <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
             <WrncLogo />
@@ -71,6 +76,7 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   screen: { backgroundColor: '#080808', flex: 1 },
+  scroll: { flex: 1 },
   scrollContent: { flexGrow: 1, paddingBottom: 24 },
   container: { alignSelf: 'center', maxWidth: 560, paddingHorizontal: 24, paddingVertical: 48, width: '100%' },
   wordmark: { alignSelf: 'flex-start', marginBottom: 72 },
