@@ -3,22 +3,12 @@ import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { Button } from '../common/Button';
 import type { Activity } from '../../types/activity';
 import type { Vehicle } from '../../types/vehicle';
-import {
-  filterTimelineActivities,
-  selectTimelineSections,
-  type TimelineFilters,
-} from '../../utils/activityTimeline';
+import { filterTimelineActivities, selectTimelineSections, type TimelineFilters } from '../../utils/activityTimeline';
 import { VehicleTimelineEmptyState } from './VehicleTimelineEmptyState';
 import { VehicleTimelineFilters } from './VehicleTimelineFilters';
 import { VehicleTimelineList } from './VehicleTimelineList';
 
-const DEFAULT_FILTERS: TimelineFilters = {
-  sortDirection: 'desc',
-  activityType: 'all',
-  status: 'all',
-  startDate: '',
-  endDate: '',
-};
+const DEFAULT_FILTERS: TimelineFilters = { sortDirection: 'desc', activityType: 'all', status: 'all', startDate: '', endDate: '' };
 
 export interface VehicleTimelineScreenProps {
   vehicle: Vehicle;
@@ -29,24 +19,10 @@ export interface VehicleTimelineScreenProps {
   onCreateActivity: () => void;
 }
 
-export function VehicleTimelineScreen({
-  vehicle,
-  activities,
-  isLoading,
-  onBack,
-  onActivityPress,
-  onCreateActivity,
-}: VehicleTimelineScreenProps) {
+export function VehicleTimelineScreen({ vehicle, activities, isLoading, onBack, onActivityPress, onCreateActivity }: VehicleTimelineScreenProps) {
   const [filters, setFilters] = useState<TimelineFilters>(DEFAULT_FILTERS);
-
-  const filteredActivities = useMemo(
-    () => filterTimelineActivities(activities, filters),
-    [activities, filters]
-  );
-  const sections = useMemo(
-    () => selectTimelineSections(activities, filters),
-    [activities, filters]
-  );
+  const filteredActivities = useMemo(() => filterTimelineActivities(activities, filters), [activities, filters]);
+  const sections = useMemo(() => selectTimelineSections(activities, filters), [activities, filters]);
   const vehicleLabel = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
   const listHeader = (
     <View>
@@ -62,26 +38,18 @@ export function VehicleTimelineScreen({
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
       {isLoading ? (
-        <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
           {listHeader}
-          <View className="items-center justify-center rounded-2xl border border-wrnc-border bg-wrnc-surface px-6 py-12">
-            <Text className="text-sm text-wrnc-text-secondary">Loading activities…</Text>
-          </View>
+          <View className="items-center justify-center rounded-2xl border border-wrnc-border bg-wrnc-surface px-6 py-12"><Text className="text-sm text-wrnc-text-secondary">Loading activities…</Text></View>
         </ScrollView>
       ) : filteredActivities.length === 0 ? (
-        <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
           {listHeader}
           <VehicleTimelineEmptyState onCreateActivity={onCreateActivity} />
         </ScrollView>
       ) : (
         <View className="flex-1 px-4">
-          <VehicleTimelineList
-            sections={sections}
-            totalCount={filteredActivities.length}
-            vehicleLabel={vehicleLabel}
-            header={listHeader}
-            onActivityPress={onActivityPress}
-          />
+          <VehicleTimelineList sections={sections} totalCount={filteredActivities.length} vehicleLabel={vehicleLabel} header={listHeader} onActivityPress={onActivityPress} />
         </View>
       )}
     </SafeAreaView>

@@ -25,33 +25,19 @@ export default function VehiclePassportRoute() {
   const removePhoto = useRemoveVehiclePhoto();
 
   if (!vehicleId) {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
-        <Text className="text-sm text-wrnc-text-secondary">Vehicle not found.</Text>
-      </SafeAreaView>
-    );
+    return <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6"><Text className="text-sm text-wrnc-text-secondary">Vehicle not found.</Text></SafeAreaView>;
   }
 
   if (isLoading || !passport) {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6">
-        <Text className="text-sm text-wrnc-text-secondary">Loading passport…</Text>
-      </SafeAreaView>
-    );
+    return <SafeAreaView className="flex-1 items-center justify-center bg-wrnc-background px-6"><Text className="text-sm text-wrnc-text-secondary">Loading passport…</Text></SafeAreaView>;
   }
 
   const { vehicleSummary, timelineSummary, documentationSummary, statistics, recommendations } = passport;
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
-        <BuildPassportHeader
-          vehicleTitle={vehicleSummary.title}
-          vehicleSubtitle={vehicleSummary.subtitle}
-          overallScore={documentationSummary.overallScore}
-          onBack={() => router.back()}
-        />
-
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+        <BuildPassportHeader vehicleTitle={vehicleSummary.title} vehicleSubtitle={vehicleSummary.subtitle} overallScore={documentationSummary.overallScore} onBack={() => router.back()} />
         {vehicle ? (
           <VehicleCoverPhoto
             signedUrl={signedUrl}
@@ -63,43 +49,17 @@ export default function VehiclePassportRoute() {
               const { data: userData } = await supabase.auth.getUser();
               const userId = userData.user?.id;
               if (!userId) throw new Error('You must be signed in to upload a photo.');
-              if (vehicle.coverPhotoPath) {
-                await replacePhoto.mutateAsync({ vehicleId, file, userId });
-              } else {
-                await uploadPhoto.mutateAsync({ vehicleId, file, userId });
-              }
+              if (vehicle.coverPhotoPath) await replacePhoto.mutateAsync({ vehicleId, file, userId });
+              else await uploadPhoto.mutateAsync({ vehicleId, file, userId });
             }}
-            onRemove={async () => {
-              await removePhoto.mutateAsync({ vehicleId });
-            }}
+            onRemove={async () => { await removePhoto.mutateAsync({ vehicleId }); }}
           />
         ) : null}
-
-        <BuildPassportVehicleSummary
-          summary={vehicleSummary}
-          onNavigate={(route) => router.push(route)}
-          onBack={() => router.back()}
-        />
-
-        <BuildPassportTimelineSummary
-          summary={timelineSummary}
-          onNavigate={(route) => router.push(route)}
-          onBack={() => router.back()}
-        />
-
-        <BuildPassportDocumentationSummary
-          summary={documentationSummary}
-          onNavigate={(route) => router.push(route)}
-          onBack={() => router.back()}
-        />
-
+        <BuildPassportVehicleSummary summary={vehicleSummary} onNavigate={(route) => router.push(route)} onBack={() => router.back()} />
+        <BuildPassportTimelineSummary summary={timelineSummary} onNavigate={(route) => router.push(route)} onBack={() => router.back()} />
+        <BuildPassportDocumentationSummary summary={documentationSummary} onNavigate={(route) => router.push(route)} onBack={() => router.back()} />
         <BuildPassportStatistics statistics={statistics} />
-
-        <BuildPassportRecommendations
-          recommendations={recommendations}
-          onNavigate={(route) => router.push(route)}
-          onBack={() => router.back()}
-        />
+        <BuildPassportRecommendations recommendations={recommendations} onNavigate={(route) => router.push(route)} onBack={() => router.back()} />
       </ScrollView>
     </SafeAreaView>
   );
