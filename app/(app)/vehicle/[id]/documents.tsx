@@ -39,7 +39,12 @@ export default function VehicleDocumentsRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <Button label="Back to Passport" variant="secondary" onPress={() => router.back()} />
 
         <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
