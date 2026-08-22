@@ -59,17 +59,23 @@ export function VehicleTimelineScreen({
     </View>
   );
 
+  const scrollProps = {
+    style: { flex: 1 },
+    contentContainerStyle: { padding: 16, paddingBottom: 40 },
+    showsVerticalScrollIndicator: false,
+  } as const;
+
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
       {isLoading ? (
-        <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView {...scrollProps}>
           {listHeader}
           <View className="items-center justify-center rounded-2xl border border-wrnc-border bg-wrnc-surface px-6 py-12">
             <Text className="text-sm text-wrnc-text-secondary">Loading activities…</Text>
           </View>
         </ScrollView>
       ) : filteredActivities.length === 0 ? (
-        <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView {...scrollProps}>
           {listHeader}
           <VehicleTimelineEmptyState onCreateActivity={onCreateActivity} />
         </ScrollView>
