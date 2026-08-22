@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { WrncLogo } from '../components/marketing/WrncLogo';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
@@ -63,10 +63,15 @@ export default function SignupScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.container}>
-        <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
-          <WrncLogo />
-        </Pressable>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
+            <WrncLogo />
+          </Pressable>
 
         <View style={styles.card}>
           <Text style={styles.eyebrow}>JOIN THE GARAGE</Text>
@@ -140,14 +145,16 @@ export default function SignupScreen() {
               </Pressable>
             </>
           )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { backgroundColor: '#080808', flex: 1 },
+  scrollContent: { flexGrow: 1 },
   container: { alignSelf: 'center', maxWidth: 560, paddingHorizontal: 24, paddingVertical: 48, width: '100%' },
   wordmark: { alignSelf: 'flex-start', marginBottom: 72 },
   card: { backgroundColor: '#1A1D22', borderColor: '#34373D', borderRadius: 8, borderWidth: 1, padding: 32 },
