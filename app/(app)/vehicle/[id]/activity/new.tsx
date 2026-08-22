@@ -10,22 +10,8 @@ import { ACTIVITY_TYPES, type ActivityType } from '../../../../../types/activity
 import { buildCreateActivityPayload, type CreateActivityFieldErrors } from '../../../../../utils/activityPayload';
 import { extractSupabaseErrorMessage, logSupabaseError } from '../../../../../utils/supabaseError';
 
-function ActivityTypeOption({
-  label,
-  selected,
-  onPress,
-}: {
-  label: ActivityType;
-  selected: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Button
-      label={label}
-      variant={selected ? 'primary' : 'secondary'}
-      onPress={onPress}
-    />
-  );
+function ActivityTypeOption({ label, selected, onPress }: { label: ActivityType; selected: boolean; onPress: () => void }) {
+  return <Button label={label} variant={selected ? 'primary' : 'secondary'} onPress={onPress} />;
 }
 
 export default function NewActivityRoute() {
@@ -50,17 +36,7 @@ export default function NewActivityRoute() {
       return;
     }
 
-    const payloadResult = buildCreateActivityPayload({
-      vehicleId,
-      userId: workspace.ownerId,
-      activityType,
-      title,
-      description,
-      activityDate,
-      odometer,
-      cost,
-    });
-
+    const payloadResult = buildCreateActivityPayload({ vehicleId, userId: workspace.ownerId, activityType, title, description, activityDate, odometer, cost });
     if (!payloadResult.input) {
       setFieldErrors(payloadResult.errors);
       setErrorMessage(null);
@@ -69,22 +45,13 @@ export default function NewActivityRoute() {
 
     setFieldErrors({});
     setErrorMessage(null);
-
-    createActivity.mutate(
-      payloadResult.input,
-      {
-        onSuccess: () => {
-          router.replace(`/vehicle/${vehicleId}/timeline`);
-        },
-        onError: (error) => {
-          setErrorMessage(extractSupabaseErrorMessage(error, 'Unable to save activity right now. Please try again.'));
-          logSupabaseError('NewActivityRoute.handleSave', error, {
-            vehicleId,
-            activityType,
-          });
-        },
-      }
-    );
+    createActivity.mutate(payloadResult.input, {
+      onSuccess: () => router.replace(`/vehicle/${vehicleId}/timeline`),
+      onError: (error) => {
+        setErrorMessage(extractSupabaseErrorMessage(error, 'Unable to save activity right now. Please try again.'));
+        logSupabaseError('NewActivityRoute.handleSave', error, { vehicleId, activityType });
+      },
+    });
   };
 
   return (
@@ -104,62 +71,19 @@ export default function NewActivityRoute() {
 
           <View className="mt-4 gap-3">
             {ACTIVITY_TYPES.map((option) => (
-              <ActivityTypeOption
-                key={option}
-                label={option}
-                selected={activityType === option}
-                onPress={() => setActivityType(option)}
-              />
+              <ActivityTypeOption key={option} label={option} selected={activityType === option} onPress={() => setActivityType(option)} />
             ))}
           </View>
 
           <View className="mt-4">
-            <Input
-              label="Title"
-              value={title}
-              onChangeText={(nextTitle) => {
-                setTitle(nextTitle);
-                setFieldErrors((currentErrors) => ({ ...currentErrors, title: undefined }));
-              }}
-              error={fieldErrors.title}
-            />
+            <Input label="Title" value={title} onChangeText={(nextTitle) => { setTitle(nextTitle); setFieldErrors((currentErrors) => ({ ...currentErrors, title: undefined })); }} error={fieldErrors.title} />
             <Input label="Description" value={description} onChangeText={setDescription} multiline numberOfLines={4} />
-            <Input
-              label="Activity Date"
-              value={activityDate}
-              onChangeText={(nextDate) => {
-                setActivityDate(nextDate);
-                setFieldErrors((currentErrors) => ({ ...currentErrors, activityDate: undefined }));
-              }}
-              placeholder="YYYY-MM-DD"
-              error={fieldErrors.activityDate}
-            />
-            <Input
-              label="Odometer"
-              value={odometer}
-              onChangeText={(nextOdometer) => {
-                setOdometer(nextOdometer);
-                setFieldErrors((currentErrors) => ({ ...currentErrors, odometer: undefined }));
-              }}
-              keyboardType="number-pad"
-              placeholder="Optional"
-              error={fieldErrors.odometer}
-            />
-            <Input
-              label="Cost"
-              value={cost}
-              onChangeText={(nextCost) => {
-                setCost(nextCost);
-                setFieldErrors((currentErrors) => ({ ...currentErrors, cost: undefined }));
-              }}
-              keyboardType="decimal-pad"
-              placeholder="Optional"
-              error={fieldErrors.cost}
-            />
+            <Input label="Activity Date" value={activityDate} onChangeText={(nextDate) => { setActivityDate(nextDate); setFieldErrors((currentErrors) => ({ ...currentErrors, activityDate: undefined })); }} placeholder="YYYY-MM-DD" error={fieldErrors.activityDate} />
+            <Input label="Odometer" value={odometer} onChangeText={(nextOdometer) => { setOdometer(nextOdometer); setFieldErrors((currentErrors) => ({ ...currentErrors, odometer: undefined })); }} keyboardType="number-pad" placeholder="Optional" error={fieldErrors.odometer} />
+            <Input label="Cost" value={cost} onChangeText={(nextCost) => { setCost(nextCost); setFieldErrors((currentErrors) => ({ ...currentErrors, cost: undefined })); }} keyboardType="decimal-pad" placeholder="Optional" error={fieldErrors.cost} />
           </View>
 
           {errorMessage ? <Text className="mb-4 text-sm text-red-600">{errorMessage}</Text> : null}
-
           <Button label="Save Activity" loading={createActivity.isPending} onPress={handleSave} />
         </View>
       </ScrollView>
