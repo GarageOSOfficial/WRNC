@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   contentMobile: { flexDirection: 'column' },
   item: { flex: 1, minHeight: 190, paddingHorizontal: 34, paddingVertical: 34 },
   itemBorder: { borderLeftColor: '#2A2A2A', borderLeftWidth: 1 },
-  index: { color: '#7C3AED', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
+  index: { color: '#C0C0C0', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
   title: { color: '#FFFFFF', fontSize: 23, fontWeight: '700', lineHeight: 27, marginTop: 18 },
   body: { color: '#C0C0C0', fontSize: 14, lineHeight: 21, marginTop: 12, maxWidth: 310 },
 });
