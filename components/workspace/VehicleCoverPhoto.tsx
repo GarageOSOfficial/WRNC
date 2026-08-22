@@ -15,7 +15,62 @@ export interface VehicleCoverPhotoProps {
   errorMessage?: string | null;
 }
 
+function inferImageMimeType(fileName: string): string {
+  const lower = fileName.toLowerCase();
+  if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg';
+  if (lower.endsWith('.png')) return 'image/png';
+  if (lower.endsWith('.webp')) return 'image/webp';
+  return '';
+}
+
+async function pickWebImage(): Promise<AttachmentFileInput | null> {
+  if (typeof document === 'undefined') {
+    throw new Error('Photo selection is unavailable in this browser.');
+  }
+
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg,image/png,image/webp';
+    input.style.position = 'fixed';
+    input.style.left = '-9999px';
+    input.style.opacity = '0';
+
+    const cleanup = () => {
+      input.remove();
+    };
+
+    input.addEventListener(
+      'change',
+      () => {
+        const webFile = input.files?.[0];
+        cleanup();
+
+        if (!webFile) {
+          resolve(null);
+          return;
+        }
+
+        resolve({
+          name: webFile.name || `vehicle-cover-${Date.now()}.jpg`,
+          mimeType: webFile.type || inferImageMimeType(webFile.name),
+          size: webFile.size,
+          webFile,
+        });
+      },
+      { once: true }
+    );
+
+    document.body.appendChild(input);
+    input.click();
+  });
+}
+
 async function pickImage(): Promise<AttachmentFileInput | null> {
+  if (Platform.OS === 'web') {
+    return pickWebImage();
+  }
+
   const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (!permission.granted) {
     throw new Error('Photo library access is required to add a vehicle photo.');
@@ -31,24 +86,12 @@ async function pickImage(): Promise<AttachmentFileInput | null> {
   }
 
   const asset = result.assets[0];
-  const webFile = Platform.OS === 'web' ? asset.file : undefined;
-  const size = webFile?.size ?? asset.fileSize ?? 0;
-  const mimeType = webFile?.type || asset.mimeType || 'image/jpeg';
-  const name = webFile?.name || asset.fileName || `vehicle-cover-${Date.now()}.jpg`;
-
-  return Platform.OS === 'web'
-    ? {
-        name,
-        mimeType,
-        size,
-        webFile,
-      }
-    : {
-        name,
-        mimeType,
-        size,
-        uri: asset.uri,
-      };
+  return {
+    name: asset.fileName || `vehicle-cover-${Date.now()}.jpg`,
+    mimeType: asset.mimeType || 'image/jpeg',
+    size: asset.fileSize ?? 0,
+    uri: asset.uri,
+  };
 }
 
 /** Reusable cover-photo card supporting Add, Change, and Remove, with private signed-URL display. */
