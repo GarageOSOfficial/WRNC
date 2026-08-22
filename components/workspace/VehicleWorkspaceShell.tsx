@@ -145,7 +145,12 @@ export function VehicleWorkspaceShell() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-wrnc-background p-4">
+    <ScrollView
+      style={{ flex: 1, backgroundColor: '#080808' }}
+      contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
       <Text className="mb-4 text-2xl font-bold text-wrnc-text-primary">Vehicles</Text>
       {!showCreate ? (
         <Button label="Create Vehicle" onPress={() => setShowCreate(true)} />
