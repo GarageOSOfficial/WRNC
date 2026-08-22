@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Platform, Pressable, Text, View } from 'react-native';
 import { Button } from '../common/Button';
 import type { AttachmentFileInput } from '../../services/api/attachmentStorage';
 
@@ -31,12 +31,24 @@ async function pickImage(): Promise<AttachmentFileInput | null> {
   }
 
   const asset = result.assets[0];
-  return {
-    name: asset.fileName || `vehicle-cover-${Date.now()}.jpg`,
-    mimeType: asset.mimeType || 'image/jpeg',
-    size: asset.fileSize ?? 0,
-    uri: asset.uri,
-  };
+  const webFile = Platform.OS === 'web' ? asset.file : undefined;
+  const size = webFile?.size ?? asset.fileSize ?? 0;
+  const mimeType = webFile?.type || asset.mimeType || 'image/jpeg';
+  const name = webFile?.name || asset.fileName || `vehicle-cover-${Date.now()}.jpg`;
+
+  return Platform.OS === 'web'
+    ? {
+        name,
+        mimeType,
+        size,
+        webFile,
+      }
+    : {
+        name,
+        mimeType,
+        size,
+        uri: asset.uri,
+      };
 }
 
 /** Reusable cover-photo card supporting Add, Change, and Remove, with private signed-URL display. */
