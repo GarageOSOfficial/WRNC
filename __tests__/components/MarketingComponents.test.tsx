@@ -1,7 +1,10 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { HomeHero } from '../../components/marketing/HomeHero';
+import { MarketingFooter } from '../../components/marketing/MarketingFooter';
+import { MarketingHeader } from '../../components/marketing/MarketingHeader';
 import { ProductShowcaseSection } from '../../components/marketing/ProductShowcaseSection';
+import { WhyWrncSection } from '../../components/marketing/WhyWrncSection';
 import { WrncLogo } from '../../components/marketing/WrncLogo';
 
 // useWindowDimensions is mocked per breakpoint where needed
@@ -16,63 +19,35 @@ const mockDimensions = require('react-native/Libraries/Utilities/useWindowDimens
 describe('HomeHero', () => {
   beforeEach(() => mockDimensions.mockReturnValue({ width: 1440, height: 900, scale: 1, fontScale: 1 }));
 
-  it('renders the approved headline copy', () => {
+  it('renders the approved V3.1 copy and product proof', () => {
     const { getByText } = render(<HomeHero />);
-    getByText(/EVERY BUILD DESERVES A/i);
-    getByText(/LIVING RECORD\./i);
+    getByText('Every build deserves a living record.');
+    getByText(/operating system for automotive builders/i);
+    getByText('JOIN WRNC');
+    getByText('SIGN IN →');
   });
 
-  it('renders the eyebrow label', () => {
-    const { getByText } = render(<HomeHero />);
-    getByText('THE CAR CULTURE PLATFORM');
-  });
-
-  it('renders the CTA button with the approved label', () => {
-    const { getByText } = render(<HomeHero />);
-    getByText('START YOUR BUILD');
-  });
-
-  it('calls onGetStarted when the CTA is pressed', () => {
+  it('routes both hero actions through their callbacks', () => {
     const onGetStarted = jest.fn();
-    const { getByText } = render(<HomeHero onGetStarted={onGetStarted} />);
-    fireEvent.press(getByText('START YOUR BUILD'));
+    const onSignIn = jest.fn();
+    const { getByText } = render(<HomeHero onGetStarted={onGetStarted} onSignIn={onSignIn} />);
+    fireEvent.press(getByText('JOIN WRNC'));
+    fireEvent.press(getByText('SIGN IN →'));
     expect(onGetStarted).toHaveBeenCalledTimes(1);
-  });
-
-  it('renders the three proof-row items', () => {
-    const { getByText } = render(<HomeHero />);
-    getByText('ONE GARAGE');
-    getByText('ONE TIMELINE');
-    getByText('ONE LEGACY');
-  });
-
-  it('renders the inventory dashboard image with correct accessibility label', () => {
-    const { getByLabelText } = render(<HomeHero />);
-    getByLabelText('WRNC inventory dashboard');
-  });
-
-  it('renders the activity timeline image with correct accessibility label', () => {
-    const { getByLabelText } = render(<HomeHero />);
-    getByLabelText('WRNC activity timeline');
-  });
-
-  it('renders the documentation score card', () => {
-    const { getByText } = render(<HomeHero />);
-    getByText('94%');
-    getByText('DOCUMENTATION SCORE');
+    expect(onSignIn).toHaveBeenCalledTimes(1);
   });
 
   it('uses stacked layout on mobile (width < 768)', () => {
     mockDimensions.mockReturnValue({ width: 375, height: 812, scale: 2, fontScale: 1 });
     // Component should render without error at mobile width
     const { getByText } = render(<HomeHero />);
-    getByText(/EVERY BUILD DESERVES A/i);
+    getByText('Every build deserves a living record.');
   });
 
   it('uses stacked layout on tablet (768 ≤ width < 1100)', () => {
     mockDimensions.mockReturnValue({ width: 834, height: 1194, scale: 2, fontScale: 1 });
     const { getByText } = render(<HomeHero />);
-    getByText(/EVERY BUILD DESERVES A/i);
+    getByText('Every build deserves a living record.');
   });
 });
 
@@ -81,34 +56,45 @@ describe('HomeHero', () => {
 describe('ProductShowcaseSection', () => {
   beforeEach(() => mockDimensions.mockReturnValue({ width: 1440, height: 900, scale: 1, fontScale: 1 }));
 
-  it('renders the section heading', () => {
-    const { getByText } = render(<ProductShowcaseSection />);
-    getByText('YOUR ENTIRE BUILD, IN FOCUS.');
-  });
-
-  it('renders the eyebrow label', () => {
-    const { getByText } = render(<ProductShowcaseSection />);
-    getByText('BUILT AROUND THE CAR');
-  });
-
-  it('renders all three approved product card captions', () => {
-    const { getByText } = render(<ProductShowcaseSection />);
-    getByText('BUILD PASSPORT™');
-    getByText('PARTS INVENTORY');
-    getByText('DOCUMENTATION SCORE™');
-  });
-
-  it('renders descriptions for each product card', () => {
-    const { getByText } = render(<ProductShowcaseSection />);
-    getByText(/permanent record of every part/i);
-    getByText(/Know what you own/i);
-    getByText(/how complete the vehicle story/i);
+  it('renders the single Garage proof and positioning copy', () => {
+    const { getByLabelText, getByText } = render(<ProductShowcaseSection />);
+    getByLabelText('WRNC Garage product interface');
+    getByText('Built for builders, not algorithms.');
+    getByText(/personal build database/i);
   });
 
   it('renders without error on mobile width', () => {
     mockDimensions.mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
     const { getByText } = render(<ProductShowcaseSection />);
-    getByText('BUILD PASSPORT™');
+    getByText('Built for builders, not algorithms.');
+  });
+});
+
+describe('V3.1 navigation and benefits', () => {
+  it('routes mobile header auth actions and toggles its accessible menu', () => {
+    mockDimensions.mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    const onJoin = jest.fn();
+    const onSignIn = jest.fn();
+    const { getByLabelText, getByText } = render(<MarketingHeader onJoin={onJoin} onSignIn={onSignIn} />);
+    fireEvent.press(getByLabelText('Open navigation'));
+    fireEvent.press(getByText('SIGN IN'));
+    fireEvent.press(getByLabelText('Open navigation'));
+    fireEvent.press(getByText('JOIN WRNC'));
+    expect(onJoin).toHaveBeenCalledTimes(1);
+    expect(onSignIn).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the three approved benefits and public footer labels', () => {
+    const benefits = render(<WhyWrncSection />);
+    benefits.getByText('Organize your vehicle.');
+    benefits.getByText('Document your build.');
+    benefits.getByText('Preserve its history.');
+    const onSignIn = jest.fn();
+    const footer = render(<MarketingFooter onSignIn={onSignIn} />);
+    footer.getByText(/Instagram/);
+    footer.getByText('© 2026 WRNC.');
+    fireEvent.press(footer.getByText('Sign In'));
+    expect(onSignIn).toHaveBeenCalledTimes(1);
   });
 });
 
