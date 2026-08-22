@@ -7,7 +7,7 @@ export function ProductShowcaseSection() {
   return (
     <View style={[styles.section, isMobile && styles.sectionMobile]}>
       <View style={[styles.content, isMobile && styles.contentMobile]}>
-        <View style={styles.visual}>
+        <View style={[styles.visual, isMobile && styles.visualMobile, isMobile && { height: (width - 40) * 9 / 16 }]}>
           <Image
             accessibilityLabel="WRNC Garage product interface"
             resizeMode="contain"
@@ -29,8 +29,9 @@ const styles = StyleSheet.create({
   sectionMobile: { paddingHorizontal: 20, paddingVertical: 48 },
   content: { alignItems: 'center', alignSelf: 'center', flexDirection: 'row', gap: 48, maxWidth: 1344, width: '100%' },
   contentMobile: { alignItems: 'stretch', flexDirection: 'column', gap: 30 },
-  visual: { flex: 1.25, minWidth: 0 },
-  image: { aspectRatio: 16 / 9, borderColor: '#2A2A2A', borderRadius: 12, borderWidth: 1, height: undefined, width: '100%' },
+  visual: { aspectRatio: 16 / 9, flex: 1.25, minWidth: 0 },
+  visualMobile: { flexBasis: 'auto', flexGrow: 0, flexShrink: 0 },
+  image: { borderColor: '#2A2A2A', borderRadius: 12, borderWidth: 1, height: '100%', width: '100%' },
   copy: { flex: 0.75, maxWidth: 430, minWidth: 0 },
   heading: { color: '#FFFFFF', fontSize: 42, fontWeight: '700', letterSpacing: -0.8, lineHeight: 47 },
   headingMobile: { fontSize: 32, lineHeight: 37 },

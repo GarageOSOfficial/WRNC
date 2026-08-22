@@ -24,7 +24,13 @@ export function HomeHero({ onGetStarted, onSignIn }: HomeHeroProps) {
             </Pressable>
           </View>
         </View>
-        <View style={[styles.visual, (isMobile || isTablet) && styles.visualStacked]}>
+        <View
+          style={[
+            styles.visual,
+            (isMobile || isTablet) && styles.visualStacked,
+            (isMobile || isTablet) && { height: (width - (isMobile ? 40 : 96)) * 9 / 16 },
+          ]}
+        >
           <Image
             accessibilityLabel="WRNC product preview"
             resizeMode="contain"
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
   primary: { minWidth: 142 },
   secondaryButton: { alignItems: 'center', justifyContent: 'center', minHeight: 44, paddingHorizontal: 8 },
   secondary: { color: '#FFFFFF', fontSize: 13, fontWeight: '700', letterSpacing: 0.4 },
-  visual: { flex: 1.22, minHeight: 430, minWidth: 0 },
-  visualStacked: { alignSelf: 'center', maxWidth: 820, minHeight: 0, width: '100%' },
-  heroArtwork: { aspectRatio: 16 / 9, height: undefined, width: '100%' },
+  visual: { aspectRatio: 16 / 9, flex: 1.22, minWidth: 0 },
+  visualStacked: { alignSelf: 'center', flexBasis: 'auto', flexGrow: 0, flexShrink: 0, maxWidth: 820, minHeight: 0, width: '100%' },
+  heroArtwork: { height: '100%', width: '100%' },
 });

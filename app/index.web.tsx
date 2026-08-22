@@ -34,7 +34,7 @@ export default function WebsiteHomeScreen() {
         <WhyWrncSection />
         <ProductShowcaseSection />
         <FinalCtaSection onJoin={openSignup} />
-        <MarketingFooter />
+        <MarketingFooter onSignIn={openLogin} />
       </ScrollView>
     </>
   );
