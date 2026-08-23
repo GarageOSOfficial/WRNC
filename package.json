@@ -40,6 +40,7 @@
     "react-native-screens": "~3.27.0",
     "react-native-svg": "14.1.0",
     "react-native-url-polyfill": "^2.0.0",
+    "react-native-web": "~0.19.6",
     "tailwindcss": "3.3.0",
     "zustand": "^4.4.7"
   },
