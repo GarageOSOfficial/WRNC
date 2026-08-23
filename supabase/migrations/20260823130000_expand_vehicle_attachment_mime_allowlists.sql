@@ -20,5 +20,5 @@ set allowed_mime_types = array[
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'text/csv'
 ]::text[],
-file_size_limit = 104857600
+file_size_limit = 52428800
 where id = 'vehicle-documents';

@@ -19,7 +19,7 @@ import {
 
 export const VEHICLE_DOCUMENTS_BUCKET = 'vehicle-documents' as const;
 export const MAX_DOCUMENT_SIZE_BYTES = 25 * 1024 * 1024;
-export const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024;
+export const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024;
 export const ALLOWED_DOCUMENT_MIME_TYPES = [
   'image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif',
   'video/mp4', 'video/quicktime', 'video/x-m4v',

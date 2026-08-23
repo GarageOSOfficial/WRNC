@@ -267,11 +267,11 @@ describe('uploadDocument', () => {
     files.forEach((file) => expect(validateDocumentFile(file).valid).toBe(true));
   });
 
-  it('rejects video over the 100 MB limit', () => {
+  it('rejects video over the 50 MB limit', () => {
     expect(validateDocumentFile({
       name: 'huge.mov',
       mimeType: 'video/quicktime',
-      size: 101 * 1024 * 1024,
+      size: 51 * 1024 * 1024,
     }).valid).toBe(false);
   });
 });
