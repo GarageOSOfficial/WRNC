@@ -195,6 +195,35 @@ describe('uploadDocument', () => {
     expect(document.storagePath).toBe('user-1/veh-1/receipt/x-r.pdf');
   });
 
+  it('associates an uploaded document with its activity', async () => {
+    mockSingle.mockResolvedValue({
+      data: makeRow({
+        activity_id: 'act-1',
+        vehicle_id: 'veh-1',
+        storage_path: 'user-1/veh-1/diagram/x-wiring.pdf',
+        original_file_name: 'wiring.pdf',
+        document_type: 'diagram',
+      }),
+      error: null,
+    });
+
+    await uploadDocument({
+      workspaceId: 'ws-1',
+      vehicleId: 'veh-1',
+      activityId: 'act-1',
+      userId: 'user-1',
+      title: 'Wiring diagram',
+      category: 'diagram',
+      file: { name: 'wiring.pdf', mimeType: 'application/pdf', size: 1024, webFile: new Blob(['x']) },
+    });
+
+    expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({
+      activity_id: 'act-1',
+      vehicle_id: 'veh-1',
+      workspace_id: 'ws-1',
+    }));
+  });
+
   it('rolls back the uploaded object when the database insert fails', async () => {
     mockSingle.mockResolvedValue({ data: null, error: { message: 'insert failed' } });
 
