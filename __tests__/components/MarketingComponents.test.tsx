@@ -93,7 +93,7 @@ describe('V3.1 navigation and benefits', () => {
     benefits.getByText('Preserve its history.');
     const onSignIn = jest.fn();
     const footer = render(<MarketingFooter onSignIn={onSignIn} />);
-    ['Instagram', 'Facebook', 'YouTube', 'Discord', 'TikTok', 'Reddit profile'].forEach((label) => {
+    ['WRNC links', 'Instagram', 'Facebook', 'YouTube', 'Discord', 'TikTok', 'Reddit profile'].forEach((label) => {
       footer.getByLabelText(label);
     });
     footer.getByText('© 2026 WRNC.');

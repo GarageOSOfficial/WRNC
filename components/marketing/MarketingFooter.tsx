@@ -6,12 +6,13 @@ import { WrncLogo } from './WrncLogo';
 const productLinks = ['About', 'Founding Builders', 'Shop', 'Sign In'];
 const legalLinks = ['Privacy', 'Terms', 'Contact', 'Support'];
 const socialLinks = [
-  { label: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/wrnc.app/' },
-  { label: 'Facebook', icon: 'facebook', url: 'https://www.facebook.com/WRNCapp/' },
-  { label: 'YouTube', icon: 'youtube', url: 'https://www.youtube.com/@WRNC_app' },
-  { label: 'Discord', icon: 'discord', url: 'https://discord.gg/YfbcetDD' },
-  { label: 'TikTok', icon: 'tiktok', url: 'https://www.tiktok.com/@wrnc.app' },
-  { label: 'Reddit profile', icon: 'reddit', url: 'https://www.reddit.com/user/WRNC_app/' },
+  { label: 'WRNC links', icon: 'link', iconStyle: 'solid', url: 'https://linktr.ee/WRNC.app' },
+  { label: 'Instagram', icon: 'instagram', iconStyle: 'brand', url: 'https://www.instagram.com/wrnc.app/' },
+  { label: 'Facebook', icon: 'facebook', iconStyle: 'brand', url: 'https://www.facebook.com/WRNCapp/' },
+  { label: 'YouTube', icon: 'youtube', iconStyle: 'brand', url: 'https://www.youtube.com/@WRNC_app' },
+  { label: 'Discord', icon: 'discord', iconStyle: 'brand', url: 'https://discord.gg/YfbcetDD' },
+  { label: 'TikTok', icon: 'tiktok', iconStyle: 'brand', url: 'https://www.tiktok.com/@wrnc.app' },
+  { label: 'Reddit profile', icon: 'reddit', iconStyle: 'brand', url: 'https://www.reddit.com/user/WRNC_app/' },
 ] as const;
 
 type MarketingFooterProps = { onSignIn?: () => void; onShop?: () => void };
@@ -27,7 +28,7 @@ export function MarketingFooter({ onSignIn, onShop }: MarketingFooterProps) {
           <WrncLogo />
           <Text style={styles.tagline}>The OS for Automotive Builders.</Text>
           <View accessibilityLabel="WRNC social media" style={styles.socials}>
-            {socialLinks.map(({ label, icon, url }) => (
+            {socialLinks.map(({ label, icon, iconStyle, url }) => (
               <Pressable
                 accessibilityLabel={label}
                 accessibilityRole="link"
@@ -35,7 +36,7 @@ export function MarketingFooter({ onSignIn, onShop }: MarketingFooterProps) {
                 onPress={() => Linking.openURL(url)}
                 style={styles.socialLink}
               >
-                <FontAwesome6 color="#C0C0C0" iconStyle="brand" name={icon} size={20} />
+                <FontAwesome6 color="#C0C0C0" iconStyle={iconStyle} name={icon} size={20} />
               </Pressable>
             ))}
           </View>
