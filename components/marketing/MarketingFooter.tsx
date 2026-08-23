@@ -1,9 +1,18 @@
 import React from 'react';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Linking, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { WrncLogo } from './WrncLogo';
 
 const productLinks = ['About', 'Founding Builders', 'Shop', 'Sign In'];
 const legalLinks = ['Privacy', 'Terms', 'Contact', 'Support'];
+const socialLinks = [
+  { label: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/wrnc.app/' },
+  { label: 'Facebook', icon: 'facebook', url: 'https://www.facebook.com/WRNCapp/' },
+  { label: 'YouTube', icon: 'youtube', url: 'https://www.youtube.com/@WRNC_app' },
+  { label: 'Discord', icon: 'discord', url: 'https://discord.gg/YfbcetDD' },
+  { label: 'TikTok', icon: 'tiktok', url: 'https://www.tiktok.com/@wrnc.app' },
+  { label: 'Reddit profile', icon: 'reddit', url: 'https://www.reddit.com/user/WRNC_app/' },
+] as const;
 
 type MarketingFooterProps = { onSignIn?: () => void; onShop?: () => void };
 
@@ -17,7 +26,19 @@ export function MarketingFooter({ onSignIn, onShop }: MarketingFooterProps) {
         <View style={styles.brand}>
           <WrncLogo />
           <Text style={styles.tagline}>The OS for Automotive Builders.</Text>
-          <Text style={styles.socials}>Instagram   Facebook   YouTube   Discord</Text>
+          <View accessibilityLabel="WRNC social media" style={styles.socials}>
+            {socialLinks.map(({ label, icon, url }) => (
+              <Pressable
+                accessibilityLabel={label}
+                accessibilityRole="link"
+                key={label}
+                onPress={() => Linking.openURL(url)}
+                style={styles.socialLink}
+              >
+                <FontAwesome6 color="#C0C0C0" iconStyle="brand" name={icon} size={20} />
+              </Pressable>
+            ))}
+          </View>
         </View>
         <View style={styles.links}>{productLinks.map((item) => item === 'Sign In' ? (
           <Pressable accessibilityRole="button" key={item} onPress={onSignIn} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
@@ -46,7 +67,8 @@ const styles = StyleSheet.create({
   contentCompact: { flexDirection: 'column', gap: 28 },
   brand: { gap: 10 },
   tagline: { color: '#C0C0C0', fontSize: 12 },
-  socials: { color: '#FFFFFF', fontSize: 12, lineHeight: 22 },
+  socials: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 2 },
+  socialLink: { alignItems: 'center', borderColor: '#34373D', borderRadius: 18, borderWidth: 1, height: 36, justifyContent: 'center', width: 36 },
   links: { gap: 11 },
   link: { color: '#C0C0C0', fontSize: 13 },
   linkPressable: { justifyContent: 'center', minHeight: 44 },
