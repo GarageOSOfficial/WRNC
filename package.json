@@ -14,7 +14,7 @@
     "build": "npm run build:web",
     "build:android": "eas build --platform android",
     "build:ios": "eas build --platform ios",
-    "build:web": "expo export --platform web",
+    "build:web": "expo export --platform web && node scripts/copy-coming-soon-static.mjs",
     "qa:attachments:live": "node scripts/live-attachment-qa.mjs"
   },
   "dependencies": {
@@ -40,7 +40,6 @@
     "react-native-screens": "~3.27.0",
     "react-native-svg": "14.1.0",
     "react-native-url-polyfill": "^2.0.0",
-    "react-native-web": "~0.19.6",
     "tailwindcss": "3.3.0",
     "zustand": "^4.4.7"
   },
