@@ -21,7 +21,61 @@ export interface DocumentUploadFormProps {
   isSubmitting?: boolean;
 }
 
+function inferDocumentMimeType(fileName: string): string {
+  const lower = fileName.toLowerCase();
+  if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg';
+  if (lower.endsWith('.png')) return 'image/png';
+  if (lower.endsWith('.webp')) return 'image/webp';
+  if (lower.endsWith('.pdf')) return 'application/pdf';
+  return '';
+}
+
+async function pickWebDocument(): Promise<AttachmentFileInput | null> {
+  if (typeof document === 'undefined') {
+    throw new Error('File selection is unavailable in this browser.');
+  }
+
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg,image/png,image/webp,application/pdf';
+    input.style.position = 'fixed';
+    input.style.left = '-9999px';
+    input.style.opacity = '0';
+
+    const cleanup = () => input.remove();
+
+    input.addEventListener(
+      'change',
+      () => {
+        const webFile = input.files?.[0];
+        cleanup();
+
+        if (!webFile) {
+          resolve(null);
+          return;
+        }
+
+        resolve({
+          name: webFile.name || `vehicle-document-${Date.now()}`,
+          mimeType: webFile.type || inferDocumentMimeType(webFile.name),
+          size: webFile.size,
+          webFile,
+        });
+      },
+      { once: true }
+    );
+
+    document.body.appendChild(input);
+    input.click();
+  });
+}
+
 async function pickDocument(): Promise<AttachmentFileInput | null> {
+  if (Platform.OS === 'web') {
+    return pickWebDocument();
+  }
+
   const result = await DocumentPicker.getDocumentAsync({
     type: ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'],
     copyToCacheDirectory: true,
@@ -32,14 +86,11 @@ async function pickDocument(): Promise<AttachmentFileInput | null> {
   }
 
   const asset = result.assets[0];
-  const webFile = Platform.OS === 'web' ? asset.file : undefined;
-
   return {
-    name: webFile?.name || asset.name,
-    mimeType: webFile?.type || asset.mimeType || 'application/octet-stream',
-    size: webFile?.size ?? asset.size ?? 0,
+    name: asset.name,
+    mimeType: asset.mimeType || inferDocumentMimeType(asset.name) || 'application/octet-stream',
+    size: asset.size ?? 0,
     uri: asset.uri,
-    webFile,
   };
 }
 
