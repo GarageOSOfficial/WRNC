@@ -6,9 +6,10 @@ import { WrncLogo } from './WrncLogo';
 type MarketingHeaderProps = {
   onJoin?: () => void;
   onSignIn?: () => void;
+  onShop?: () => void;
 };
 
-export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
+export function MarketingHeader({ onJoin, onSignIn, onShop }: MarketingHeaderProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,6 +29,10 @@ export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
   const handleSignIn = () => {
     setMenuOpen(false);
     onSignIn?.();
+  };
+  const handleShop = () => {
+    setMenuOpen(false);
+    onShop?.();
   };
 
   return (
@@ -49,6 +54,7 @@ export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
             <Text style={styles.navLink}>ABOUT</Text>
             <Text style={styles.navLink}>FOUNDING BUILDERS</Text>
             <Pressable accessibilityRole="button" onPress={handleSignIn} style={styles.navPressable}><Text style={styles.navLink}>SIGN IN</Text></Pressable>
+            <Pressable accessibilityRole="link" onPress={handleShop} style={styles.navPressable}><Text style={styles.shopLink}>SHOP</Text></Pressable>
             <MarketingButton label="JOIN WRNC" onPress={handleJoin} style={styles.joinButton} />
           </View>
         )}
@@ -58,6 +64,7 @@ export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
           <Text style={styles.mobileLink}>ABOUT</Text>
           <Text style={styles.mobileLink}>FOUNDING BUILDERS</Text>
           <Pressable accessibilityRole="button" onPress={handleSignIn} style={styles.mobilePressable}><Text style={styles.mobileLink}>SIGN IN</Text></Pressable>
+          <Pressable accessibilityRole="link" onPress={handleShop} style={styles.mobilePressable}><Text style={styles.mobileShopLink}>SHOP</Text></Pressable>
           <MarketingButton label="JOIN WRNC" onPress={handleJoin} style={styles.mobileJoin} />
         </View>
       ) : null}
@@ -71,12 +78,14 @@ const styles = StyleSheet.create({
   headerMobile: { height: 68, paddingHorizontal: 20 },
   nav: { alignItems: 'center', flexDirection: 'row', gap: 34 },
   navLink: { color: '#C0C0C0', fontSize: 12, fontWeight: '700', letterSpacing: 0.4 },
+  shopLink: { color: '#C0C0C0', fontSize: 12, fontWeight: '700', letterSpacing: 0.4 },
   navPressable: { alignItems: 'center', justifyContent: 'center', minHeight: 44, minWidth: 64 },
   joinButton: { minWidth: 126 },
   menuButton: { alignItems: 'center', height: 44, justifyContent: 'center', width: 44 },
   menuIcon: { color: '#FFFFFF', fontSize: 25, lineHeight: 28 },
   mobileMenu: { borderTopColor: '#1F1F1F', borderTopWidth: 1, gap: 22, paddingHorizontal: 20, paddingVertical: 24 },
   mobileLink: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
+  mobileShopLink: { color: '#C0C0C0', fontSize: 15, fontWeight: '700' },
   mobilePressable: { justifyContent: 'center', minHeight: 44 },
   mobileJoin: { alignSelf: 'stretch' },
 });

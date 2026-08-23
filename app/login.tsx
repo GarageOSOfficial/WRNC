@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { WrncLogo } from '../components/marketing/WrncLogo';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
@@ -51,6 +51,12 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.container}>
         <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
           <WrncLogo />
@@ -107,12 +113,15 @@ export default function LoginScreen() {
           </Pressable>
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { backgroundColor: '#080808', flex: 1 },
+  scroll: { flex: 1 },
+  scrollContent: { flexGrow: 1, paddingBottom: 24 },
   container: { alignSelf: 'center', maxWidth: 560, paddingHorizontal: 24, paddingVertical: 48, width: '100%' },
   wordmark: { alignSelf: 'flex-start', marginBottom: 72 },
   card: { backgroundColor: '#1A1D22', borderColor: '#34373D', borderRadius: 8, borderWidth: 1, padding: 32 },

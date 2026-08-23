@@ -46,6 +46,7 @@ export type DocumentCategory = (typeof DOCUMENT_CATEGORIES)[number];
 export interface UploadDocumentInput {
   workspaceId: string;
   vehicleId: string;
+  activityId?: string | null;
   userId: string;
   title: string;
   category: DocumentCategory;
@@ -85,6 +86,7 @@ export async function uploadDocument(input: UploadDocumentInput): Promise<Docume
       .insert({
         workspace_id: input.workspaceId,
         vehicle_id: input.vehicleId,
+        activity_id: input.activityId ?? null,
         document_type: input.category,
         title: input.title.trim(),
         storage_path: objectPath,

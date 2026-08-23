@@ -2,8 +2,11 @@ import React from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../../components/common/Button';
+import { DocumentUploadForm } from '../../../../../components/workspace/DocumentUploadForm';
 import { useActivity } from '../../../../../hooks/useActivity';
+import { useUploadDocument } from '../../../../../hooks/useDocument';
 import { useVehicle } from '../../../../../hooks/useVehicle';
+import { supabase } from '../../../../../lib/supabase';
 import {
   formatTimelineDate,
   getActivityCost,
@@ -17,6 +20,7 @@ export default function ActivityDetailsRoute() {
   const activityId = Array.isArray(params.activityId) ? params.activityId[0] : params.activityId;
   const { data: vehicle } = useVehicle(vehicleId);
   const { data: activity, isLoading } = useActivity(activityId);
+  const uploadDocument = useUploadDocument();
 
   if (isLoading || !activity) {
     return (
@@ -74,6 +78,26 @@ export default function ActivityDetailsRoute() {
               </View>
             ) : null}
           </View>
+        </View>
+        <View className="mt-4">
+          <DocumentUploadForm
+            isSubmitting={uploadDocument.isPending}
+            onSubmit={async ({ title, category, file }) => {
+              if (!vehicleId || !activityId || !vehicle) throw new Error('Activity context is unavailable.');
+              const { data: userData } = await supabase.auth.getUser();
+              const userId = userData.user?.id;
+              if (!userId) throw new Error('You must be signed in to upload a document.');
+              await uploadDocument.mutateAsync({
+                workspaceId: vehicle.workspaceId,
+                vehicleId,
+                activityId,
+                userId,
+                title,
+                category,
+                file,
+              });
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

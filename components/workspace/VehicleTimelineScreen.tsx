@@ -55,6 +55,9 @@ export function VehicleTimelineScreen({
         <Text className="text-3xl font-bold text-wrnc-text-primary">Timeline</Text>
         <Text className="mt-2 text-sm text-wrnc-text-secondary">{vehicle.nickname || vehicleLabel}</Text>
       </View>
+      <View className="mt-4">
+        <Button label="Add Activity" onPress={onCreateActivity} />
+      </View>
       <VehicleTimelineFilters filters={filters} onFiltersChange={setFilters} />
     </View>
   );

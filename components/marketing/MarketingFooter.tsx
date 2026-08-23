@@ -1,13 +1,13 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { WrncLogo } from './WrncLogo';
 
-const productLinks = ['About', 'Founding Builders', 'Sign In'];
-const legalLinks = ['Privacy', 'Terms', 'Contact'];
+const productLinks = ['About', 'Founding Builders', 'Shop', 'Sign In'];
+const legalLinks = ['Privacy', 'Terms', 'Contact', 'Support'];
 
-type MarketingFooterProps = { onSignIn?: () => void };
+type MarketingFooterProps = { onSignIn?: () => void; onShop?: () => void };
 
-export function MarketingFooter({ onSignIn }: MarketingFooterProps) {
+export function MarketingFooter({ onSignIn, onShop }: MarketingFooterProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const isCompact = width < 1100;
@@ -21,8 +21,14 @@ export function MarketingFooter({ onSignIn }: MarketingFooterProps) {
         </View>
         <View style={styles.links}>{productLinks.map((item) => item === 'Sign In' ? (
           <Pressable accessibilityRole="button" key={item} onPress={onSignIn} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
+        ) : item === 'Shop' ? (
+          <Pressable accessibilityRole="link" key={item} onPress={onShop} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
         ) : <Text key={item} style={styles.link}>{item}</Text>)}</View>
-        <View style={styles.links}>{legalLinks.map((item) => <Text key={item} style={styles.link}>{item}</Text>)}</View>
+        <View style={styles.links}>{legalLinks.map((item) => item === 'Contact' || item === 'Support' ? (
+          <Pressable accessibilityRole="link" key={item} onPress={() => Linking.openURL(`mailto:${item.toLowerCase()}@wrnc.app`)} style={styles.linkPressable}>
+            <Text style={styles.link}>{item}</Text>
+          </Pressable>
+        ) : <Text key={item} style={styles.link}>{item}</Text>)}</View>
         <View style={styles.legal}>
           <Text style={styles.legalText}>© 2026 WRNC.</Text>
           <Text style={styles.legalText}>A Swear Like A Sailor, LLC company.</Text>
