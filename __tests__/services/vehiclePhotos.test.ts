@@ -52,6 +52,11 @@ describe('vehicle photo validation', () => {
     expect(result.valid).toBe(true);
   });
 
+  it('accepts iPhone HEIC and HEIF photos under the limit', () => {
+    expect(validateVehiclePhotoFile({ name: 'cover.heic', mimeType: 'image/heic', size: 1024 }).valid).toBe(true);
+    expect(validateVehiclePhotoFile({ name: 'cover.heif', mimeType: 'image/heif', size: 1024 }).valid).toBe(true);
+  });
+
   it('rejects an oversized file', () => {
     const result = validateVehiclePhotoFile({
       name: 'cover.jpg',

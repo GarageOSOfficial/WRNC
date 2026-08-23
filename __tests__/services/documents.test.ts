@@ -7,6 +7,7 @@ import {
   listDocuments,
   replaceDocumentFile,
   uploadDocument,
+  validateDocumentFile,
 } from '../../services/api/documents';
 import * as attachmentStorage from '../../services/api/attachmentStorage';
 
@@ -224,6 +225,25 @@ describe('uploadDocument', () => {
     ).rejects.toThrow();
 
     expect(mockUploadObject).not.toHaveBeenCalled();
+  });
+
+  it('accepts Office, spreadsheet, HEIC, and bounded video records', () => {
+    const files = [
+      { name: 'manual.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', size: 1024 },
+      { name: 'parts.xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', size: 1024 },
+      { name: 'wiring.csv', mimeType: 'text/csv', size: 1024 },
+      { name: 'progress.heic', mimeType: 'image/heic', size: 1024 },
+      { name: 'walkaround.mov', mimeType: 'video/quicktime', size: 50 * 1024 * 1024 },
+    ];
+    files.forEach((file) => expect(validateDocumentFile(file).valid).toBe(true));
+  });
+
+  it('rejects video over the 100 MB limit', () => {
+    expect(validateDocumentFile({
+      name: 'huge.mov',
+      mimeType: 'video/quicktime',
+      size: 101 * 1024 * 1024,
+    }).valid).toBe(false);
   });
 });
 

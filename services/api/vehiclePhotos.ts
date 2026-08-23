@@ -11,7 +11,7 @@ import { getVehicle } from './vehicles';
 
 export const VEHICLE_PHOTOS_BUCKET = 'vehicle-photos' as const;
 export const MAX_PHOTO_SIZE_BYTES = 10 * 1024 * 1024;
-export const ALLOWED_PHOTO_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+export const ALLOWED_PHOTO_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'] as const;
 
 export interface VehiclePhotoUploadResult {
   path: string;

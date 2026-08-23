@@ -18,8 +18,18 @@ import {
 } from './attachmentStorage';
 
 export const VEHICLE_DOCUMENTS_BUCKET = 'vehicle-documents' as const;
-export const MAX_DOCUMENT_SIZE_BYTES = 20 * 1024 * 1024;
-export const ALLOWED_DOCUMENT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'] as const;
+export const MAX_DOCUMENT_SIZE_BYTES = 25 * 1024 * 1024;
+export const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024;
+export const ALLOWED_DOCUMENT_MIME_TYPES = [
+  'image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif',
+  'video/mp4', 'video/quicktime', 'video/x-m4v',
+  'application/pdf', 'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain', 'application/rtf', 'text/rtf',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/csv',
+] as const;
 
 export const DOCUMENT_CATEGORIES = [
   'receipt',
@@ -43,9 +53,10 @@ export interface UploadDocumentInput {
 }
 
 export function validateDocumentFile(file: AttachmentFileInput) {
+  const isVideo = file.mimeType.startsWith('video/');
   return validateAttachmentFile(file, {
     allowedMimeTypes: ALLOWED_DOCUMENT_MIME_TYPES,
-    maxSizeBytes: MAX_DOCUMENT_SIZE_BYTES,
+    maxSizeBytes: isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_DOCUMENT_SIZE_BYTES,
   });
 }
 
