@@ -45,6 +45,8 @@ export type UpdateDocumentInput = Partial<
 
 export interface ListDocumentsOptions {
   includeArchived?: boolean;
+  vehicleId?: string;
+  activityId?: string;
 }
 
 export function toDocument(row: DocumentRow): Document {

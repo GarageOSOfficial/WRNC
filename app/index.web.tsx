@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import Head from 'expo-router/head';
 import { FinalCtaSection } from '../components/marketing/FinalCtaSection';
@@ -13,7 +13,6 @@ export default function WebsiteHomeScreen() {
   const router = useRouter();
   const openSignup = () => router.push('/signup');
   const openLogin = () => router.push('/login');
-  const openShop = () => Linking.openURL('https://shop.wrnc.app');
 
   return (
     <>
@@ -30,12 +29,12 @@ export default function WebsiteHomeScreen() {
         <meta name="twitter:card" content="summary" />
       </Head>
       <ScrollView contentContainerStyle={styles.content} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-        <MarketingHeader onJoin={openSignup} onSignIn={openLogin} onShop={openShop} />
+        <MarketingHeader onJoin={openSignup} onSignIn={openLogin} />
         <HomeHero onGetStarted={openSignup} onSignIn={openLogin} />
         <WhyWrncSection />
         <ProductShowcaseSection />
         <FinalCtaSection onJoin={openSignup} />
-        <MarketingFooter onSignIn={openLogin} onShop={openShop} />
+        <MarketingFooter onSignIn={openLogin} />
       </ScrollView>
     </>
   );

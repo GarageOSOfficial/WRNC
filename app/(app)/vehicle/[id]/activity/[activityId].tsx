@@ -1,12 +1,14 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Linking, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../../components/common/Button';
+import { DocumentCard } from '../../../../../components/workspace/DocumentCard';
 import { DocumentUploadForm } from '../../../../../components/workspace/DocumentUploadForm';
 import { useActivity } from '../../../../../hooks/useActivity';
-import { useUploadDocument } from '../../../../../hooks/useDocument';
+import { useDocuments, useUploadDocument } from '../../../../../hooks/useDocument';
 import { useVehicle } from '../../../../../hooks/useVehicle';
 import { supabase } from '../../../../../lib/supabase';
+import { getDocumentSignedUrl } from '../../../../../services/api/documents';
 import {
   formatTimelineDate,
   getActivityCost,
@@ -20,7 +22,11 @@ export default function ActivityDetailsRoute() {
   const activityId = Array.isArray(params.activityId) ? params.activityId[0] : params.activityId;
   const { data: vehicle } = useVehicle(vehicleId);
   const { data: activity, isLoading } = useActivity(activityId);
+  const { data: documents = [], isLoading: documentsLoading } = useDocuments(vehicle?.workspaceId, {
+    activityId,
+  });
   const uploadDocument = useUploadDocument();
+  const [openError, setOpenError] = useState<string | null>(null);
 
   if (isLoading || !activity) {
     return (
@@ -98,6 +104,42 @@ export default function ActivityDetailsRoute() {
               });
             }}
           />
+        </View>
+        <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
+          <Text className="text-xl font-bold text-wrnc-text-primary">Activity Records</Text>
+          <Text className="mt-2 text-sm text-wrnc-text-secondary">
+            Photos and documents attached to this activity appear here.
+          </Text>
+          {openError ? <Text className="mt-3 text-sm text-semantic-error">{openError}</Text> : null}
+          <View className="mt-4">
+            {documentsLoading ? (
+              <Text className="text-sm text-wrnc-text-secondary">Loading activity records…</Text>
+            ) : documents.length === 0 ? (
+              <Text className="text-sm text-wrnc-text-secondary">No records have been attached to this activity.</Text>
+            ) : (
+              documents.map((document) => (
+                <DocumentCard
+                  key={document.id}
+                  title={document.title}
+                  documentType={document.documentType}
+                  mimeType={document.mimeType}
+                  fileSize={document.fileSize}
+                  onPress={async () => {
+                    setOpenError(null);
+                    try {
+                      const url = document.storagePath
+                        ? await getDocumentSignedUrl(document.storagePath)
+                        : document.fileUrl;
+                      if (!url) throw new Error('This record has no file to open.');
+                      await Linking.openURL(url);
+                    } catch (error) {
+                      setOpenError(error instanceof Error ? error.message : 'Unable to open this record.');
+                    }
+                  }}
+                />
+              ))
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

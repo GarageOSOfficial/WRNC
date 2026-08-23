@@ -90,6 +90,7 @@ describe('document CRUD service', () => {
       single: mockSingle,
     });
     mockEq.mockReturnValue({
+      eq: mockEq,
       select: mockSelect,
       single: mockSingle,
       order: mockOrder,
@@ -101,17 +102,28 @@ describe('document CRUD service', () => {
     });
     mockIs.mockReturnValue({
       single: mockSingle,
+      order: mockOrder,
     });
   });
 
   it('lists documents for a workspace excluding archived by default', async () => {
-    mockIs.mockResolvedValue({ data: [makeRow()], error: null });
+    mockOrder.mockResolvedValue({ data: [makeRow()], error: null });
 
     const documents = await listDocuments('ws-1');
 
     expect(documents).toHaveLength(1);
     expect(documents[0].title).toBe('Service Manual');
     expect(mockIs).toHaveBeenCalledWith('archived_at', null);
+  });
+
+  it('filters document retrieval by vehicle and activity', async () => {
+    mockOrder.mockResolvedValue({ data: [makeRow({ vehicle_id: 'veh-1', activity_id: 'act-1' })], error: null });
+
+    const documents = await listDocuments('ws-1', { vehicleId: 'veh-1', activityId: 'act-1' });
+
+    expect(documents).toHaveLength(1);
+    expect(mockEq).toHaveBeenCalledWith('vehicle_id', 'veh-1');
+    expect(mockEq).toHaveBeenCalledWith('activity_id', 'act-1');
   });
 
   it('creates a document and maps the Supabase row', async () => {

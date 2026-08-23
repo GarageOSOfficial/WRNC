@@ -161,12 +161,21 @@ export async function listDocuments(
   let query = supabase
     .from('documents')
     .select('*')
-    .eq('workspace_id', workspaceId)
-    .order('uploaded_at', { ascending: false });
+    .eq('workspace_id', workspaceId);
+
+  if (options.vehicleId) {
+    query = query.eq('vehicle_id', options.vehicleId);
+  }
+
+  if (options.activityId) {
+    query = query.eq('activity_id', options.activityId);
+  }
 
   if (!options.includeArchived) {
     query = query.is('archived_at', null);
   }
+
+  query = query.order('uploaded_at', { ascending: false });
 
   const { data, error } = await query;
   if (error) throw error;

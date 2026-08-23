@@ -17,6 +17,7 @@ export default function VehicleDocumentsRoute() {
   const { data: vehicle, isLoading: vehicleLoading } = useVehicle(vehicleId);
   const { data: documents = [], isLoading: documentsLoading } = useDocuments(vehicle?.workspaceId, {
     includeArchived: true,
+    vehicleId,
   });
   const uploadDocument = useUploadDocument();
   const [openError, setOpenError] = useState<string | null>(null);

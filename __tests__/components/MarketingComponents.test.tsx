@@ -93,9 +93,11 @@ describe('V3.1 navigation and benefits', () => {
     benefits.getByText('Preserve its history.');
     const onSignIn = jest.fn();
     const footer = render(<MarketingFooter onSignIn={onSignIn} />);
-    ['WRNC links', 'Instagram', 'Facebook', 'YouTube', 'Discord', 'TikTok', 'Reddit profile'].forEach((label) => {
+    ['Instagram', 'Facebook', 'YouTube', 'Discord', 'TikTok', 'Reddit profile'].forEach((label) => {
       footer.getByLabelText(label);
     });
+    expect(footer.queryByLabelText('WRNC links')).toBeNull();
+    expect(footer.queryByText('Shop')).toBeNull();
     footer.getByText('© 2026 WRNC.');
     fireEvent.press(footer.getByText('Sign In'));
     expect(onSignIn).toHaveBeenCalledTimes(1);
