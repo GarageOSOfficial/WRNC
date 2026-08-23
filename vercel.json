@@ -1,6 +1,10 @@
 {
   "routes": [
     {
+      "src": "/coming-soon",
+      "dest": "/api/coming-soon"
+    },
+    {
       "handle": "filesystem"
     },
     {
