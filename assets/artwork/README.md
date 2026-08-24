@@ -7,6 +7,8 @@ This directory preserves the complete product and brand artwork set supplied for
 
 The concept files are reference artwork. Do not import them directly into production screens without checking legibility, crop behavior, and whether the depicted interface still matches the current product.
 
+The founder-approved platform icon and controlled production derivatives are maintained under `../brand/platform/`. The circular badge is for app, avatar, favicon, and compact identity surfaces. It does not replace the WRNC master wordmark in website headers, application shells, or full-logo compositions.
+
 ## Production selections
 
 | Website asset | Source concept | Use |
