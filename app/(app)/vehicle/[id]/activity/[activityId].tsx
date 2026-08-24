@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Linking, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../../components/common/Button';
 import { DocumentCard } from '../../../../../components/workspace/DocumentCard';
@@ -8,7 +8,6 @@ import { useActivity } from '../../../../../hooks/useActivity';
 import { useDocuments, useUploadDocument } from '../../../../../hooks/useDocument';
 import { useVehicle } from '../../../../../hooks/useVehicle';
 import { supabase } from '../../../../../lib/supabase';
-import { getDocumentSignedUrl } from '../../../../../services/api/documents';
 import {
   formatTimelineDate,
   getActivityCost,
@@ -26,7 +25,6 @@ export default function ActivityDetailsRoute() {
     activityId,
   });
   const uploadDocument = useUploadDocument();
-  const [openError, setOpenError] = useState<string | null>(null);
 
   if (isLoading || !activity) {
     return (
@@ -110,7 +108,6 @@ export default function ActivityDetailsRoute() {
           <Text className="mt-2 text-sm text-wrnc-text-secondary">
             Photos and documents attached to this activity appear here.
           </Text>
-          {openError ? <Text className="mt-3 text-sm text-semantic-error">{openError}</Text> : null}
           <View className="mt-4">
             {documentsLoading ? (
               <Text className="text-sm text-wrnc-text-secondary">Loading activity records…</Text>
@@ -124,18 +121,7 @@ export default function ActivityDetailsRoute() {
                   documentType={document.documentType}
                   mimeType={document.mimeType}
                   fileSize={document.fileSize}
-                  onPress={async () => {
-                    setOpenError(null);
-                    try {
-                      const url = document.storagePath
-                        ? await getDocumentSignedUrl(document.storagePath)
-                        : document.fileUrl;
-                      if (!url) throw new Error('This record has no file to open.');
-                      await Linking.openURL(url);
-                    } catch (error) {
-                      setOpenError(error instanceof Error ? error.message : 'Unable to open this record.');
-                    }
-                  }}
+                  onPress={() => router.push(`/vehicle/${vehicleId}/documents/${document.id}`)}
                 />
               ))
             )}
