@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { MarketingButton } from './MarketingButton';
 
-type FinalCtaSectionProps = { onJoin?: () => void };
+type FinalCtaSectionProps = { onFounding23?: () => void; onJoin?: () => void };
 
-export function FinalCtaSection({ onJoin }: FinalCtaSectionProps) {
+export function FinalCtaSection({ onFounding23, onJoin }: FinalCtaSectionProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   return (
@@ -14,6 +14,7 @@ export function FinalCtaSection({ onJoin }: FinalCtaSectionProps) {
         <Text style={styles.body}>Create your WRNC account and give the work a record that lasts.</Text>
         <View style={[styles.actions, isMobile && styles.actionsMobile]}>
           <MarketingButton label="JOIN WRNC" onPress={onJoin} />
+          <Pressable accessibilityRole="link" onPress={onFounding23} style={styles.secondary}><Text style={styles.secondaryText}>BECOME A FOUNDING BUILDER →</Text></Pressable>
         </View>
       </View>
     </View>
@@ -29,4 +30,6 @@ const styles = StyleSheet.create({
   body: { color: '#C0C0C0', fontSize: 17, lineHeight: 25, marginTop: 18 },
   actions: { alignItems: 'center', flexDirection: 'row', gap: 24, marginTop: 30 },
   actionsMobile: { alignItems: 'stretch', flexDirection: 'column', gap: 12 },
+  secondary: { justifyContent: 'center', minHeight: 44 },
+  secondaryText: { color: '#FFFFFF', fontSize: 12, fontWeight: '700', letterSpacing: 0.3 },
 });

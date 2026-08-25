@@ -4,11 +4,12 @@ import { MarketingButton } from './MarketingButton';
 import { WrncLogo } from './WrncLogo';
 
 type MarketingHeaderProps = {
+  onFounding23?: () => void;
   onJoin?: () => void;
   onSignIn?: () => void;
 };
 
-export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
+export function MarketingHeader({ onFounding23, onJoin, onSignIn }: MarketingHeaderProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,6 +30,10 @@ export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
     setMenuOpen(false);
     onSignIn?.();
   };
+  const handleFounding23 = () => {
+    setMenuOpen(false);
+    onFounding23?.();
+  };
 
   return (
     <View style={styles.shell}>
@@ -47,7 +52,7 @@ export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
         ) : (
           <View style={styles.nav}>
             <Text style={styles.navLink}>ABOUT</Text>
-            <Text style={styles.navLink}>FOUNDING BUILDERS</Text>
+            <Pressable accessibilityRole="link" onPress={handleFounding23} style={styles.navPressable}><Text style={styles.navLink}>FOUNDING BUILDERS</Text></Pressable>
             <Pressable accessibilityRole="button" onPress={handleSignIn} style={styles.navPressable}><Text style={styles.navLink}>SIGN IN</Text></Pressable>
             <MarketingButton label="JOIN WRNC" onPress={handleJoin} style={styles.joinButton} />
           </View>
@@ -56,7 +61,7 @@ export function MarketingHeader({ onJoin, onSignIn }: MarketingHeaderProps) {
       {isMobile && menuOpen ? (
         <View style={styles.mobileMenu}>
           <Text style={styles.mobileLink}>ABOUT</Text>
-          <Text style={styles.mobileLink}>FOUNDING BUILDERS</Text>
+          <Pressable accessibilityRole="link" onPress={handleFounding23} style={styles.mobilePressable}><Text style={styles.mobileLink}>FOUNDING BUILDERS</Text></Pressable>
           <Pressable accessibilityRole="button" onPress={handleSignIn} style={styles.mobilePressable}><Text style={styles.mobileLink}>SIGN IN</Text></Pressable>
           <MarketingButton label="JOIN WRNC" onPress={handleJoin} style={styles.mobileJoin} />
         </View>

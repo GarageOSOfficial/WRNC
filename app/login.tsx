@@ -57,62 +57,62 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-      <View style={styles.container}>
-        <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
-          <WrncLogo />
-        </Pressable>
-
-        <View style={styles.card}>
-          <Text style={styles.eyebrow}>WELCOME BACK</Text>
-          <Text style={styles.title}>CONTINUE YOUR BUILD RECORD.</Text>
-          <Text style={styles.intro}>Sign in to return to the work, history, and story behind your build.</Text>
-
-          <Text style={styles.label}>EMAIL</Text>
-          <TextInput
-            accessibilityLabel="Email"
-            autoCapitalize="none"
-            autoComplete="email"
-            keyboardType="email-address"
-            onChangeText={setEmail}
-            onSubmitEditing={() => passwordInputRef.current?.focus()}
-            placeholder="you@example.com"
-            placeholderTextColor="#777777"
-            returnKeyType="next"
-            style={styles.input}
-            value={email}
-          />
-
-          <Text style={styles.label}>PASSWORD</Text>
-          <TextInput
-            accessibilityLabel="Password"
-            autoComplete="current-password"
-            onChangeText={setPassword}
-            onSubmitEditing={handleLogin}
-            placeholder="Your password"
-            placeholderTextColor="#777777"
-            ref={passwordInputRef}
-            returnKeyType="go"
-            secureTextEntry
-            style={styles.input}
-            value={password}
-          />
-
-          {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
-
-          <Pressable
-            accessibilityRole="button"
-            disabled={isSubmitting}
-            onPress={handleLogin}
-            style={[styles.primaryButton, isSubmitting && styles.primaryButtonDisabled]}
-          >
-            {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.primaryButtonText}>SIGN IN</Text>}
+        <View style={styles.container}>
+          <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
+            <WrncLogo />
           </Pressable>
 
-          <Pressable accessibilityRole="button" onPress={() => router.replace('/signup')} style={styles.secondaryButton}>
-            <Text style={styles.secondaryButtonText}>NEW TO WRNC? CREATE AN ACCOUNT</Text>
-          </Pressable>
+          <View style={styles.card}>
+            <Text style={styles.eyebrow}>WELCOME BACK</Text>
+            <Text style={styles.title}>CONTINUE YOUR BUILD RECORD.</Text>
+            <Text style={styles.intro}>Sign in to return to the work, history, and story behind your build.</Text>
+
+            <Text style={styles.label}>EMAIL</Text>
+            <TextInput
+              accessibilityLabel="Email"
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              onChangeText={setEmail}
+              onSubmitEditing={() => passwordInputRef.current?.focus()}
+              placeholder="you@example.com"
+              placeholderTextColor="#777777"
+              returnKeyType="next"
+              style={styles.input}
+              value={email}
+            />
+
+            <Text style={styles.label}>PASSWORD</Text>
+            <TextInput
+              accessibilityLabel="Password"
+              autoComplete="current-password"
+              onChangeText={setPassword}
+              onSubmitEditing={handleLogin}
+              placeholder="Your password"
+              placeholderTextColor="#777777"
+              ref={passwordInputRef}
+              returnKeyType="go"
+              secureTextEntry
+              style={styles.input}
+              value={password}
+            />
+
+            {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+
+            <Pressable
+              accessibilityRole="button"
+              disabled={isSubmitting}
+              onPress={handleLogin}
+              style={[styles.primaryButton, isSubmitting && styles.primaryButtonDisabled]}
+            >
+              {isSubmitting ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.primaryButtonText}>SIGN IN</Text>}
+            </Pressable>
+
+            <Pressable accessibilityRole="button" onPress={() => router.replace('/signup')} style={styles.secondaryButton}>
+              <Text style={styles.secondaryButtonText}>NEW TO WRNC? CREATE AN ACCOUNT</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
       </ScrollView>
     </SafeAreaView>
   );

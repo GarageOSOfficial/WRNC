@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { HomeHero } from '../../components/marketing/HomeHero';
+import { FinalCtaSection } from '../../components/marketing/FinalCtaSection';
 import { MarketingFooter } from '../../components/marketing/MarketingFooter';
 import { MarketingHeader } from '../../components/marketing/MarketingHeader';
 import { ProductShowcaseSection } from '../../components/marketing/ProductShowcaseSection';
@@ -77,13 +78,27 @@ describe('V3.1 navigation and benefits', () => {
     mockDimensions.mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
     const onJoin = jest.fn();
     const onSignIn = jest.fn();
-    const { getByLabelText, getByText } = render(<MarketingHeader onJoin={onJoin} onSignIn={onSignIn} />);
+    const onFounding23 = jest.fn();
+    const { getByLabelText, getByText } = render(<MarketingHeader onFounding23={onFounding23} onJoin={onJoin} onSignIn={onSignIn} />);
+    fireEvent.press(getByLabelText('Open navigation'));
+    fireEvent.press(getByText('FOUNDING BUILDERS'));
     fireEvent.press(getByLabelText('Open navigation'));
     fireEvent.press(getByText('SIGN IN'));
     fireEvent.press(getByLabelText('Open navigation'));
     fireEvent.press(getByText('JOIN WRNC'));
     expect(onJoin).toHaveBeenCalledTimes(1);
     expect(onSignIn).toHaveBeenCalledTimes(1);
+    expect(onFounding23).toHaveBeenCalledTimes(1);
+  });
+
+  it('routes the homepage and footer Founding Builder actions', () => {
+    const onFounding23 = jest.fn();
+    const finalCta = render(<FinalCtaSection onFounding23={onFounding23} />);
+    fireEvent.press(finalCta.getByText('BECOME A FOUNDING BUILDER →'));
+
+    const footer = render(<MarketingFooter onFounding23={onFounding23} />);
+    fireEvent.press(footer.getByText('Founding Builders'));
+    expect(onFounding23).toHaveBeenCalledTimes(2);
   });
 
   it('renders the three approved benefits and public footer labels', () => {

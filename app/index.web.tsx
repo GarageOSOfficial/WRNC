@@ -13,6 +13,7 @@ export default function WebsiteHomeScreen() {
   const router = useRouter();
   const openSignup = () => router.push('/signup');
   const openLogin = () => router.push('/login');
+  const openFounding23 = () => router.push('/founding23');
 
   return (
     <>
@@ -29,12 +30,12 @@ export default function WebsiteHomeScreen() {
         <meta name="twitter:card" content="summary" />
       </Head>
       <ScrollView contentContainerStyle={styles.content} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-        <MarketingHeader onJoin={openSignup} onSignIn={openLogin} />
+        <MarketingHeader onFounding23={openFounding23} onJoin={openSignup} onSignIn={openLogin} />
         <HomeHero onGetStarted={openSignup} onSignIn={openLogin} />
         <WhyWrncSection />
         <ProductShowcaseSection />
-        <FinalCtaSection onJoin={openSignup} />
-        <MarketingFooter onSignIn={openLogin} />
+        <FinalCtaSection onFounding23={openFounding23} onJoin={openSignup} />
+        <MarketingFooter onFounding23={openFounding23} onSignIn={openLogin} />
       </ScrollView>
     </>
   );
