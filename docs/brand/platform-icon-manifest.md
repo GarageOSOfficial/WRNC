@@ -22,15 +22,15 @@ The repository master is an exact byte-for-byte copy of the founder-supplied Des
 
 ### Approved derivatives
 
-| Asset | Dimensions | Alpha | Purpose |
-| --- | ---: | --- | --- |
-| `assets/brand/platform/wrnc-app-icon-ios-1024.png` | 1024x1024 | No | iOS and App Store icon source |
-| `assets/brand/platform/wrnc-adaptive-icon-foreground.png` | 1024x1024 | No | Android adaptive foreground with proportional safe-region padding |
-| `assets/brand/platform/wrnc-adaptive-icon-background.png` | 1024x1024 | No | Android black adaptive background export |
-| `assets/brand/platform/wrnc-social-profile-icon.png` | 1080x1080 | No | Social profile source |
-| `assets/brand/platform/wrnc-platform-favicon.png` | 512x512 | No | Web favicon source |
+| Asset | Dimensions | Alpha | SHA-256 | Purpose |
+| --- | ---: | --- | --- | --- |
+| `assets/brand/platform/wrnc-app-icon-ios-1024.png` | 1024x1024 | No | `aa1bd2129e9ad8ffaf626027304bd6c5531be4ee6c863425c2d3cf370603a759` | Byte-identical V1.2 iOS and App Store icon source |
+| `assets/brand/platform/wrnc-adaptive-icon-foreground.png` | 1024x1024 | Yes | `c732191134e1a70b079b9fa08640b537ea3392035802d7049269e28f8e4da439` | Byte-identical V1.2 Android foreground with a transparent exterior |
+| `assets/brand/platform/wrnc-adaptive-icon-background.png` | 1024x1024 | No | `7cbaaa8483968c422c72111663ee483dbf58e6a4036603671ce5e42d8a80c71c` | Byte-identical V1.2 opaque black Android background |
+| `assets/brand/platform/wrnc-social-profile-icon.png` | 1080x1080 | No | `d17e1e6c411909c57610832ee1e13b00fb5c854db603ae5d3ebb7985e6ae93f2` | Byte-identical V1.2 social profile source |
+| `assets/brand/platform/wrnc-platform-favicon.png` | 512x512 | No | `693f195199a6f59e26666856fec1439a5d6eedfb60abeda786f48d188fff238b` | Controlled web favicon export from the locked master |
 
-All derivatives preserve the complete approved composition proportionally. Only canvas size, resolution, color-profile normalization, and black safe-area treatment differ.
+The iOS, Android, and social derivatives are installed byte-for-byte from the validated V1.2 package. The favicon preserves the complete approved composition proportionally as a controlled compact export.
 
 ## Application mapping
 
