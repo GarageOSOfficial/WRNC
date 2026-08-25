@@ -90,18 +90,21 @@ describe('VehicleTimelineScreen', () => {
 
   it('filters activities and opens selected entries', () => {
     const onActivityPress = jest.fn();
+    const onCreateActivity = jest.fn();
     const { getAllByRole, getByText, getByLabelText, queryByText } = render(
       <VehicleTimelineScreen
         vehicle={vehicle}
         activities={activities}
         onBack={jest.fn()}
         onActivityPress={onActivityPress}
-        onCreateActivity={jest.fn()}
+        onCreateActivity={onCreateActivity}
       />
     );
 
     expect(getByText('Brake Service')).toBeTruthy();
     expect(getByText('Weekend Photos')).toBeTruthy();
+    fireEvent.press(getByText('Add Activity'));
+    expect(onCreateActivity).toHaveBeenCalled();
 
     const maintenanceButtons = getAllByRole('button', { name: 'Maintenance' });
     fireEvent.press(maintenanceButtons[0]);

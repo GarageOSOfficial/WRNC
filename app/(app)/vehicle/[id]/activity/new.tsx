@@ -73,8 +73,8 @@ export default function NewActivityRoute() {
     createActivity.mutate(
       payloadResult.input,
       {
-        onSuccess: () => {
-          router.replace(`/vehicle/${vehicleId}/timeline`);
+        onSuccess: (activity) => {
+          router.replace(`/vehicle/${vehicleId}/activity/${activity.id}`);
         },
         onError: (error) => {
           setErrorMessage(extractSupabaseErrorMessage(error, 'Unable to save activity right now. Please try again.'));
@@ -89,7 +89,7 @@ export default function NewActivityRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView className="flex-1 p-4">
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
         <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
         <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-4">
           <Text className="text-2xl font-bold text-wrnc-text-primary">Create Activity</Text>
@@ -156,6 +156,9 @@ export default function NewActivityRoute() {
           {errorMessage ? <Text className="mb-4 text-sm text-red-600">{errorMessage}</Text> : null}
 
           <Button label="Save Activity" loading={createActivity.isPending} onPress={handleSave} />
+          <Text className="mt-3 text-xs text-wrnc-text-secondary">
+            After saving, you can attach receipts, photos, diagrams, and other build records to this activity.
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>

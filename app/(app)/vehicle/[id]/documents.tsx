@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Linking, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../components/common/Button';
 import { DocumentCard } from '../../../../components/workspace/DocumentCard';
@@ -7,7 +7,6 @@ import { DocumentEmptyState } from '../../../../components/workspace/DocumentEmp
 import { DocumentUploadForm } from '../../../../components/workspace/DocumentUploadForm';
 import { useDocuments, useUploadDocument } from '../../../../hooks/useDocument';
 import { useVehicle } from '../../../../hooks/useVehicle';
-import { getDocumentSignedUrl } from '../../../../services/api/documents';
 import { supabase } from '../../../../lib/supabase';
 
 export default function VehicleDocumentsRoute() {
@@ -17,9 +16,9 @@ export default function VehicleDocumentsRoute() {
   const { data: vehicle, isLoading: vehicleLoading } = useVehicle(vehicleId);
   const { data: documents = [], isLoading: documentsLoading } = useDocuments(vehicle?.workspaceId, {
     includeArchived: true,
+    vehicleId,
   });
   const uploadDocument = useUploadDocument();
-  const [openError, setOpenError] = useState<string | null>(null);
 
   if (!vehicleId) {
     return (
@@ -39,8 +38,8 @@ export default function VehicleDocumentsRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
-        <Button label="Back to Passport" variant="secondary" onPress={() => router.back()} />
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
+        <Button label="Back to Passport" variant="secondary" onPress={() => router.replace(`/vehicle/${vehicleId}/passport`)} />
 
         <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">
           <Text className="text-2xl font-bold text-wrnc-text-primary">Documents</Text>
@@ -67,8 +66,6 @@ export default function VehicleDocumentsRoute() {
               }}
             />
 
-            {openError ? <Text className="mb-3 text-sm text-semantic-error">{openError}</Text> : null}
-
             {documentsLoading ? (
               <Text className="text-sm text-wrnc-text-secondary">Loading document records…</Text>
             ) : documents.length === 0 ? (
@@ -81,18 +78,7 @@ export default function VehicleDocumentsRoute() {
                   documentType={document.documentType}
                   mimeType={document.mimeType}
                   fileSize={document.fileSize}
-                  onPress={async () => {
-                    setOpenError(null);
-                    try {
-                      const url = document.storagePath
-                        ? await getDocumentSignedUrl(document.storagePath)
-                        : document.fileUrl;
-                      if (!url) throw new Error('This document has no file to open.');
-                      await Linking.openURL(url);
-                    } catch (error) {
-                      setOpenError(error instanceof Error ? error.message : 'Unable to open this document.');
-                    }
-                  }}
+                  onPress={() => router.push(`/vehicle/${vehicleId}/documents/${document.id}`)}
                 />
               ))
             )}

@@ -2,19 +2,19 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { MarketingButton } from './MarketingButton';
 
-type FinalCtaSectionProps = { onJoin?: () => void };
+type FinalCtaSectionProps = { onFounding23?: () => void; onJoin?: () => void };
 
-export function FinalCtaSection({ onJoin }: FinalCtaSectionProps) {
+export function FinalCtaSection({ onFounding23, onJoin }: FinalCtaSectionProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   return (
     <View style={[styles.section, isMobile && styles.sectionMobile]}>
       <View style={styles.content}>
-        <Text style={[styles.heading, isMobile && styles.headingMobile]}>Built for builders, not algorithms.</Text>
-        <Text style={styles.body}>WRNC is not social media.{`\n`}It’s your personal build database.</Text>
+        <Text style={[styles.heading, isMobile && styles.headingMobile]}>Your build is already happening. Start preserving it.</Text>
+        <Text style={styles.body}>Create your WRNC account and give the work a record that lasts.</Text>
         <View style={[styles.actions, isMobile && styles.actionsMobile]}>
           <MarketingButton label="JOIN WRNC" onPress={onJoin} />
-          <Pressable accessibilityRole="link" style={styles.secondary}><Text style={styles.secondaryText}>BECOME A FOUNDING BUILDER →</Text></Pressable>
+          <Pressable accessibilityRole="link" onPress={onFounding23} style={styles.secondary}><Text style={styles.secondaryText}>BECOME A FOUNDING BUILDER →</Text></Pressable>
         </View>
       </View>
     </View>
