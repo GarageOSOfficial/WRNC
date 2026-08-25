@@ -10,10 +10,11 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 }));
 
 describe('Founding23Screen', () => {
-  it('renders the locked V1 cohort model and honest intake gate', () => {
+  it('renders the locked V1 cadre model and honest intake gate', () => {
     const { getAllByLabelText, getAllByText, getByLabelText, getByRole, getByText } = render(<Founding23Screen />);
 
     getByText('Founding 23');
+    getByText('THE ORIGINAL CADRE');
     getByText('20');
     getByText('BUILDERS BEING RECRUITED');
     getByLabelText('Founding Builder 001, reserved');

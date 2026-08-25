@@ -31,7 +31,7 @@ export default function Founding23Screen() {
         </View>
 
         <View style={[styles.hero, isMobile && styles.sectionMobile]}>
-          <Text style={styles.eyebrow}>THE ORIGINAL COHORT</Text>
+          <Text style={styles.eyebrow}>THE ORIGINAL CADRE</Text>
           <Text style={[styles.title, isMobile && styles.titleMobile]}>Founding 23</Text>
           <Text style={[styles.lead, isMobile && styles.leadMobile]}>
             Twenty-three permanent Founding Builder numbers. Three reserved. Twenty open to builders who will use WRNC on real projects and provide structured product feedback.
@@ -46,7 +46,7 @@ export default function Founding23Screen() {
         <View style={[styles.section, isMobile && styles.sectionMobile]}>
           <Text style={styles.sectionTitle}>Built for product validation</Text>
           <Text style={styles.body}>
-            Founding 23 is a permanent record of WRNC's original builder cohort. It is not a subscription tier, a follower contest, or a leaderboard. Selection is based on active participation with a real vehicle build.
+            Founding 23 is a permanent record of WRNC's original builder cadre. It is not a subscription tier, a follower contest, or a leaderboard. Selection is based on active participation with a real vehicle build.
           </Text>
           <View style={styles.requirements}>
             {[
