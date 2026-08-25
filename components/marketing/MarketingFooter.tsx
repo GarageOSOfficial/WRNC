@@ -5,9 +5,9 @@ import { WrncLogo } from './WrncLogo';
 const productLinks = ['About', 'Founding Builders', 'Sign In'];
 const legalLinks = ['Privacy', 'Terms', 'Contact'];
 
-type MarketingFooterProps = { onSignIn?: () => void };
+type MarketingFooterProps = { onFounding23?: () => void; onSignIn?: () => void };
 
-export function MarketingFooter({ onSignIn }: MarketingFooterProps) {
+export function MarketingFooter({ onFounding23, onSignIn }: MarketingFooterProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const isCompact = width < 1100;
@@ -21,6 +21,8 @@ export function MarketingFooter({ onSignIn }: MarketingFooterProps) {
         </View>
         <View style={styles.links}>{productLinks.map((item) => item === 'Sign In' ? (
           <Pressable accessibilityRole="button" key={item} onPress={onSignIn} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
+        ) : item === 'Founding Builders' ? (
+          <Pressable accessibilityRole="link" key={item} onPress={onFounding23} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
         ) : <Text key={item} style={styles.link}>{item}</Text>)}</View>
         <View style={styles.links}>{legalLinks.map((item) => <Text key={item} style={styles.link}>{item}</Text>)}</View>
         <View style={styles.legal}>
