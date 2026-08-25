@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import Founding23Screen from '../../app/founding23.web';
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
@@ -10,7 +11,7 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 
 describe('Founding23Screen', () => {
   it('renders the locked V1 cohort model and honest intake gate', () => {
-    const { getAllByLabelText, getAllByText, getByLabelText, getByText } = render(<Founding23Screen />);
+    const { getAllByLabelText, getAllByText, getByLabelText, getByRole, getByText } = render(<Founding23Screen />);
 
     getByText('Founding 23');
     getByText('20');
@@ -23,5 +24,8 @@ describe('Founding23Screen', () => {
     expect(getAllByText('OPEN')).toHaveLength(20);
     getByText('APPLY FOR THE FOUNDING 23');
     getByText('APPLICATION INTAKE GATE PENDING');
+    const applyButton = getByRole('button', { name: 'APPLY FOR THE FOUNDING 23' });
+    expect(applyButton.props.accessibilityState).toEqual({ disabled: true });
+    expect(StyleSheet.flatten(applyButton.props.style)).toMatchObject({ backgroundColor: '#FF6400' });
   });
 });

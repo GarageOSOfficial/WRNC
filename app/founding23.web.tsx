@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   numberStatus: { color: '#8F6BFF', fontSize: 9, fontWeight: '800', letterSpacing: 0.8, marginTop: 4 },
   numberStatusReserved: { color: '#A0A0A0' },
   applySection: { alignItems: 'flex-start' },
-  disabledButton: { alignItems: 'center', backgroundColor: '#5A5A5A', borderRadius: 4, justifyContent: 'center', marginTop: 28, minHeight: 48, opacity: 0.72, paddingHorizontal: 24 },
+  disabledButton: { alignItems: 'center', backgroundColor: '#FF6400', borderRadius: 4, justifyContent: 'center', marginTop: 28, minHeight: 48, paddingHorizontal: 24 },
   disabledButtonText: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
   gateText: { color: '#A0A0A0', fontSize: 10, fontWeight: '700', letterSpacing: 0.8, marginTop: 10 },
   footer: { alignItems: 'flex-start', alignSelf: 'center', borderTopColor: '#2A2A2A', borderTopWidth: 1, gap: 14, maxWidth: 1344, paddingHorizontal: 48, paddingVertical: 44, width: '100%' },
