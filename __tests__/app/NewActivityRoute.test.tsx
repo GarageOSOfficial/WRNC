@@ -75,10 +75,10 @@ describe('NewActivityRoute', () => {
       (
         _payload: unknown,
         callbacks?: {
-          onSuccess?: () => void;
+          onSuccess?: (activity: { id: string }) => void;
         }
       ) => {
-        callbacks?.onSuccess?.();
+        callbacks?.onSuccess?.({ id: 'act-1' });
       }
     );
 
@@ -107,6 +107,6 @@ describe('NewActivityRoute', () => {
         onError: expect.any(Function),
       })
     );
-    expect(mockReplace).toHaveBeenCalledWith('/vehicle/veh-1/timeline');
+    expect(mockReplace).toHaveBeenCalledWith('/vehicle/veh-1/activity/act-1');
   });
 });

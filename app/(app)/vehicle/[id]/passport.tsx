@@ -44,7 +44,7 @@ export default function VehiclePassportRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }}>
         <BuildPassportHeader
           vehicleTitle={vehicleSummary.title}
           vehicleSubtitle={vehicleSummary.subtitle}

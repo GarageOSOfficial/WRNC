@@ -18,8 +18,18 @@ import {
 } from './attachmentStorage';
 
 export const VEHICLE_DOCUMENTS_BUCKET = 'vehicle-documents' as const;
-export const MAX_DOCUMENT_SIZE_BYTES = 20 * 1024 * 1024;
-export const ALLOWED_DOCUMENT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'] as const;
+export const MAX_DOCUMENT_SIZE_BYTES = 25 * 1024 * 1024;
+export const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024;
+export const ALLOWED_DOCUMENT_MIME_TYPES = [
+  'image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif',
+  'video/mp4', 'video/quicktime', 'video/x-m4v',
+  'application/pdf', 'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain', 'application/rtf', 'text/rtf',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/csv',
+] as const;
 
 export const DOCUMENT_CATEGORIES = [
   'receipt',
@@ -36,6 +46,7 @@ export type DocumentCategory = (typeof DOCUMENT_CATEGORIES)[number];
 export interface UploadDocumentInput {
   workspaceId: string;
   vehicleId: string;
+  activityId?: string | null;
   userId: string;
   title: string;
   category: DocumentCategory;
@@ -43,9 +54,10 @@ export interface UploadDocumentInput {
 }
 
 export function validateDocumentFile(file: AttachmentFileInput) {
+  const isVideo = file.mimeType.startsWith('video/');
   return validateAttachmentFile(file, {
     allowedMimeTypes: ALLOWED_DOCUMENT_MIME_TYPES,
-    maxSizeBytes: MAX_DOCUMENT_SIZE_BYTES,
+    maxSizeBytes: isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_DOCUMENT_SIZE_BYTES,
   });
 }
 
@@ -74,6 +86,7 @@ export async function uploadDocument(input: UploadDocumentInput): Promise<Docume
       .insert({
         workspace_id: input.workspaceId,
         vehicle_id: input.vehicleId,
+        activity_id: input.activityId ?? null,
         document_type: input.category,
         title: input.title.trim(),
         storage_path: objectPath,
@@ -148,12 +161,21 @@ export async function listDocuments(
   let query = supabase
     .from('documents')
     .select('*')
-    .eq('workspace_id', workspaceId)
-    .order('uploaded_at', { ascending: false });
+    .eq('workspace_id', workspaceId);
+
+  if (options.vehicleId) {
+    query = query.eq('vehicle_id', options.vehicleId);
+  }
+
+  if (options.activityId) {
+    query = query.eq('activity_id', options.activityId);
+  }
 
   if (!options.includeArchived) {
     query = query.is('archived_at', null);
   }
+
+  query = query.order('uploaded_at', { ascending: false });
 
   const { data, error } = await query;
   if (error) throw error;

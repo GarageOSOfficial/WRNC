@@ -28,3 +28,19 @@ describe('corrective vehicle attachment Storage migration', () => {
     expect(sql).toContain('w.owner_id = (select auth.uid())');
   });
 });
+
+describe('attachment MIME allowlist migration', () => {
+  const sql = fs.readFileSync(
+    path.join(process.cwd(), 'supabase/migrations/20260823130000_expand_vehicle_attachment_mime_allowlists.sql'),
+    'utf8'
+  );
+
+  it('changes only private bucket restrictions, not privacy or RLS policies', () => {
+    expect(sql).toContain("where id = 'vehicle-photos'");
+    expect(sql).toContain("where id = 'vehicle-documents'");
+    expect(sql).toContain("'image/heic'");
+    expect(sql).toContain("'image/heif'");
+    expect(sql).not.toMatch(/\bpublic\s*=/i);
+    expect(sql).not.toMatch(/create\s+policy|drop\s+policy|alter\s+table/i);
+  });
+});

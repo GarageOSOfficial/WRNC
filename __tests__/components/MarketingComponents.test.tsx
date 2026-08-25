@@ -8,6 +8,8 @@ import { ProductShowcaseSection } from '../../components/marketing/ProductShowca
 import { WhyWrncSection } from '../../components/marketing/WhyWrncSection';
 import { WrncLogo } from '../../components/marketing/WrncLogo';
 
+jest.mock('@expo/vector-icons/FontAwesome6', () => 'FontAwesome6');
+
 // useWindowDimensions is mocked per breakpoint where needed
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   default: jest.fn(() => ({ width: 1440, height: 900, scale: 1, fontScale: 1 })),
@@ -106,7 +108,11 @@ describe('V3.1 navigation and benefits', () => {
     benefits.getByText('Preserve its history.');
     const onSignIn = jest.fn();
     const footer = render(<MarketingFooter onSignIn={onSignIn} />);
-    footer.getByText(/Instagram/);
+    ['Instagram', 'Facebook', 'YouTube', 'Discord', 'TikTok', 'Reddit profile'].forEach((label) => {
+      footer.getByLabelText(label);
+    });
+    expect(footer.queryByLabelText('WRNC links')).toBeNull();
+    expect(footer.queryByText('Shop')).toBeNull();
     footer.getByText('© 2026 WRNC.');
     fireEvent.press(footer.getByText('Sign In'));
     expect(onSignIn).toHaveBeenCalledTimes(1);

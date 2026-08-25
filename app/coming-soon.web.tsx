@@ -68,7 +68,7 @@ export default function ComingSoonScreen() {
   const { height: viewportHeight } = useWindowDimensions();
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !window.location) return;
 
     const params = new URLSearchParams(window.location.search);
     const analyticsData: AnalyticsData = {

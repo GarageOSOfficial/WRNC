@@ -7,6 +7,7 @@ import {
   listDocuments,
   replaceDocumentFile,
   uploadDocument,
+  validateDocumentFile,
 } from '../../services/api/documents';
 import * as attachmentStorage from '../../services/api/attachmentStorage';
 
@@ -89,6 +90,7 @@ describe('document CRUD service', () => {
       single: mockSingle,
     });
     mockEq.mockReturnValue({
+      eq: mockEq,
       select: mockSelect,
       single: mockSingle,
       order: mockOrder,
@@ -100,17 +102,28 @@ describe('document CRUD service', () => {
     });
     mockIs.mockReturnValue({
       single: mockSingle,
+      order: mockOrder,
     });
   });
 
   it('lists documents for a workspace excluding archived by default', async () => {
-    mockIs.mockResolvedValue({ data: [makeRow()], error: null });
+    mockOrder.mockResolvedValue({ data: [makeRow()], error: null });
 
     const documents = await listDocuments('ws-1');
 
     expect(documents).toHaveLength(1);
     expect(documents[0].title).toBe('Service Manual');
     expect(mockIs).toHaveBeenCalledWith('archived_at', null);
+  });
+
+  it('filters document retrieval by vehicle and activity', async () => {
+    mockOrder.mockResolvedValue({ data: [makeRow({ vehicle_id: 'veh-1', activity_id: 'act-1' })], error: null });
+
+    const documents = await listDocuments('ws-1', { vehicleId: 'veh-1', activityId: 'act-1' });
+
+    expect(documents).toHaveLength(1);
+    expect(mockEq).toHaveBeenCalledWith('vehicle_id', 'veh-1');
+    expect(mockEq).toHaveBeenCalledWith('activity_id', 'act-1');
   });
 
   it('creates a document and maps the Supabase row', async () => {
@@ -194,6 +207,35 @@ describe('uploadDocument', () => {
     expect(document.storagePath).toBe('user-1/veh-1/receipt/x-r.pdf');
   });
 
+  it('associates an uploaded document with its activity', async () => {
+    mockSingle.mockResolvedValue({
+      data: makeRow({
+        activity_id: 'act-1',
+        vehicle_id: 'veh-1',
+        storage_path: 'user-1/veh-1/diagram/x-wiring.pdf',
+        original_file_name: 'wiring.pdf',
+        document_type: 'diagram',
+      }),
+      error: null,
+    });
+
+    await uploadDocument({
+      workspaceId: 'ws-1',
+      vehicleId: 'veh-1',
+      activityId: 'act-1',
+      userId: 'user-1',
+      title: 'Wiring diagram',
+      category: 'diagram',
+      file: { name: 'wiring.pdf', mimeType: 'application/pdf', size: 1024, webFile: new Blob(['x']) },
+    });
+
+    expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({
+      activity_id: 'act-1',
+      vehicle_id: 'veh-1',
+      workspace_id: 'ws-1',
+    }));
+  });
+
   it('rolls back the uploaded object when the database insert fails', async () => {
     mockSingle.mockResolvedValue({ data: null, error: { message: 'insert failed' } });
 
@@ -224,6 +266,25 @@ describe('uploadDocument', () => {
     ).rejects.toThrow();
 
     expect(mockUploadObject).not.toHaveBeenCalled();
+  });
+
+  it('accepts Office, spreadsheet, HEIC, and bounded video records', () => {
+    const files = [
+      { name: 'manual.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', size: 1024 },
+      { name: 'parts.xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', size: 1024 },
+      { name: 'wiring.csv', mimeType: 'text/csv', size: 1024 },
+      { name: 'progress.heic', mimeType: 'image/heic', size: 1024 },
+      { name: 'walkaround.mov', mimeType: 'video/quicktime', size: 50 * 1024 * 1024 },
+    ];
+    files.forEach((file) => expect(validateDocumentFile(file).valid).toBe(true));
+  });
+
+  it('rejects video over the 50 MB limit', () => {
+    expect(validateDocumentFile({
+      name: 'huge.mov',
+      mimeType: 'video/quicktime',
+      size: 51 * 1024 * 1024,
+    }).valid).toBe(false);
   });
 });
 

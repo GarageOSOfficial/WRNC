@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import { Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { DOCUMENT_CATEGORIES, type DocumentCategory } from '../../services/api/documents';
@@ -21,9 +21,61 @@ export interface DocumentUploadFormProps {
   isSubmitting?: boolean;
 }
 
+const DOCUMENT_ACCEPT = [
+  'image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif',
+  'video/mp4', 'video/quicktime', 'video/x-m4v',
+  'application/pdf', 'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain', 'application/rtf', 'text/rtf',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/csv',
+].join(',');
+
+const MIME_BY_EXTENSION: Record<string, string> = {
+  jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp',
+  heic: 'image/heic', heif: 'image/heif', mp4: 'video/mp4', mov: 'video/quicktime',
+  m4v: 'video/x-m4v', pdf: 'application/pdf', doc: 'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  txt: 'text/plain', rtf: 'application/rtf', xls: 'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', csv: 'text/csv',
+};
+
+function inferDocumentMimeType(fileName: string): string {
+  const extension = fileName.toLowerCase().split('.').pop() || '';
+  return MIME_BY_EXTENSION[extension] || '';
+}
+
+async function pickWebDocument(): Promise<AttachmentFileInput | null> {
+  if (typeof document === 'undefined') throw new Error('File selection is unavailable in this browser.');
+
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = DOCUMENT_ACCEPT;
+    input.style.position = 'fixed';
+    input.style.left = '-9999px';
+    input.addEventListener('change', () => {
+      const webFile = input.files?.[0];
+      input.remove();
+      if (!webFile) return resolve(null);
+      resolve({
+        name: webFile.name || `vehicle-document-${Date.now()}`,
+        mimeType: webFile.type || inferDocumentMimeType(webFile.name),
+        size: webFile.size,
+        webFile,
+      });
+    }, { once: true });
+    document.body.appendChild(input);
+    input.click();
+  });
+}
+
 async function pickDocument(): Promise<AttachmentFileInput | null> {
+  if (Platform.OS === 'web') return pickWebDocument();
+
   const result = await DocumentPicker.getDocumentAsync({
-    type: ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'],
+    type: DOCUMENT_ACCEPT.split(','),
     copyToCacheDirectory: true,
   });
 
@@ -34,7 +86,7 @@ async function pickDocument(): Promise<AttachmentFileInput | null> {
   const asset = result.assets[0];
   return {
     name: asset.name,
-    mimeType: asset.mimeType || 'application/octet-stream',
+    mimeType: asset.mimeType || inferDocumentMimeType(asset.name) || 'application/octet-stream',
     size: asset.size ?? 0,
     uri: asset.uri,
   };
