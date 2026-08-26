@@ -25,7 +25,7 @@ export function MarketingFooter({ onFounding23, onSignIn }: MarketingFooterProps
       <View style={[styles.content, isCompact && styles.contentCompact]}>
         <View style={styles.brand}>
           <WrncLogo />
-          <Text style={styles.tagline}>The OS for Automotive Builders.</Text>
+          <Text style={styles.tagline}>Built for Builders.</Text>
           <View accessibilityLabel="WRNC social media" style={styles.socials}>
             {socialLinks.map(({ label, icon, iconStyle, url }) => (
               <Pressable

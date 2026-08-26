@@ -113,6 +113,8 @@ describe('V3.1 navigation and benefits', () => {
     });
     expect(footer.queryByLabelText('WRNC links')).toBeNull();
     expect(footer.queryByText('Shop')).toBeNull();
+    footer.getByText('Built for Builders.');
+    expect(footer.queryByText('The OS for Automotive Builders.')).toBeNull();
     footer.getByText('© 2026 WRNC.');
     fireEvent.press(footer.getByText('Sign In'));
     expect(onSignIn).toHaveBeenCalledTimes(1);
