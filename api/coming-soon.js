@@ -27,7 +27,7 @@ const html = `<!doctype html>
 <meta name="twitter:image" content="${SOCIAL_URL}" />
 <style>
 :root{color-scheme:dark;background:#080808;color:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080808}body{min-height:100dvh;overflow-x:hidden}.page{min-height:100dvh;padding:0 24px}.hero{width:min(100%,920px);min-height:78dvh;margin:0 auto;padding:72px 0 64px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.logo{display:block;width:min(226px,62vw);height:auto;margin:0 0 64px}h1{margin:0;max-width:760px;color:#fff;font-size:clamp(2.15rem,6vw,3rem);line-height:1.08;font-weight:800;letter-spacing:.01em;text-wrap:balance}.copy{max-width:660px;margin:22px auto 0;color:#c0c0c0;font-size:clamp(1rem,2.4vw,1.125rem);line-height:1.56}.status{margin-top:52px;display:flex;flex-direction:column;align-items:center}.built{margin:0;color:#fff;font-size:.94rem;font-weight:700;letter-spacing:.14em}.accent{width:42px;height:2px;margin:18px 0;background:#ff6400}.coming{margin:0;color:#c0c0c0;font-size:.8rem;font-weight:700;letter-spacing:.28em}#product-preview[hidden]{display:none!important}footer{width:min(100%,920px);margin:0 auto;padding:40px 0 44px;border-top:1px solid #202020;text-align:center}.footer-logo{display:block;width:113px;height:auto;margin:0 auto 18px}.descriptor{margin:0;color:#c0c0c0;font-size:.72rem;font-weight:700;letter-spacing:.16em}.secondary,.culture{margin:10px 0 0;font-size:.82rem}.secondary{color:#9a9a9a}.culture{margin-top:14px;color:#777;font-size:.76rem}@media(max-width:480px){.page{padding:0 20px}.hero{min-height:82dvh;padding:54px 0 46px}.logo{margin-bottom:48px}h1{font-size:clamp(2rem,10vw,2.55rem)}.copy{margin-top:18px;line-height:1.5}.status{margin-top:42px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080808}body{min-height:100dvh;overflow-x:hidden}.page{min-height:100dvh;padding:0 24px}.hero{width:min(100%,920px);min-height:78dvh;margin:0 auto;padding:72px 0 64px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.logo{display:block;width:min(226px,62vw);height:auto;margin:0 0 64px}h1{margin:0;max-width:760px;color:#fff;font-size:clamp(2.15rem,6vw,3rem);line-height:1.08;font-weight:800;letter-spacing:.01em;text-wrap:balance}.copy{max-width:660px;margin:22px auto 0;color:#c0c0c0;font-size:clamp(1rem,2.4vw,1.125rem);line-height:1.56}.status{margin-top:52px;display:flex;flex-direction:column;align-items:center}.built{margin:0;color:#fff;font-size:.94rem;font-weight:700;letter-spacing:.14em}.accent{width:42px;height:2px;margin:18px 0;background:#ff6400}.coming{margin:0;color:#c0c0c0;font-size:.8rem;font-weight:700;letter-spacing:.28em}#product-preview[hidden]{display:none!important}@media(max-width:480px){.page{padding:0 20px}.hero{min-height:82dvh;padding:54px 0 46px}.logo{margin-bottom:48px}h1{font-size:clamp(2rem,10vw,2.55rem)}.copy{margin-top:18px;line-height:1.5}.status{margin-top:42px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
 </style>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -42,12 +42,6 @@ const html = `<!doctype html>
 <div class="status"><p class="built">BUILT FOR BUILDERS.</p><span class="accent" aria-hidden="true"></span><p class="coming">COMING SOON</p></div>
 </section>
 <section id="product-preview" hidden aria-label="WRNC product preview"></section>
-<footer>
-<img class="footer-logo" src="${LOGO_URL}" alt="WRNC" width="113" height="25" loading="lazy" decoding="async" />
-<p class="descriptor">THE CAR CULTURE PLATFORM</p>
-<p class="secondary">The OS for Automotive Builders.</p>
-<p class="culture">Built for the culture, not the algorithms.</p>
-</footer>
 </main>
 <script>
 (function(){
