@@ -157,13 +157,6 @@ export default function ComingSoonScreen() {
         </View>
 
         <ProductPreviewSlot />
-
-        <View style={styles.footer}>
-          <WrncLogo style={styles.footerLogo} />
-          <Text style={styles.footerDescriptor}>THE CAR CULTURE PLATFORM</Text>
-          <Text style={styles.footerSecondary}>The OS for Automotive Builders.</Text>
-          <Text style={styles.footerCulture}>Built for the culture, not the algorithms.</Text>
-        </View>
       </ScrollView>
     </>
   );
@@ -247,39 +240,5 @@ const styles = StyleSheet.create({
     aspectRatio: 16 / 10,
     borderRadius: 18,
     width: '100%',
-  },
-  footer: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    borderTopColor: '#202020',
-    borderTopWidth: 1,
-    maxWidth: 920,
-    paddingBottom: 44,
-    paddingTop: 40,
-    width: '100%',
-  },
-  footerLogo: {
-    height: 25,
-    marginBottom: 18,
-    width: 113,
-  },
-  footerDescriptor: {
-    color: '#C0C0C0',
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 2,
-    textAlign: 'center',
-  },
-  footerSecondary: {
-    color: '#9A9A9A',
-    fontSize: 13,
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  footerCulture: {
-    color: '#777777',
-    fontSize: 12,
-    marginTop: 14,
-    textAlign: 'center',
   },
 });

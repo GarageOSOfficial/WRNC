@@ -12,13 +12,15 @@ jest.mock('../../components/marketing/WrncLogo', () => ({
 }));
 
 describe('ComingSoonScreen', () => {
-  it('renders the approved pre-launch messaging without exposing product navigation', () => {
+  it('renders the approved pre-launch messaging without duplicate footer branding or product navigation', () => {
     const { getByText, queryByText } = render(<ComingSoonScreen />);
 
     expect(getByText(/EVERY BUILD DESERVES/)).toBeTruthy();
     expect(getByText('BUILT FOR BUILDERS.')).toBeTruthy();
     expect(getByText('COMING SOON')).toBeTruthy();
-    expect(getByText('THE CAR CULTURE PLATFORM')).toBeTruthy();
+    expect(queryByText('THE CAR CULTURE PLATFORM')).toBeNull();
+    expect(queryByText('The OS for Automotive Builders.')).toBeNull();
+    expect(queryByText('Built for the culture, not the algorithms.')).toBeNull();
     expect(queryByText('SIGN IN')).toBeNull();
     expect(queryByText('JOIN WRNC')).toBeNull();
     expect(queryByText('APPLY FOR THE FOUNDING 23')).toBeNull();
