@@ -58,7 +58,7 @@ export default function LoginScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
-          <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
+          <Pressable accessibilityLabel="WRNC home" accessibilityRole="button" onPress={() => router.replace('/')} style={styles.wordmark}>
             <WrncLogo />
           </Pressable>
 
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: { flexGrow: 1, paddingBottom: 24 },
   container: { alignSelf: 'center', maxWidth: 560, paddingHorizontal: 24, paddingVertical: 48, width: '100%' },
-  wordmark: { alignSelf: 'flex-start', marginBottom: 72 },
+  wordmark: { alignSelf: 'flex-start', justifyContent: 'center', marginBottom: 72, minHeight: 44 },
   card: { backgroundColor: '#1A1D22', borderColor: '#34373D', borderRadius: 8, borderWidth: 1, padding: 32 },
   eyebrow: { color: '#FF6400', fontSize: 14, fontWeight: '600', lineHeight: 17 },
   title: { color: '#FFFFFF', fontSize: 34, fontWeight: '600', lineHeight: 40, marginTop: 16 },
@@ -134,6 +134,6 @@ const styles = StyleSheet.create({
   primaryButton: { alignItems: 'center', backgroundColor: '#FF6400', borderRadius: 4, height: 48, justifyContent: 'center', marginTop: 28 },
   primaryButtonDisabled: { opacity: 0.65 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600', lineHeight: 17 },
-  secondaryButton: { alignItems: 'center', marginTop: 22, paddingVertical: 6 },
+  secondaryButton: { alignItems: 'center', justifyContent: 'center', marginTop: 22, minHeight: 44 },
   secondaryButtonText: { color: '#C0C0C0', fontSize: 13, fontWeight: '600', lineHeight: 16 },
 });

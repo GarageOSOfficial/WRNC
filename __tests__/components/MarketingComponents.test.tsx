@@ -1,9 +1,11 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { HomeHero } from '../../components/marketing/HomeHero';
 import { FinalCtaSection } from '../../components/marketing/FinalCtaSection';
 import { MarketingFooter } from '../../components/marketing/MarketingFooter';
 import { MarketingHeader } from '../../components/marketing/MarketingHeader';
+import { MarketingButton } from '../../components/marketing/MarketingButton';
 import { ProductShowcaseSection } from '../../components/marketing/ProductShowcaseSection';
 import { WhyWrncSection } from '../../components/marketing/WhyWrncSection';
 import { WrncLogo } from '../../components/marketing/WrncLogo';
@@ -19,6 +21,18 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const mockedDimensionsModule = require('react-native/Libraries/Utilities/useWindowDimensions');
 const mockDimensions = (mockedDimensionsModule.default ?? mockedDimensionsModule) as jest.Mock;
+
+describe('MarketingButton', () => {
+  it('keeps the primary action at least 44px tall', () => {
+    const { getByRole } = render(<MarketingButton label="JOIN WRNC" />);
+    const button = getByRole('button', { name: 'JOIN WRNC' });
+    const resolvedStyle = typeof button.props.style === 'function'
+      ? button.props.style({ pressed: false })
+      : button.props.style;
+
+    expect(StyleSheet.flatten(resolvedStyle)).toMatchObject({ height: 44 });
+  });
+});
 
 // ─── HomeHero ──────────────────────────────────────────────────────────────
 
