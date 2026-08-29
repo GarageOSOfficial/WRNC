@@ -15,7 +15,10 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   default: jest.fn(() => ({ width: 1440, height: 900, scale: 1, fontScale: 1 })),
 }));
 
-const mockDimensions = require('react-native/Libraries/Utilities/useWindowDimensions').default as jest.Mock;
+// Jest must resolve the mocked CommonJS default after the mock factory is registered.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const mockedDimensionsModule = require('react-native/Libraries/Utilities/useWindowDimensions');
+const mockDimensions = (mockedDimensionsModule.default ?? mockedDimensionsModule) as jest.Mock;
 
 // ─── HomeHero ──────────────────────────────────────────────────────────────
 
