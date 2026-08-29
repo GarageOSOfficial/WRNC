@@ -61,9 +61,17 @@ Evidence: Authentication gates the app workspace. No App Review notes, stable re
 
 Founder gate: Approve a dedicated non-privileged review account and review notes. Verify that review credentials work in the submitted TestFlight build and expose representative features without production customer data.
 
+### 6. Support URL is not established
+
+Status: Not met or not evidenced.
+
+Evidence: `support@wrnc.app` remains a mail action in the shared footer. No approved public support web route or confirmed App Store Connect Support URL was found. The prepared `/about` route visibly requires confirmation that the mailbox is monitored.
+
+Founder gate: Approve a stable HTTPS support destination with contact method, response expectations, account-deletion directions that do not replace in-app deletion, and basic troubleshooting.
+
 ## Launch blockers
 
-### 6. Physical iPhone lifecycle QA is not complete
+### 7. Physical iPhone lifecycle QA is not complete
 
 Status: Not met in this sprint.
 
@@ -71,7 +79,7 @@ Required evidence: install and cold launch, signup and confirmation, sign in and
 
 Founder gate: Provide a current physical iPhone and approved test accounts after a signed TestFlight build exists.
 
-### 7. Camera and photo permission strings need native verification
+### 8. Camera and photo permission strings need native verification
 
 Status: Configured in source, not verified in a built binary.
 
@@ -80,14 +88,6 @@ Evidence: `app.json` configures Expo Image Picker strings: “Allow WRNC to acce
 Requirement: protected-resource usage descriptions must accurately explain why access is requested and must be present when the API is used. Source: [Apple, Protecting the User’s Privacy](https://developer.apple.com/documentation/uikit/protecting-the-user-s-privacy).
 
 Founder gate: Inspect the generated iOS Info.plist and permission dialogs in the signed candidate. Confirm the wording matches the shipped feature and does not request broader access than needed.
-
-### 8. Support URL is not established
-
-Status: Not met or not evidenced.
-
-Evidence: `support@wrnc.app` remains a mail action in the shared footer. No approved public support web route or confirmed App Store Connect Support URL was found. The prepared `/about` route visibly requires confirmation that the mailbox is monitored.
-
-Founder gate: Approve a stable HTTPS support destination with contact method, response expectations, account-deletion directions that do not replace in-app deletion, and basic troubleshooting.
 
 ### 9. Sign in with Apple decision is unresolved
 
