@@ -14,9 +14,15 @@ const socialLinks = [
   { label: 'Reddit profile', icon: 'reddit', iconStyle: 'brand', url: 'https://www.reddit.com/user/WRNC_app/' },
 ] as const;
 
-type MarketingFooterProps = { onFounding23?: () => void; onSignIn?: () => void };
+type MarketingFooterProps = {
+  onAbout?: () => void;
+  onFounding23?: () => void;
+  onPrivacy?: () => void;
+  onSignIn?: () => void;
+  onTerms?: () => void;
+};
 
-export function MarketingFooter({ onFounding23, onSignIn }: MarketingFooterProps) {
+export function MarketingFooter({ onAbout, onFounding23, onPrivacy, onSignIn, onTerms }: MarketingFooterProps) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const isCompact = width < 1100;
@@ -44,11 +50,17 @@ export function MarketingFooter({ onFounding23, onSignIn }: MarketingFooterProps
           <Pressable accessibilityRole="button" key={item} onPress={onSignIn} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
         ) : item === 'Founding Builders' ? (
           <Pressable accessibilityRole="link" key={item} onPress={onFounding23} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
+        ) : item === 'About' ? (
+          <Pressable accessibilityRole="link" key={item} onPress={onAbout} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
         ) : <Text key={item} style={styles.link}>{item}</Text>)}</View>
         <View style={styles.links}>{legalLinks.map((item) => item === 'Contact' || item === 'Support' ? (
           <Pressable accessibilityRole="link" key={item} onPress={() => Linking.openURL(`mailto:${item.toLowerCase()}@wrnc.app`)} style={styles.linkPressable}>
             <Text style={styles.link}>{item}</Text>
           </Pressable>
+        ) : item === 'Privacy' ? (
+          <Pressable accessibilityRole="link" key={item} onPress={onPrivacy} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
+        ) : item === 'Terms' ? (
+          <Pressable accessibilityRole="link" key={item} onPress={onTerms} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
         ) : <Text key={item} style={styles.link}>{item}</Text>)}</View>
         <View style={styles.legal}>
           <Text style={styles.legalText}>© 2026 WRNC.</Text>
