@@ -4,6 +4,9 @@ import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, Style
 import { WrncLogo } from '../components/marketing/WrncLogo';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
+// Activation remains gated on Founder and Legal approval of the final documents.
+export const LEGAL_ASSENT_ENABLED = false;
+
 /** Universal WRNC account creation route used by the homepage CTAs. */
 export default function SignupScreen() {
   const router = useRouter();
@@ -13,6 +16,7 @@ export default function SignupScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [hasAcceptedLegal, setHasAcceptedLegal] = useState(false);
 
   const handleSignup = async () => {
     const normalizedEmail = email.trim().toLowerCase();
@@ -34,6 +38,11 @@ export default function SignupScreen() {
 
     if (password !== confirmPassword) {
       setError('Your passwords do not match.');
+      return;
+    }
+
+    if (LEGAL_ASSENT_ENABLED && !hasAcceptedLegal) {
+      setError('Review and accept the Terms of Service and Privacy Notice to create an account.');
       return;
     }
 
@@ -129,6 +138,23 @@ export default function SignupScreen() {
                 value={confirmPassword}
               />
 
+              {LEGAL_ASSENT_ENABLED ? (
+                <View style={styles.assentRow}>
+                  <Pressable
+                    accessibilityLabel="Accept Terms of Service and Privacy Notice"
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: hasAcceptedLegal }}
+                    onPress={() => setHasAcceptedLegal((current) => !current)}
+                    style={[styles.checkbox, hasAcceptedLegal && styles.checkboxChecked]}
+                  >
+                    <Text style={styles.checkmark}>{hasAcceptedLegal ? '✓' : ''}</Text>
+                  </Pressable>
+                  <Text style={styles.assentText}>
+                    I agree to the <Text onPress={() => router.push('/terms')} style={styles.inlineLink}>Terms of Service</Text> and acknowledge the <Text onPress={() => router.push('/privacy')} style={styles.inlineLink}>Privacy Notice</Text>.
+                  </Text>
+                </View>
+              ) : null}
+
               {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
 
               <Pressable
@@ -172,4 +198,10 @@ const styles = StyleSheet.create({
   successBox: { backgroundColor: '#111318', borderColor: '#42464E', borderRadius: 4, borderWidth: 1, padding: 20 },
   successTitle: { color: '#FFFFFF', fontSize: 16, fontWeight: '600', lineHeight: 20 },
   successText: { color: '#C0C0C0', fontSize: 16, lineHeight: 23, marginTop: 8 },
+  assentRow: { alignItems: 'flex-start', flexDirection: 'row', gap: 12, marginTop: 22 },
+  checkbox: { alignItems: 'center', borderColor: '#C0C0C0', borderRadius: 3, borderWidth: 1, height: 24, justifyContent: 'center', width: 24 },
+  checkboxChecked: { backgroundColor: '#FF6400', borderColor: '#FF6400' },
+  checkmark: { color: '#FFFFFF', fontSize: 16, fontWeight: '700', lineHeight: 19 },
+  assentText: { color: '#C0C0C0', flex: 1, fontSize: 14, lineHeight: 21 },
+  inlineLink: { color: '#FFFFFF', textDecorationLine: 'underline' },
 });
