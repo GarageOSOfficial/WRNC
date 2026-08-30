@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { WrncLogo } from '../components/marketing/WrncLogo';
+import { SignupLegalAssent } from '../components/legal/SignupLegalAssent';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 /** Universal WRNC account creation route used by the homepage CTAs. */
@@ -130,6 +131,12 @@ export default function SignupScreen() {
               />
 
               {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+
+              <SignupLegalAssent
+                enabled={false}
+                onPrivacy={() => router.push('/privacy')}
+                onTerms={() => router.push('/terms')}
+              />
 
               <Pressable
                 accessibilityRole="button"

@@ -101,6 +101,19 @@ describe('V3.1 navigation and benefits', () => {
     expect(onFounding23).toHaveBeenCalledTimes(2);
   });
 
+  it('routes prepared About, Privacy, and Terms footer links', () => {
+    const onAbout = jest.fn();
+    const onPrivacy = jest.fn();
+    const onTerms = jest.fn();
+    const footer = render(<MarketingFooter onAbout={onAbout} onPrivacy={onPrivacy} onTerms={onTerms} />);
+    fireEvent.press(footer.getByText('About'));
+    fireEvent.press(footer.getByText('Privacy'));
+    fireEvent.press(footer.getByText('Terms'));
+    expect(onAbout).toHaveBeenCalledTimes(1);
+    expect(onPrivacy).toHaveBeenCalledTimes(1);
+    expect(onTerms).toHaveBeenCalledTimes(1);
+  });
+
   it('renders the three approved benefits and public footer labels', () => {
     const benefits = render(<WhyWrncSection />);
     benefits.getByText('Organize your vehicle.');
