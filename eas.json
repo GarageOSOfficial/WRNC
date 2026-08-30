@@ -33,7 +33,7 @@
     "production": {
       "ios": {
         "appleId": "$APPLE_ID",
-        "ascAppId": "$ASC_APP_ID",
+        "ascAppId": "6791770564",
         "appleTeamId": "$APPLE_TEAM_ID"
       },
       "android": {
@@ -43,7 +43,7 @@
     "preview": {
       "ios": {
         "appleId": "$APPLE_ID",
-        "ascAppId": "$ASC_APP_ID",
+        "ascAppId": "6791770564",
         "appleTeamId": "$APPLE_TEAM_ID"
       }
     }
