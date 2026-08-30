@@ -2,6 +2,7 @@ import React from 'react';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Linking, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { WrncLogo } from './WrncLogo';
+import { WRNC_CONTACT_EMAILS } from '../../lib/contactEmails';
 
 const productLinks = ['About', 'Founding Builders', 'Sign In'];
 const legalLinks = ['Privacy', 'Terms', 'Contact', 'Support'];
@@ -54,7 +55,7 @@ export function MarketingFooter({ onAbout, onFounding23, onPrivacy, onSignIn, on
           <Pressable accessibilityRole="link" key={item} onPress={onAbout} style={styles.linkPressable}><Text style={styles.link}>{item}</Text></Pressable>
         ) : <Text key={item} style={styles.link}>{item}</Text>)}</View>
         <View style={styles.links}>{legalLinks.map((item) => item === 'Contact' || item === 'Support' ? (
-          <Pressable accessibilityRole="link" key={item} onPress={() => Linking.openURL(`mailto:${item.toLowerCase()}@wrnc.app`)} style={styles.linkPressable}>
+          <Pressable accessibilityRole="link" key={item} onPress={() => Linking.openURL(`mailto:${WRNC_CONTACT_EMAILS.support}`)} style={styles.linkPressable}>
             <Text style={styles.link}>{item}</Text>
           </Pressable>
         ) : item === 'Privacy' ? (

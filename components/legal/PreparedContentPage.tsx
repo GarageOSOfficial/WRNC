@@ -1,11 +1,13 @@
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { WrncContactEmail } from '../../lib/contactEmails';
 import { WrncLogo } from '../marketing/WrncLogo';
 
 export type PreparedContentSection = {
   body?: string[];
   items?: string[];
   title: string;
+  contacts?: { label: string; email: WrncContactEmail }[];
 };
 
 type PreparedContentPageProps = {
@@ -41,6 +43,17 @@ export function PreparedContentPage({ description, eyebrow, onBack, sections, st
               <View key={section.title} style={styles.section}>
                 <Text accessibilityRole="header" style={styles.sectionTitle}>{section.title}</Text>
                 {section.body?.map((paragraph) => <Text key={paragraph} style={styles.body}>{paragraph}</Text>)}
+                {section.contacts?.map(({ label, email }) => (
+                  <Pressable
+                    key={email}
+                    accessibilityRole="link"
+                    accessibilityLabel={`${label}: ${email}`}
+                    onPress={() => Linking.openURL(`mailto:${email}`)}
+                    style={styles.contact}
+                  >
+                    <Text style={styles.contactText}>{label}: {email}</Text>
+                  </Pressable>
+                ))}
                 {section.items?.map((item) => (
                   <View key={item} style={styles.itemRow}>
                     <Text style={styles.bullet}>•</Text>
@@ -73,6 +86,8 @@ const styles = StyleSheet.create({
   section: { backgroundColor: '#14161A', borderColor: '#34373D', borderRadius: 6, borderWidth: 1, padding: 24 },
   sectionTitle: { color: '#FFFFFF', fontSize: 21, fontWeight: '700', lineHeight: 27, marginBottom: 12 },
   body: { color: '#C0C0C0', fontSize: 16, lineHeight: 25, marginTop: 8 },
+  contact: { justifyContent: 'center', minHeight: 44, marginTop: 8 },
+  contactText: { color: '#C0C0C0', fontSize: 16, lineHeight: 25, textDecorationLine: 'underline' },
   itemRow: { alignItems: 'flex-start', flexDirection: 'row', gap: 10, marginTop: 8 },
   bullet: { color: '#FF6400', fontSize: 18, lineHeight: 24 },
   itemText: { color: '#C0C0C0', flex: 1, fontSize: 16, lineHeight: 24 },
