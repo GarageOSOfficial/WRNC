@@ -76,9 +76,11 @@ describe('HomeHero', () => {
 describe('ProductShowcaseSection', () => {
   beforeEach(() => mockDimensions.mockReturnValue({ width: 1440, height: 900, scale: 1, fontScale: 1 }));
 
-  it('renders the single Garage proof and positioning copy', () => {
+  it('renders the current Timeline capture with canonical branding and sample disclosure', () => {
     const { getByLabelText, getByText } = render(<ProductShowcaseSection />);
-    getByLabelText('WRNC Garage product interface');
+    getByLabelText('WRNC Timeline product capture with sample activity data');
+    getByLabelText('WRNC');
+    getByText('Timeline · Sample data');
     getByText('Built for builders, not algorithms.');
     getByText(/personal build database/i);
   });
