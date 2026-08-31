@@ -21,4 +21,11 @@ Target: iOS 0.1.0 (3), com.wrnc.app, existing QA profile and existing signing cr
 
 app.json remains an uncommitted archive input because it includes pre-existing encryption and Android permission edits. Those edits were preserved, not newly introduced for this fix. This task changes its iOS build number from 2 to 3. The cloud archive includes that local configuration.
 
-Build and upload identifiers will be recorded after completion.
+## Delivery result
+
+- Source commit: 19a4d8b, plus the local app.json input described above.
+- EAS build: 17fbe94c-d3fa-42b9-9386-dd8fcd67b46d. FINISHED, version 0.1.0, build 3.
+- EAS submission: 4640ac35-cae7-403e-8344-6ca43ec110b8. Successfully uploaded to Apple App Store Connect.
+- Apple processing was pending at handoff. TestFlight availability and device installation are not yet verified.
+- No automatic TestFlight group setup or public review submission was requested.
+- TestFlight: https://appstoreconnect.apple.com/apps/6791770564/testflight/ios
