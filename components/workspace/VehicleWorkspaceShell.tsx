@@ -145,7 +145,8 @@ export function VehicleWorkspaceShell() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-wrnc-background p-4">
+    <SafeAreaView testID="vehicles-safe-area" style={{ flex: 1, backgroundColor: '#080808' }}>
+    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 40 }}>
       <Text className="mb-4 text-2xl font-bold text-wrnc-text-primary">Vehicles</Text>
       {!showCreate ? (
         <Button label="Create Vehicle" onPress={() => setShowCreate(true)} />
@@ -247,5 +248,6 @@ export function VehicleWorkspaceShell() {
         </>
       )}
     </ScrollView>
+    </SafeAreaView>
   );
 }

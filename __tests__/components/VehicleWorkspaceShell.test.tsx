@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import { VehicleWorkspaceShell } from '../../components/workspace/VehicleWorkspaceShell';
 
 const mockUpdateVehicleMutate = jest.fn();
@@ -84,6 +85,14 @@ jest.mock('../../hooks/useDocumentationScore', () => ({
 }));
 
 describe('VehicleWorkspaceShell loading and empty states', () => {
+  it('places the loaded Vehicles content inside a safe-area boundary', () => {
+    const screen = render(<VehicleWorkspaceShell />);
+    const boundary = screen.UNSAFE_getByType(SafeAreaView);
+    expect(boundary.props.testID).toBe('vehicles-safe-area');
+    const scroll = boundary.findByType(ScrollView);
+    expect(scroll.props.contentContainerStyle).toEqual({ padding: 16, paddingBottom: 40 });
+    expect(screen.getByText('Vehicles')).toBeTruthy();
+  });
   beforeEach(() => {
     mockWorkspaceQuery.data = {
       id: 'ws-1',
