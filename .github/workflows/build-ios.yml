@@ -11,40 +11,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run ESLint
         run: npm run lint
-      
+
       - name: TypeScript type checking
         run: npm run type-check
-      
+
       - name: Run tests
         run: npm test -- --coverage
 
       - name: Validate governance documentation links
-        run: python - <<'PY'
-import os
-from pathlib import Path
-root = Path('.')
-files = [root / 'README.md', root / 'CONTRIBUTING.md', root / '.github/PULL_REQUEST_TEMPLATE.md']
-for path in files:
-    text = path.read_text(encoding='utf-8')
-    if 'docs/governance' not in text:
-        raise SystemExit(f'Missing governance reference in {path}')
-print('Governance references present')
-PY
-      
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          files = [root / 'README.md', root / 'CONTRIBUTING.md', root / '.github/PULL_REQUEST_TEMPLATE.md']
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              if 'docs/governance' not in text:
+                  raise SystemExit(f'Missing governance reference in {path}')
+          print('Governance references present')
+          PY
+
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./coverage/coverage-final.json
           flags: unittests
@@ -56,44 +57,45 @@ PY
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Setup EAS CLI
         run: npm install -g eas-cli
-      
-      - name: Build iOS Preview
-        run: eas build --platform ios --profile preview --non-interactive
+
+      - name: Build iOS for TestFlight
+        run: eas build --platform ios --profile production --non-interactive
         env:
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
           EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
-      
+
       - name: Get build ID
         run: |
-          BUILD_ID=$(eas build list --platform ios --json | jq -r '.[0].id')
-          echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+          BUILD_ID=$(eas build list --platform ios --json --non-interactive | jq -r '.[0].id')
+          test -n "$BUILD_ID" && test "$BUILD_ID" != "null"
+          echo "BUILD_ID=$BUILD_ID" >> "$GITHUB_ENV"
         env:
           EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
-      
+
       - name: Generate build report
         run: |
           echo "# iOS Build Report" > build-report.md
           echo "" >> build-report.md
-          echo "**Build Status:** ✅ Success" >> build-report.md
+          echo "**Build Status:** Success" >> build-report.md
           echo "**Commit:** ${{ github.sha }}" >> build-report.md
-          echo "**Branch:** main" >> build-report.md
+          echo "**Branch:** ${{ github.ref_name }}" >> build-report.md
           echo "**Build ID:** ${{ env.BUILD_ID }}" >> build-report.md
           echo "**Timestamp:** $(date -u)" >> build-report.md
-      
+
       - name: Upload build report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-report
           path: build-report.md
@@ -103,21 +105,21 @@ PY
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Setup EAS CLI
         run: npm install -g eas-cli
-      
-      - name: Submit to TestFlight
-        run: eas submit --platform ios --latest --non-interactive
+
+      - name: Submit latest production build to TestFlight
+        run: eas submit --platform ios --profile production --latest --non-interactive
         env:
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
           EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
@@ -125,76 +127,42 @@ PY
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
-      
+
       - name: Post deployment success to Slack
         if: success()
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": "🚀 WRNC iOS Build & TestFlight Deployment Successful",
+              "text": "WRNC iOS Build & TestFlight Deployment Successful",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*✅ Deployment Status: Success*\n*App:* WRNC\n*Platform:* iOS\n*Destination:* TestFlight\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* main\n*Time:* $(date -u)"
+                    "text": "*Deployment Status: Success*\n*App:* WRNC\n*Platform:* iOS\n*Destination:* TestFlight\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* ${{ github.ref_name }}"
                   }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Build"
-                      },
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "TestFlight"
-                      },
-                      "url": "https://testflight.apple.com"
-                    }
-                  ]
                 }
               ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      
+
       - name: Post deployment failure to Slack
         if: failure()
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": "❌ WRNC iOS Build Failed",
+              "text": "WRNC iOS Build Failed",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*❌ Deployment Status: Failed*\n*App:* WRNC\n*Platform:* iOS\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* main\n*Time:* $(date -u)"
+                    "text": "*Deployment Status: Failed*\n*App:* WRNC\n*Platform:* iOS\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*Branch:* ${{ github.ref_name }}"
                   }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Logs"
-                      },
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
-                  ]
                 }
               ]
             }
