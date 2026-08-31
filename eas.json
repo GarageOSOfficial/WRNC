@@ -41,6 +41,13 @@
     }
   },
   "submit": {
+    "qa": {
+      "ios": {
+        "appleId": "themctowns@yahoo.com",
+        "ascAppId": "6791770564",
+        "appleTeamId": "GKNJ58S5YG"
+      }
+    },
     "production": {
       "ios": {
         "appleId": "$APPLE_ID",
