@@ -38,6 +38,11 @@ Fix source commit: 17af043.
 
 ## Acceptance gate
 
+EAS confirmed replacement build FINISHED and version 0.1.0 (2). Submission
+85651f75-98e5-4c5d-9ca8-e850385d5a2b then completed successfully, confirming
+upload to App Store Connect. Existing API key reused; automatic TestFlight
+setup disabled. Apple processing and physical-device launch remain unverified.
+
 P0 remains open until build 2 cold-launches successfully on the physical iPhone.
 Verify signed-out launch reaches sign-in; sign-in opens Garage; force-close and
 reopen retains a usable session. Then test Vehicle, Activity, Evidence,
