@@ -29,4 +29,24 @@ Next: authorize and configure narrowly scoped Apple upload credentials, then
 submit this exact build ID. Do not use latest, rebuild, enable automatic tester
 assignment, or submit for public review.
 
+## Approved upload completed
+
+After Founder approval, reused the authenticated local Apple session and
+generated key `29BX3BMT8L` with APP_MANAGER, the lower-privilege option offered
+by the installed EAS generator. This is an app-management key, not upload-only;
+the generator uses team-wide app visibility. EAS stores the credential for
+submission of com.wrnc.app. No key material was written to this repository.
+
+Submission `18e8e89f-5b90-451d-91f3-a324e473b134` uploaded the exact build above.
+EAS exited successfully and confirmed the binary was uploaded to App Store
+Connect. Apple processing remains a separate, unverified gate. Automatic
+TestFlight setup was explicitly disabled. No external groups, invitations, or
+public App Review submission were initiated.
+
+- Upload: https://expo.dev/accounts/wrnc/projects/garageosofficial/submissions/18e8e89f-5b90-451d-91f3-a324e473b134
+- TestFlight: https://appstoreconnect.apple.com/apps/6791770564/testflight/ios
+
+Next: confirm Apple processing, assign the intended internal tester, and
+perform physical-device core-loop QA. A successful upload is not device PASS.
+
 Reference: https://docs.expo.dev/submit/ios/
