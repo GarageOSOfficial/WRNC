@@ -3,6 +3,17 @@
     "version": ">= 5.4.0"
   },
   "build": {
+    "qa": {
+      "extends": "production",
+      "distribution": "store",
+      "environment": "preview",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://iwsqsudrayqeuexnuwtk.supabase.co"
+      },
+      "ios": {
+        "simulator": false
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
