@@ -45,5 +45,22 @@ These results do not establish a signed binary or physical-device PASS.
 
 ## References
 
+## First build attempt
+
+The frozen-credentials, non-interactive QA build loaded both preview variables
+and resolved the QA backend correctly. It stopped before build creation:
+`Credentials are not set up. Run this command again in interactive mode.`
+No signed binary, queued build, upload to Apple, or submission was produced.
+
+EAS also reported missing `ITSAppUsesNonExemptEncryption`; an accurate export
+compliance determination remains required, not an assumed boolean. The future
+`cli.appVersionSource` requirement was a warning, not the current blocker.
+
+QA HTTP checks: auth settings returned 200, email login enabled, confirmation
+required; unauthenticated vehicle reads returned 401 with permission denied.
+An authenticated complete core-loop test remains pending.
+
+## Reference links
+
 - https://supabase.com/docs/guides/deployment/managing-environments
 - https://docs.expo.dev/eas/environment-variables/
