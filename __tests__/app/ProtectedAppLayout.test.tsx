@@ -11,7 +11,11 @@ let mockIsSupabaseConfigured = false;
 
 jest.mock('expo-router', () => ({
   Redirect: (props: { href: string }) => mockRedirect(props),
-  Stack: (props: unknown) => mockStack(props),
+  Stack: function ProtectedStack(props: unknown) {
+    const { useQueryClient } = jest.requireActual('@tanstack/react-query');
+    useQueryClient();
+    return mockStack(props);
+  },
 }));
 
 jest.mock('../../lib/supabase', () => ({
