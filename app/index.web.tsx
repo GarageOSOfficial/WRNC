@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import Head from 'expo-router/head';
+import { EarlyAccessSection } from '../components/marketing/EarlyAccessSection';
 import { FinalCtaSection } from '../components/marketing/FinalCtaSection';
 import { MarketingFooter } from '../components/marketing/MarketingFooter';
 import { MarketingHeader } from '../components/marketing/MarketingHeader';
@@ -37,6 +38,7 @@ export default function WebsiteHomeScreen() {
         <HomeHero onGetStarted={openSignup} onSignIn={openLogin} />
         <WhyWrncSection />
         <ProductShowcaseSection />
+        <EarlyAccessSection onPrivacy={openPrivacy} />
         <FinalCtaSection onFounding23={openFounding23} onJoin={openSignup} />
         <MarketingFooter onAbout={openAbout} onFounding23={openFounding23} onPrivacy={openPrivacy} onSignIn={openLogin} onTerms={openTerms} />
       </ScrollView>
