@@ -59,6 +59,15 @@ describe('NewActivityRoute', () => {
     mockMutate.mockReset();
   });
 
+  it('keeps explicit space between the activity heading and large type controls', () => {
+    const { getByTestId, getByText } = render(<NewActivityRoute />);
+
+    expect(getByTestId('activity-type-options').props.style).toEqual({ marginTop: 16, rowGap: 12 });
+    expect(getByText('Create Activity')).toBeTruthy();
+    expect(getByText('Purchased Part')).toBeTruthy();
+    expect(getByText('Record Upload')).toBeTruthy();
+  });
+
   it('does not submit when cost validation fails', () => {
     const { getByLabelText, getByText } = render(<NewActivityRoute />);
 

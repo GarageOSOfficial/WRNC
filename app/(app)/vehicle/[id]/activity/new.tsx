@@ -97,7 +97,7 @@ export default function NewActivityRoute() {
             {vehicle ? `Log work for ${vehicle.year} ${vehicle.make} ${vehicle.model}.` : 'Log work for this vehicle.'}
           </Text>
 
-          <View className="mt-4 gap-3">
+          <View testID="activity-type-options" style={{ marginTop: 16, rowGap: 12 }}>
             {ACTIVITY_TYPES.map((option) => (
               <ActivityTypeOption
                 key={option}
