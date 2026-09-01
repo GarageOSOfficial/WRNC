@@ -90,7 +90,9 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
     const boundary = screen.UNSAFE_getByType(SafeAreaView);
     expect(boundary.props.testID).toBe('vehicles-safe-area');
     const scroll = boundary.findByType(ScrollView);
-    expect(scroll.props.contentContainerStyle).toEqual({ padding: 16, paddingBottom: 40 });
+    expect(scroll.props.contentContainerStyle).toEqual({ padding: 16, paddingBottom: 160 });
+    expect(scroll.props.automaticallyAdjustKeyboardInsets).toBe(true);
+    expect(scroll.props.keyboardDismissMode).toBe('interactive');
     expect(screen.getByText('Vehicles')).toBeTruthy();
   });
   beforeEach(() => {

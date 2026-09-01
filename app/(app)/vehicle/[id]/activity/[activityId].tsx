@@ -39,7 +39,7 @@ export default function ActivityDetailsRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 160 }} automaticallyAdjustKeyboardInsets keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled">
         <Button label="Back to Timeline" variant="secondary" onPress={() => router.replace(`/vehicle/${vehicleId}/timeline`)} />
         <View className="mt-3">
           <Button label="Build Passport" variant="secondary" onPress={() => router.replace(`/vehicle/${vehicleId}/passport`)} />

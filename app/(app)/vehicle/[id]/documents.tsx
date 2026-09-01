@@ -38,7 +38,7 @@ export default function VehicleDocumentsRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 160 }} automaticallyAdjustKeyboardInsets keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled">
         <Button label="Back to Passport" variant="secondary" onPress={() => router.replace(`/vehicle/${vehicleId}/passport`)} />
 
         <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-5">

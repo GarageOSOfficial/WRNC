@@ -64,6 +64,8 @@ export default function SignupScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView
+        automaticallyAdjustKeyboardInsets
+        keyboardDismissMode="interactive"
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}

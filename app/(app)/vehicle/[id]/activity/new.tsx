@@ -93,7 +93,7 @@ export default function NewActivityRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 160 }} automaticallyAdjustKeyboardInsets keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled">
         <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
         <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-4">
           <Text className="text-2xl font-bold text-wrnc-text-primary">Create Activity</Text>
