@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useCurrentWorkspace } from '../../hooks/useWorkspace';
 import { useVehicles, useCreateVehicle, useArchiveVehicle, useRestoreVehicle, useUpdateVehicle } from '../../hooks/useVehicle';
 import { useDocumentationScore } from '../../hooks/useDocumentationScore';
 import { Button } from '../common/Button';
+import { KeyboardSafeScrollView } from '../common/KeyboardSafeScrollView';
 import { EmptyState } from '../common/EmptyState';
 import { VehicleCard } from './VehicleCard';
 import { VehicleDetailsForm } from './VehicleDetailsForm';
@@ -146,7 +148,7 @@ export function VehicleWorkspaceShell() {
 
   return (
     <SafeAreaView testID="vehicles-safe-area" style={{ flex: 1, backgroundColor: '#080808' }}>
-    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 160 }} automaticallyAdjustKeyboardInsets keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled">
+    <KeyboardSafeScrollView contentContainerStyle={{ padding: 16 }}>
       <Text className="mb-4 text-2xl font-bold text-wrnc-text-primary">Vehicles</Text>
       {!showCreate ? (
         <Button label="Create Vehicle" onPress={() => setShowCreate(true)} />
@@ -247,7 +249,7 @@ export function VehicleWorkspaceShell() {
           ))}
         </>
       )}
-    </ScrollView>
+    </KeyboardSafeScrollView>
     </SafeAreaView>
   );
 }

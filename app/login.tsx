@@ -1,7 +1,9 @@
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { WrncLogo } from '../components/marketing/WrncLogo';
+import { KeyboardSafeScrollView } from '../components/common/KeyboardSafeScrollView';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 /** Universal WRNC sign-in route for returning members. */
@@ -51,12 +53,9 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <ScrollView
-        automaticallyAdjustKeyboardInsets
-        keyboardDismissMode="interactive"
+      <KeyboardSafeScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
@@ -115,7 +114,7 @@ export default function LoginScreen() {
             </Pressable>
           </View>
         </View>
-      </ScrollView>
+      </KeyboardSafeScrollView>
     </SafeAreaView>
   );
 }

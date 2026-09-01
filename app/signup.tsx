@@ -1,7 +1,9 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { WrncLogo } from '../components/marketing/WrncLogo';
+import { KeyboardSafeScrollView } from '../components/common/KeyboardSafeScrollView';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 /** Universal WRNC account creation route used by the homepage CTAs. */
@@ -63,11 +65,8 @@ export default function SignupScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <ScrollView
-        automaticallyAdjustKeyboardInsets
-        keyboardDismissMode="interactive"
+      <KeyboardSafeScrollView
         contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
@@ -149,7 +148,7 @@ export default function SignupScreen() {
           )}
           </View>
         </View>
-      </ScrollView>
+      </KeyboardSafeScrollView>
     </SafeAreaView>
   );
 }
