@@ -50,7 +50,7 @@ export default function VehiclePassportRoute() {
             vehicleTitle={vehicleSummary.title}
             vehicleSubtitle={vehicleSummary.subtitle}
             overallScore={documentationSummary.overallScore}
-            onBack={() => router.back()}
+            onBack={() => router.replace('/workspace')}
           />
         </View>
 

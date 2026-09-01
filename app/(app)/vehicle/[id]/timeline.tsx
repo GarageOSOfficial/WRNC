@@ -35,7 +35,8 @@ export default function VehicleTimelineRoute() {
       vehicle={vehicle}
       activities={activities}
       isLoading={activitiesLoading}
-      onBack={() => router.back()}
+      onBack={() => router.replace('/workspace')}
+      onBuildPassport={() => router.push(`/vehicle/${vehicle.id}/passport`)}
       onActivityPress={(activityId) => router.push(`/vehicle/${vehicle.id}/activity/${activityId}`)}
       onCreateActivity={() => router.push(`/vehicle/${vehicle.id}/activity/new`)}
     />

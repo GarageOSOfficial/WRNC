@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../../components/common/Button';
 import { Input } from '../../../../../components/common/Input';
+import { KeyboardSafeScrollView } from '../../../../../components/common/KeyboardSafeScrollView';
 import { useCreateActivity } from '../../../../../hooks/useActivity';
 import { useVehicle } from '../../../../../hooks/useVehicle';
 import { useCurrentWorkspace } from '../../../../../hooks/useWorkspace';
@@ -93,7 +94,7 @@ export default function NewActivityRoute() {
 
   return (
     <SafeAreaView className="flex-1 bg-wrnc-background">
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, paddingBottom: 160 }} automaticallyAdjustKeyboardInsets keyboardDismissMode="interactive" keyboardShouldPersistTaps="handled">
+      <KeyboardSafeScrollView contentContainerStyle={{ padding: 16 }}>
         <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
         <View className="mt-4 rounded-2xl border border-wrnc-border bg-wrnc-surface p-4">
           <Text className="text-2xl font-bold text-wrnc-text-primary">Create Activity</Text>
@@ -212,7 +213,7 @@ export default function NewActivityRoute() {
             After saving, you can attach receipts, photos, diagrams, and other build records to this activity.
           </Text>
         </View>
-      </ScrollView>
+      </KeyboardSafeScrollView>
     </SafeAreaView>
   );
 }

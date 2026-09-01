@@ -29,7 +29,7 @@ export function BuildPassportHeader({ vehicleTitle, vehicleSubtitle, overallScor
       </View>
 
       <View style={{ marginTop: 16, maxWidth: 160, minHeight: 44 }}>
-        <Button label="Back" variant="secondary" onPress={onBack} />
+        <Button label="← Vehicle" variant="secondary" onPress={onBack} />
       </View>
     </View>
   );

@@ -19,7 +19,7 @@ describe('BuildPassport components', () => {
       />
     );
 
-    fireEvent.press(getByText('Back'));
+    fireEvent.press(getByText('← Vehicle'));
     expect(onBack).toHaveBeenCalledTimes(1);
     expect(getByText('88')).toBeTruthy();
   });
