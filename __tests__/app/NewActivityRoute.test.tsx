@@ -118,4 +118,21 @@ describe('NewActivityRoute', () => {
     );
     expect(mockReplace).toHaveBeenCalledWith('/vehicle/veh-1/activity/act-1');
   });
+
+  it('creates multi-item maintenance with large selectable rows and a generated title', () => {
+    const { getByLabelText, getByText, getByTestId } = render(<NewActivityRoute />);
+    fireEvent.press(getByText('Maintenance'));
+    expect(getByTestId('maintenance-options').props.style).toEqual({ marginTop: 12, rowGap: 12 });
+    fireEvent.press(getByLabelText('Engine Oil'));
+    fireEvent.press(getByLabelText('Oil Filter'));
+    fireEvent.press(getByText('Save Activity'));
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({
+      activityType: 'Maintenance',
+      title: 'Engine Oil + Oil Filter',
+      metadata: expect.objectContaining({
+        serviceType: 'Engine Oil, Oil Filter',
+        serviceItems: ['Engine Oil', 'Oil Filter'],
+      }),
+    }), expect.any(Object));
+  });
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../../../components/common/Button';
 import { Input } from '../../../../../components/common/Input';
@@ -7,6 +7,7 @@ import { useCreateActivity } from '../../../../../hooks/useActivity';
 import { useVehicle } from '../../../../../hooks/useVehicle';
 import { useCurrentWorkspace } from '../../../../../hooks/useWorkspace';
 import { ACTIVITY_TYPES, type ActivityType } from '../../../../../types/activity';
+import { MAINTENANCE_ITEMS, type MaintenanceItem } from '../../../../../types/maintenance';
 import { buildCreateActivityPayload, type CreateActivityFieldErrors } from '../../../../../utils/activityPayload';
 import { extractSupabaseErrorMessage, logSupabaseError } from '../../../../../utils/supabaseError';
 
@@ -41,6 +42,8 @@ export default function NewActivityRoute() {
   const [activityDate, setActivityDate] = useState(new Date().toISOString().slice(0, 10));
   const [odometer, setOdometer] = useState('');
   const [cost, setCost] = useState('');
+  const [maintenanceItems, setMaintenanceItems] = useState<MaintenanceItem[]>([]);
+  const [maintenanceMenuOpen, setMaintenanceMenuOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<CreateActivityFieldErrors>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -59,6 +62,7 @@ export default function NewActivityRoute() {
       activityDate,
       odometer,
       cost,
+      maintenanceItems,
     });
 
     if (!payloadResult.input) {
@@ -103,14 +107,62 @@ export default function NewActivityRoute() {
                 key={option}
                 label={option}
                 selected={activityType === option}
-                onPress={() => setActivityType(option)}
+                onPress={() => {
+                  setActivityType(option);
+                  setMaintenanceMenuOpen(option === 'Maintenance');
+                  setFieldErrors((currentErrors) => ({ ...currentErrors, maintenanceItems: undefined }));
+                }}
               />
             ))}
           </View>
 
+          {activityType === 'Maintenance' ? (
+            <View style={{ marginTop: 16 }}>
+              <Text className="mb-2 text-sm font-medium text-wrnc-text-secondary">What was serviced?</Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Maintenance items"
+                accessibilityState={{ expanded: maintenanceMenuOpen }}
+                onPress={() => setMaintenanceMenuOpen((open) => !open)}
+                style={{ minHeight: 56 }}
+                className="flex-row items-center justify-between rounded-lg border border-wrnc-border bg-wrnc-background px-4 py-3"
+              >
+                <Text className="flex-1 text-base font-semibold text-wrnc-text-primary">
+                  {maintenanceItems.length ? `${maintenanceItems.length} selected` : 'Select maintenance items'}
+                </Text>
+                <Text className="ml-3 text-xl text-wrnc-action-primary">{maintenanceMenuOpen ? '▲' : '▼'}</Text>
+              </Pressable>
+              {maintenanceMenuOpen ? (
+                <View testID="maintenance-options" style={{ marginTop: 12, rowGap: 12 }}>
+                  {MAINTENANCE_ITEMS.map((item) => {
+                    const selected = maintenanceItems.includes(item);
+                    return (
+                      <Pressable
+                        key={item}
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: selected }}
+                        accessibilityLabel={item}
+                        onPress={() => {
+                          setMaintenanceItems((current) => selected ? current.filter((value) => value !== item) : [...current, item]);
+                          setFieldErrors((currentErrors) => ({ ...currentErrors, maintenanceItems: undefined }));
+                        }}
+                        style={{ minHeight: 56 }}
+                        className={`flex-row items-center rounded-lg border px-4 py-3 ${selected ? 'border-wrnc-action-primary bg-wrnc-action-primary' : 'border-wrnc-border bg-wrnc-surface-elevated'}`}
+                      >
+                        <Text className="mr-3 text-lg font-bold text-wrnc-text-primary">{selected ? '✓' : '○'}</Text>
+                        <Text className="flex-1 text-base font-semibold text-wrnc-text-primary">{item}</Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              ) : null}
+              {fieldErrors.maintenanceItems ? <Text className="mt-2 text-sm text-semantic-error">{fieldErrors.maintenanceItems}</Text> : null}
+            </View>
+          ) : null}
+
           <View className="mt-4">
             <Input
-              label="Title"
+              label={activityType === 'Maintenance' ? 'Title (generated if blank)' : 'Title'}
               value={title}
               onChangeText={(nextTitle) => {
                 setTitle(nextTitle);
