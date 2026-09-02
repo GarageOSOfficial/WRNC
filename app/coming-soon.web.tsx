@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Head from 'expo-router/head';
+import { KitLaunchListForm } from '../components/marketing/KitLaunchListForm.web';
 import { WrncLogo } from '../components/marketing/WrncLogo';
 
 declare global {
@@ -154,6 +155,8 @@ export default function ComingSoonScreen() {
             <View style={styles.accentLine} />
             <Text style={styles.comingSoon}>COMING SOON</Text>
           </View>
+
+          <KitLaunchListForm />
         </View>
 
         <ProductPreviewSlot />
