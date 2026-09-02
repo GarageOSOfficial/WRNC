@@ -29,17 +29,21 @@ describe('RootLayout splash hold', () => {
   afterEach(() => jest.useRealTimers());
 
   it('keeps the native splash visible for at least two seconds', () => {
-    render(<RootLayout />);
+    const screen = render(<RootLayout />);
     expect(MINIMUM_SPLASH_DURATION_MS).toBe(2000);
     expect(mockPreventAutoHide).toHaveBeenCalled();
-    expect(mockSlot).not.toHaveBeenCalled();
+    expect(mockSlot).toHaveBeenCalledTimes(1);
     expect(mockHide).not.toHaveBeenCalled();
+    expect(screen.getByTestId('wrnc-root-background').props.style).toEqual({
+      flex: 1,
+      backgroundColor: '#080808',
+    });
 
     act(() => jest.advanceTimersByTime(1999));
-    expect(mockSlot).not.toHaveBeenCalled();
+    expect(mockSlot).toHaveBeenCalledTimes(1);
 
     act(() => jest.advanceTimersByTime(1));
-    expect(mockSlot).toHaveBeenCalledTimes(1);
+    expect(mockSlot).toHaveBeenCalledTimes(2);
     expect(mockHide).toHaveBeenCalledTimes(1);
   });
 });

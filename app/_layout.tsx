@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { View } from 'react-native';
 
 export const MINIMUM_SPLASH_DURATION_MS = 2000;
 
@@ -19,6 +20,9 @@ export default function RootLayout() {
     void SplashScreen.hideAsync();
   }, [minimumHoldComplete]);
 
-  if (!minimumHoldComplete) return null;
-  return <Slot />;
+  return (
+    <View testID="wrnc-root-background" style={{ flex: 1, backgroundColor: '#080808' }}>
+      <Slot />
+    </View>
+  );
 }
