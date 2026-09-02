@@ -17,7 +17,7 @@ describe('ComingSoonScreen', () => {
 
     expect(getByText(/EVERY BUILD DESERVES/)).toBeTruthy();
     expect(getByText('BUILT FOR BUILDERS.')).toBeTruthy();
-    expect(getByText('COMING SOON')).toBeTruthy();
+    expect(queryByText('COMING SOON')).toBeNull();
     expect(queryByText('THE CAR CULTURE PLATFORM')).toBeNull();
     expect(queryByText('The OS for Automotive Builders.')).toBeNull();
     expect(queryByText('Built for the culture, not the algorithms.')).toBeNull();
