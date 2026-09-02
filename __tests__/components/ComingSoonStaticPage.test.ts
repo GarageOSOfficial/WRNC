@@ -31,4 +31,9 @@ describe('static Coming Soon campaign page', () => {
     expect(page.match(/9cf45d2196\/index\.js/g)).toHaveLength(1);
     expect(apiPage.match(/9cf45d2196\/index\.js/g)).toHaveLength(1);
   });
+
+  it('uses a logo path that works in both direct file previews and hosted delivery', () => {
+    expect(page).toContain('src="../wrnc-logo.png"');
+    expect(page).not.toContain('src="/wrnc-logo.png"');
+  });
 });
