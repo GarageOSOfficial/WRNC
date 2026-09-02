@@ -153,7 +153,6 @@ export default function ComingSoonScreen() {
           <View style={styles.statusBlock}>
             <Text style={styles.builderStatement}>BUILT FOR BUILDERS.</Text>
             <View style={styles.accentLine} />
-            <Text style={styles.comingSoon}>COMING SOON</Text>
           </View>
 
           <KitLaunchListForm />
@@ -221,12 +220,6 @@ const styles = StyleSheet.create({
     height: 2,
     marginVertical: 18,
     width: 42,
-  },
-  comingSoon: {
-    color: '#C0C0C0',
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 3.6,
   },
   previewShell: {
     alignSelf: 'center',

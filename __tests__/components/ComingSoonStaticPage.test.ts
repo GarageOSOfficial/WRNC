@@ -7,7 +7,7 @@ describe('static Coming Soon campaign page', () => {
 
   it('ends on the launch status without duplicate footer branding', () => {
     expect(page).toContain('BUILT FOR BUILDERS.');
-    expect(page).toContain('COMING SOON');
+    expect(page).not.toContain('COMING SOON');
     expect(page).not.toContain('<footer>');
     expect(page).not.toContain('THE CAR CULTURE PLATFORM</p>');
     expect(page).not.toContain('The OS for Automotive Builders.</p>');
@@ -16,7 +16,7 @@ describe('static Coming Soon campaign page', () => {
 
   it('keeps the Vercel route response free of duplicate footer branding', () => {
     expect(apiPage).toContain('BUILT FOR BUILDERS.');
-    expect(apiPage).toContain('COMING SOON');
+    expect(apiPage).not.toContain('COMING SOON');
     expect(apiPage).not.toContain('<footer>');
     expect(apiPage).not.toContain('THE CAR CULTURE PLATFORM</p>');
     expect(apiPage).not.toContain('The OS for Automotive Builders.</p>');
