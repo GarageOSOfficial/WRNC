@@ -22,4 +22,13 @@ describe('static Coming Soon campaign page', () => {
     expect(apiPage).not.toContain('The OS for Automotive Builders.</p>');
     expect(apiPage).not.toContain('Built for the culture, not the algorithms.</p>');
   });
+
+  it('loads the same managed Kit launch-list form in both public implementations', () => {
+    const embed = '<script async data-uid="9cf45d2196" src="https://wrnc.kit.com/9cf45d2196/index.js"></script>';
+
+    expect(page).toContain(embed);
+    expect(apiPage).toContain(embed);
+    expect(page.match(/9cf45d2196\/index\.js/g)).toHaveLength(1);
+    expect(apiPage.match(/9cf45d2196\/index\.js/g)).toHaveLength(1);
+  });
 });

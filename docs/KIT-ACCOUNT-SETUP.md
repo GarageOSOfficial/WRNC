@@ -41,6 +41,8 @@ Create an inline Form in Kit named `WRNC Launch List`.
 
 ## Development handoff
 
+Published form: Kit Form ID `9872091`, managed embed UID `9cf45d2196`.
+
 For the recommended managed embed, provide Development:
 
 1. The published Kit Form ID
