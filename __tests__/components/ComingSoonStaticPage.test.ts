@@ -4,6 +4,9 @@ import path from 'path';
 describe('static Coming Soon campaign page', () => {
   const page = fs.readFileSync(path.join(process.cwd(), 'public/coming-soon/index.html'), 'utf8');
   const apiPage = fs.readFileSync(path.join(process.cwd(), 'api/coming-soon.js'), 'utf8');
+  const vercelConfig = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), 'vercel.json'), 'utf8'),
+  ) as { routes: { src?: string; dest?: string; handle?: string }[] };
 
   it('ends on the launch status without duplicate footer branding', () => {
     expect(page).toContain('BUILT FOR BUILDERS.');
@@ -35,5 +38,14 @@ describe('static Coming Soon campaign page', () => {
   it('uses a logo path that works in both direct file previews and hosted delivery', () => {
     expect(page).toContain('src="../wrnc-logo.png"');
     expect(page).not.toContain('src="/wrnc-logo.png"');
+  });
+
+  it('serves the landing page at the root without intercepting other application routes', () => {
+    expect(vercelConfig.routes.slice(0, 2)).toEqual([
+      { src: '/', dest: '/api/coming-soon' },
+      { src: '/coming-soon', dest: '/api/coming-soon' },
+    ]);
+    expect(vercelConfig.routes).toContainEqual({ handle: 'filesystem' });
+    expect(vercelConfig.routes).toContainEqual({ src: '/(.*)', dest: '/index.html' });
   });
 });

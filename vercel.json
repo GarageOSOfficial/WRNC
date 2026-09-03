@@ -1,6 +1,10 @@
 {
   "routes": [
     {
+      "src": "/",
+      "dest": "/api/coming-soon"
+    },
+    {
       "src": "/coming-soon",
       "dest": "/api/coming-soon"
     },
