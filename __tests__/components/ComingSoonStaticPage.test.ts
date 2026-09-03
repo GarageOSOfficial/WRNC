@@ -35,6 +35,25 @@ describe('static Coming Soon campaign page', () => {
     expect(apiPage.match(/9cf45d2196\/index\.js/g)).toHaveLength(1);
   });
 
+  it('puts signup before the closing brand signature', () => {
+    expect(page.indexOf('class="launch-list"')).toBeLessThan(page.indexOf('class="status"'));
+    expect(apiPage.indexOf('class="launch-list"')).toBeLessThan(apiPage.indexOf('class="status"'));
+  });
+
+  it('optimizes the injected email field and preserves large controls', () => {
+    for (const implementation of [page, apiPage]) {
+      expect(implementation).toMatch(/input\.setAttribute\('type',\s*'email'\)/);
+      expect(implementation).toMatch(/input\.setAttribute\('autocomplete',\s*'email'\)/);
+      expect(implementation).toMatch(/min-height:\s*52px\s*!important/);
+      expect(implementation).toMatch(/outline:\s*3px solid rgba\(255,\s*100,\s*0/);
+    }
+  });
+
+  it('identifies the root URL as the canonical public landing page', () => {
+    expect(page).toContain('<link rel="canonical" href="https://wrnc.app/" />');
+    expect(apiPage).toContain('<link rel="canonical" href="https://wrnc.app/" />');
+  });
+
   it('uses a logo path that works in both direct file previews and hosted delivery', () => {
     expect(page).toContain('src="../wrnc-logo.png"');
     expect(page).not.toContain('src="/wrnc-logo.png"');
