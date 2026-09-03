@@ -1,5 +1,10 @@
+import crypto from 'node:crypto';
+
 const VIN_PATTERN = /^[A-HJ-NPR-Z0-9]{17}$/;
 const MOCK_VIN = '1HGCM82633A004352';
+const DEFAULT_BASE_URL = 'https://api.motor.com';
+const DEFAULT_VIN_PATH = '/v1/Information/Vehicles/Search/ByVIN';
+const REQUEST_TIMEOUT_MS = 10_000;
 
 function send(response, status, body) {
   response.status(status).json(body);
@@ -25,6 +30,63 @@ async function authenticate(request) {
   } catch {
     return false;
   }
+}
+
+function requireMotorConfig() {
+  const publicKey = process.env.MOTOR_SANDBOX_PUBLIC_KEY?.trim();
+  const privateKey = process.env.MOTOR_SANDBOX_PRIVATE_KEY?.trim();
+  const baseUrl = process.env.MOTOR_SANDBOX_BASE_URL?.trim() || DEFAULT_BASE_URL;
+  const vinPath = process.env.MOTOR_SANDBOX_VIN_PATH?.trim() || DEFAULT_VIN_PATH;
+
+  if (!publicKey || !privateKey) {
+    throw new Error('MOTOR sandbox credentials are not configured.');
+  }
+  if (!baseUrl.startsWith('https://') || !vinPath.startsWith('/')) {
+    throw new Error('MOTOR sandbox endpoint configuration is invalid.');
+  }
+
+  return { publicKey, privateKey, baseUrl: baseUrl.replace(/\/$/, ''), vinPath };
+}
+
+function buildMotorUrl(vin, config, epochSeconds = Math.floor(Date.now() / 1000)) {
+  const verb = 'GET';
+  const stringToSign = [config.publicKey, verb, epochSeconds, config.vinPath].join('\n');
+  const signature = crypto
+    .createHmac('sha256', config.privateKey)
+    .update(stringToSign, 'ascii')
+    .digest('base64');
+  const query = new URLSearchParams({
+    VIN: vin,
+    AttributeStandard: 'MOTOR',
+    Scheme: 'Shared',
+    XDate: String(epochSeconds),
+    ApiKey: config.publicKey,
+    Sig: signature,
+  });
+  return `${config.baseUrl}${config.vinPath}?${query.toString()}`;
+}
+
+function normalizeMotorVehicle(vin, payload) {
+  const vehicles = payload?.Body?.Vehicles;
+  if (!Array.isArray(vehicles) || vehicles.length === 0) return null;
+  const vehicle = vehicles[0];
+
+  if (!Number.isInteger(vehicle.Year) || !vehicle.MakeName || !vehicle.ModelName) {
+    throw new Error('MOTOR returned an invalid vehicle response.');
+  }
+
+  return {
+    vin,
+    year: vehicle.Year,
+    make: vehicle.MakeName,
+    model: vehicle.ModelName,
+    trim: vehicle.SubModelName ?? null,
+    engine: vehicle.EngineDescription ?? null,
+    transmission: null,
+    motorVehicleId: Number.isInteger(vehicle.VehicleID) ? vehicle.VehicleID : null,
+    motorBaseVehicleId: Number.isInteger(vehicle.BaseVehicleID) ? vehicle.BaseVehicleID : null,
+    source: 'motor-sandbox',
+  };
 }
 
 export default async function handler(request, response) {
@@ -74,15 +136,46 @@ export default async function handler(request, response) {
       trim: 'EX V6',
       engine: '3.0L V6',
       transmission: 'Automatic',
+      motorVehicleId: null,
+      motorBaseVehicleId: null,
       source: 'mock',
     });
     return;
   }
 
-  sendError(
-    response,
-    503,
-    'MOTOR_CONTRACT_REQUIRED',
-    'Live MOTOR sandbox lookup requires the approved endpoint, authentication scheme, and response schema.'
-  );
+  let config;
+  try {
+    config = requireMotorConfig();
+  } catch {
+    sendError(response, 503, 'MOTOR_NOT_CONFIGURED', 'MOTOR sandbox access is not configured.');
+    return;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const motorResponse = await fetch(buildMotorUrl(vin, config), {
+      headers: { Accept: 'application/json' },
+      method: 'GET',
+      signal: controller.signal,
+    });
+    if (!motorResponse.ok) {
+      sendError(response, 502, 'MOTOR_UPSTREAM_ERROR', 'MOTOR sandbox lookup failed.');
+      return;
+    }
+
+    const result = normalizeMotorVehicle(vin, await motorResponse.json());
+    if (!result) {
+      sendError(response, 404, 'MOTOR_VIN_NOT_FOUND', 'No MOTOR sandbox vehicle matched that VIN.');
+      return;
+    }
+    send(response, 200, result);
+  } catch (error) {
+    const code = error?.name === 'AbortError' ? 'MOTOR_TIMEOUT' : 'MOTOR_INVALID_RESPONSE';
+    sendError(response, 502, code, 'MOTOR sandbox lookup is temporarily unavailable.');
+  } finally {
+    clearTimeout(timeout);
+  }
 }
+
+export const __testing = { buildMotorUrl, normalizeMotorVehicle };

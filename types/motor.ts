@@ -6,6 +6,8 @@ export interface MotorVinLookup {
   trim: string | null;
   engine: string | null;
   transmission: string | null;
+  motorVehicleId: number | null;
+  motorBaseVehicleId: number | null;
   source: 'motor-sandbox' | 'mock';
 }
 

@@ -8,11 +8,11 @@ import { KeyboardSafeScrollView } from '../../components/common/KeyboardSafeScro
 import { isMotorSandboxEnabled, lookupMotorVin } from '../../services/api/motor';
 import type { MotorVinLookup } from '../../types/motor';
 
-const MOCK_VIN = '1HGCM82633A004352';
+const SANDBOX_VIN = '1B3ES47Y6VD205309';
 
 export default function MotorSandboxScreen() {
   const router = useRouter();
-  const [vin, setVin] = useState(MOCK_VIN);
+  const [vin, setVin] = useState(SANDBOX_VIN);
   const [result, setResult] = useState<MotorVinLookup | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,6 +55,8 @@ export default function MotorSandboxScreen() {
               <Text className="mt-2 text-sm text-wrnc-text-secondary">Trim: {result.trim ?? 'Unknown'}</Text>
               <Text className="mt-1 text-sm text-wrnc-text-secondary">Engine: {result.engine ?? 'Unknown'}</Text>
               <Text className="mt-1 text-sm text-wrnc-text-secondary">Transmission: {result.transmission ?? 'Unknown'}</Text>
+              <Text className="mt-1 text-sm text-wrnc-text-secondary">MOTOR Vehicle ID: {result.motorVehicleId ?? 'Unknown'}</Text>
+              <Text className="mt-1 text-sm text-wrnc-text-secondary">Base Vehicle ID: {result.motorBaseVehicleId ?? 'Unknown'}</Text>
               <Text className="mt-3 text-xs text-semantic-warning">Source: {result.source}. Test data only.</Text>
             </View>
           ) : null}
