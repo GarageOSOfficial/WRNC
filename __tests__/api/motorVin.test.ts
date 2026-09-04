@@ -20,8 +20,9 @@ describe('MOTOR VIN proxy', () => {
     process.env.MOTOR_SANDBOX_VIN_PATH = '/v1/Information/Vehicles/Search/ByVIN';
     process.env.MOTOR_SANDBOX_PUBLIC_KEY = 'public-test-key';
     process.env.MOTOR_SANDBOX_PRIVATE_KEY = 'private-test-key';
-    process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
-    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
+    process.env.SUPABASE_URL = 'https://example.supabase.co';
+    process.env.SUPABASE_ANON_KEY = 'anon-key';
+    delete process.env.MOTOR_ALLOWED_ORIGIN;
     global.fetch = jest.fn().mockResolvedValue({ ok: true }) as jest.Mock;
   });
 
@@ -36,6 +37,15 @@ describe('MOTOR VIN proxy', () => {
     const response = makeResponse();
     await handler({ method: 'POST', headers: {}, body: { vin: '1HGCM82633A004352' } } as any, response);
     expect(response.status).toHaveBeenCalledWith(401);
+  });
+
+  it('rejects a cross-origin request outside the exact preview allowlist', async () => {
+    process.env.MOTOR_ALLOWED_ORIGIN = 'https://approved-preview.example';
+    const response = makeResponse();
+    await handler({ method: 'POST', headers: { origin: 'https://attacker.example' }, body: {} } as any, response);
+    expect(response.status).toHaveBeenCalledWith(403);
+    expect(global.fetch).not.toHaveBeenCalled();
+    delete process.env.MOTOR_ALLOWED_ORIGIN;
   });
 
   it('returns the fixed fixture only for the documented mock VIN', async () => {

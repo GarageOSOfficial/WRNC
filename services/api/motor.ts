@@ -31,9 +31,10 @@ function getProxyUrl(): string {
 
 export async function lookupMotorVin(
   vin: string,
-  fetcher: typeof fetch = fetch
+  fetcher: typeof fetch = fetch,
+  testConfig?: { enabled?: boolean; proxyUrl?: string }
 ): Promise<MotorVinLookup> {
-  if (!isMotorSandboxEnabled()) {
+  if (!(testConfig?.enabled ?? isMotorSandboxEnabled())) {
     throw new MotorLookupError('MOTOR sandbox testing is disabled.', 'FEATURE_DISABLED');
   }
 
@@ -49,7 +50,7 @@ export async function lookupMotorVin(
 
   let response: Response;
   try {
-    response = await fetcher(getProxyUrl(), {
+    response = await fetcher(testConfig?.proxyUrl ?? getProxyUrl(), {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${data.session.access_token}`,

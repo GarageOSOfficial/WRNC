@@ -18,8 +18,9 @@ async function authenticate(request) {
   const authorization = request.headers.authorization;
   if (!authorization?.startsWith('Bearer ')) return false;
 
-  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+  // Bracket access keeps these values runtime-only in this server function.
+  const supabaseUrl = process.env['SUPABASE_URL'] || process.env['EXPO_PUBLIC_SUPABASE_URL'];
+  const anonKey = process.env['SUPABASE_ANON_KEY'] || process.env['EXPO_PUBLIC_SUPABASE_ANON_KEY'];
   if (!supabaseUrl || !anonKey) return false;
 
   try {
@@ -91,7 +92,14 @@ function normalizeMotorVehicle(vin, payload) {
 
 export default async function handler(request, response) {
   const allowedOrigin = process.env.MOTOR_ALLOWED_ORIGIN?.trim();
-  if (allowedOrigin) response.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  const requestOrigin = request.headers.origin;
+  if (allowedOrigin && requestOrigin && requestOrigin !== allowedOrigin) {
+    sendError(response, 403, 'ORIGIN_NOT_ALLOWED', 'This test origin is not allowed.');
+    return;
+  }
+  if (allowedOrigin && requestOrigin === allowedOrigin) {
+    response.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  }
   response.setHeader('Cache-Control', 'no-store');
   response.setHeader('Vary', 'Origin');
 

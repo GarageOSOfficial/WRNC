@@ -1,6 +1,6 @@
 # ADR: Server-side MOTOR sandbox adapter
 
-Status: Proposed for local validation
+Status: Accepted for isolated preview validation
 
 Date: 2026-09-02
 
@@ -8,11 +8,11 @@ Decider: Founder
 
 ## Context
 
-MOTOR DaaS requests require a private HMAC key. An Expo application bundle cannot keep that key secret. The first approved scope is a read-only native VIN lookup against MOTOR's 15-vehicle sandbox, with no persistence, deployment, database change, or website UI change.
+MOTOR DaaS requests require a private HMAC key. A browser or Expo application bundle cannot keep that key secret. The approved scope is a read-only authenticated website workbench against MOTOR's 15-vehicle sandbox, with no persistence, production deployment, or database change. Its normalized contract remains reusable by a later native test surface.
 
 ## Decision
 
-The authenticated native app sends a VIN and its WRNC access token to a WRNC server route. The route validates the session, signs the MOTOR request using server-only credentials, maps the vendor response to WRNC-owned fields, disables caching, and returns the normalized result. The feature is disabled unless both client and server sandbox flags are enabled.
+The authenticated website sends a VIN and its WRNC access token to a WRNC server route. The route validates the session, signs the MOTOR request using server-only credentials, maps the vendor response to WRNC-owned fields, disables caching, and returns the normalized result. The feature is disabled unless both client and server sandbox flags are enabled.
 
 ## Options considered
 
@@ -22,7 +22,7 @@ The authenticated native app sends a VIN and its WRNC access token to a WRNC ser
 
 ## Consequences
 
-- Native code never receives MOTOR credentials.
-- A reachable HTTPS proxy is required for physical-device testing.
+- Browser and native code never receive MOTOR credentials.
+- Same-origin preview hosting is preferred. Cross-origin previews require an exact origin allowlist.
 - MOTOR licensing, attribution, caching, retention, and production access remain separate approval gates.
 - Results remain transient until persistence is explicitly designed and approved.
