@@ -49,6 +49,26 @@ const mockVehiclesQuery: {
   isFetching: false,
 };
 
+const mockActivitiesQuery = {
+  data: [
+    {
+      id: 'act-1',
+      vehicleId: 'veh-1',
+      userId: 'user-1',
+      activityType: 'Maintenance' as const,
+      title: 'Brake Service',
+      description: 'Replaced pads.',
+      activityDate: '2026-08-01',
+      createdAt: '2026-08-01T18:00:00.000Z',
+      updatedAt: null,
+      photos: [],
+      attachments: [],
+      metadata: null,
+      archivedAt: null,
+    },
+  ],
+};
+
 jest.mock('expo-router', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -83,6 +103,10 @@ jest.mock('../../hooks/useDocumentationScore', () => ({
   }),
 }));
 
+jest.mock('../../hooks/useActivity', () => ({
+  useActivities: () => mockActivitiesQuery,
+}));
+
 describe('VehicleWorkspaceShell loading and empty states', () => {
   beforeEach(() => {
     mockWorkspaceQuery.data = {
@@ -98,6 +122,23 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
     mockVehiclesQuery.isLoading = false;
     mockVehiclesQuery.isPending = false;
     mockVehiclesQuery.isFetching = false;
+    mockActivitiesQuery.data = [
+      {
+        id: 'act-1',
+        vehicleId: 'veh-1',
+        userId: 'user-1',
+        activityType: 'Maintenance',
+        title: 'Brake Service',
+        description: 'Replaced pads.',
+        activityDate: '2026-08-01',
+        createdAt: '2026-08-01T18:00:00.000Z',
+        updatedAt: null,
+        photos: [],
+        attachments: [],
+        metadata: null,
+        archivedAt: null,
+      },
+    ];
 
     mockUpdateVehicleMutate.mockReset();
   });
@@ -205,6 +246,39 @@ describe('VehicleWorkspaceShell loading and empty states', () => {
 
     expect(getByText('Benny')).toBeTruthy();
     expect(queryByText('No vehicles yet')).toBeNull();
+  });
+
+  it('shows one selected vehicle record with primary build actions and recent activity', () => {
+    mockVehiclesQuery.data = [
+      {
+        id: 'veh-1',
+        workspaceId: 'ws-1',
+        year: 2012,
+        make: 'Porsche',
+        model: '911',
+        trim: null,
+        nickname: 'Benny',
+        vin: 'WP0AA29972S620001',
+        engine: '3.6L',
+        transmission: 'Manual',
+        mileage: 120000,
+        coverPhotoUrl: null,
+        archivedAt: null,
+        createdAt: '2026-08-01T00:00:00.000Z',
+        updatedAt: '2026-08-01T00:00:00.000Z',
+      },
+    ];
+
+    const { getAllByText, getByText } = render(<VehicleWorkspaceShell />);
+
+    fireEvent.press(getAllByText('Benny')[0]);
+
+    expect(getAllByText('Benny')).toHaveLength(1);
+    expect(getByText('Build Passport')).toBeTruthy();
+    expect(getByText('Timeline')).toBeTruthy();
+    expect(getByText('Add Activity')).toBeTruthy();
+    expect(getByText('Brake Service · Aug 1, 2026')).toBeTruthy();
+    expect(getByText('3.6L')).toBeTruthy();
   });
 
   it('applies updated vehicle data immediately after edit success', () => {
