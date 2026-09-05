@@ -61,14 +61,14 @@ export function calculateCategoryScores(input: DocumentationScoreInput): Documen
         break;
       }
       case 'activityHistory': {
+        const detailedActivities = activities.filter((activity) => Boolean(activity.title || activity.description));
         if (activities.length > 0) {
           score += 5;
-          evidence.push('Activity history present');
         }
-        if (activities.some((activity) => Boolean(activity.title || activity.description))) {
+        if (detailedActivities.length > 0) {
           score += 5;
-          evidence.push('Activities have detail');
         }
+        evidence.push(`${activities.length} ${activities.length === 1 ? 'activity' : 'activities'} recorded`);
         break;
       }
       case 'maintenanceRecords': {
@@ -85,8 +85,8 @@ export function calculateCategoryScores(input: DocumentationScoreInput): Documen
         const photoDocuments = documents.filter((document) => document.mimeType.startsWith('image/'));
         if (photoDocuments.length > 0) {
           score += 10;
-          evidence.push('Photo documents present');
         }
+        evidence.push(`${photoDocuments.length} ${photoDocuments.length === 1 ? 'photo' : 'photos'} uploaded`);
         break;
       }
       case 'receipts': {

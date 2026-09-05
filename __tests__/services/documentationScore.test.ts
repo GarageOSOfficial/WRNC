@@ -66,8 +66,12 @@ describe('documentation score service', () => {
   it('calculates category scores from existing records', () => {
     const categories = calculateCategoryScores(baseInput);
     const vehicleCategory = categories.find((category) => category.key === 'vehicleInformation');
+    const activityCategory = categories.find((category) => category.key === 'activityHistory');
+    const photoCategory = categories.find((category) => category.key === 'photos');
     expect(vehicleCategory?.score).toBeGreaterThan(0);
     expect(vehicleCategory?.score).toBeLessThanOrEqual(100);
+    expect(activityCategory?.evidence).toEqual(['1 activity recorded']);
+    expect(photoCategory?.evidence).toEqual(['0 photos uploaded']);
   });
 
   it('produces an overall documentation score', () => {
