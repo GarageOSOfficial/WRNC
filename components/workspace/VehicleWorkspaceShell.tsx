@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useCurrentWorkspace } from '../../hooks/useWorkspace';
 import { useVehicles, useCreateVehicle, useArchiveVehicle, useRestoreVehicle, useUpdateVehicle } from '../../hooks/useVehicle';
 import { useDocumentationScore } from '../../hooks/useDocumentationScore';
+import { useActivities } from '../../hooks/useActivity';
 import { Button } from '../common/Button';
 import { EmptyState } from '../common/EmptyState';
 import { VehicleCard } from './VehicleCard';
@@ -12,7 +13,9 @@ import { DocumentationScoreCard } from './DocumentationScoreCard';
 import { Input } from '../common/Input';
 import { validateVehicleInput } from '../../utils/validators';
 import type { Vehicle } from '../../types/vehicle';
+import type { Activity } from '../../types/activity';
 import { extractSupabaseErrorMessage, logSupabaseError } from '../../utils/supabaseError';
+import { formatTimelineDate } from '../../utils/activityTimeline';
 
 interface DarkStatusStateProps {
   title: string;
@@ -50,6 +53,7 @@ export function VehicleWorkspaceShell() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
   const documentationScore = useDocumentationScore(activeVehicle?.id);
+  const activitiesQuery = useActivities(activeVehicle?.id, { includeArchived: true });
 
   const isWorkspacePending = workspaceQuery.isPending;
   const isVehiclesPending = vehiclesQuery.isPending;
@@ -194,58 +198,125 @@ export function VehicleWorkspaceShell() {
           ) : null}
           {vehicles.map((vehicle) => (
             <View key={vehicle.id} className="mb-3">
-              <VehicleCard vehicle={vehicle} onPress={() => handleSelectVehicle(vehicle)} />
               {activeVehicle?.id === vehicle.id ? (
                 <View className="rounded-xl border border-wrnc-border bg-wrnc-surface p-4">
+                  <Text className="text-lg font-semibold text-wrnc-text-primary">
+                    {activeVehicle.nickname || `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`}
+                  </Text>
+                  <Text className="mt-1 text-sm text-wrnc-text-secondary">
+                    {activeVehicle.year} {activeVehicle.make} {activeVehicle.model}
+                  </Text>
+                  <View className="mt-3 flex-row flex-wrap gap-2">
+                    <Fact label="VIN" value={activeVehicle.vin || 'Not recorded'} />
+                    <Fact label="Mileage" value={activeVehicle.mileage !== null ? `${activeVehicle.mileage.toLocaleString()} mi` : 'Not recorded'} />
+                    <Fact label="Engine" value={activeVehicle.engine || 'Not recorded'} />
+                    <Fact label="Transmission" value={activeVehicle.transmission || 'Not recorded'} />
+                  </View>
                   <DocumentationScoreCard
                     score={documentationScore.data?.overallScore ?? 0}
                     onPress={() => router.push(`/vehicle/${activeVehicle.id}/passport`)}
                   />
-                  <VehicleDetailsForm
-                    vehicleData={activeVehicle}
-                    isEditMode={isEditMode}
-                    onSubmit={(input) => {
-                      setEditError(null);
-                      updateVehicle.mutate(
-                        { id: activeVehicle.id, input },
-                        {
-                          onSuccess: (updatedVehicle) => {
-                            setActiveVehicle(updatedVehicle);
-                            setIsEditMode(false);
-                          },
-                          onError: (error) => {
-                            setEditError(extractSupabaseErrorMessage(error, 'Unable to save vehicle changes.'));
-                            logSupabaseError('VehicleWorkspaceShell.updateVehicle', error, {
-                              vehicleId: activeVehicle.id,
-                            });
-                          },
-                        }
-                      );
-                    }}
-                    onCancel={() => {
-                      setIsEditMode(false);
-                      setEditError(null);
-                    }}
-                    isSubmitting={updateVehicle.isPending}
+                  <View className="mt-4 flex-row flex-wrap gap-3">
+                    <View className="min-w-40 flex-1">
+                      <Button label="Build Passport" onPress={() => router.push(`/vehicle/${activeVehicle.id}/passport`)} />
+                    </View>
+                    <View className="min-w-40 flex-1">
+                      <Button label="Timeline" onPress={() => router.push(`/vehicle/${activeVehicle.id}/timeline`)} />
+                    </View>
+                    <View className="min-w-40 flex-1">
+                      <Button label="Add Activity" onPress={() => router.push(`/vehicle/${activeVehicle.id}/activity/new`)} />
+                    </View>
+                  </View>
+                  <RecentActivities
+                    activities={activitiesQuery.data ?? []}
+                    onPress={(activityId) => router.push(`/vehicle/${activeVehicle.id}/activity/${activityId}`)}
                   />
+                  {isEditMode ? (
+                    <VehicleDetailsForm
+                      vehicleData={activeVehicle}
+                      isEditMode={isEditMode}
+                      onSubmit={(input) => {
+                        setEditError(null);
+                        updateVehicle.mutate(
+                          { id: activeVehicle.id, input },
+                          {
+                            onSuccess: (updatedVehicle) => {
+                              setActiveVehicle(updatedVehicle);
+                              setIsEditMode(false);
+                            },
+                            onError: (error) => {
+                              setEditError(extractSupabaseErrorMessage(error, 'Unable to save vehicle changes.'));
+                              logSupabaseError('VehicleWorkspaceShell.updateVehicle', error, {
+                                vehicleId: activeVehicle.id,
+                              });
+                            },
+                          }
+                        );
+                      }}
+                      onCancel={() => {
+                        setIsEditMode(false);
+                        setEditError(null);
+                      }}
+                      isSubmitting={updateVehicle.isPending}
+                    />
+                  ) : null}
                   {isEditMode && editError ? <Text className="mt-3 text-xs text-semantic-error">{editError}</Text> : null}
                   {!isEditMode ? (
                     <View className="mt-4 flex-row gap-3">
-                      <Button label="Timeline" variant="secondary" onPress={() => router.push(`/vehicle/${activeVehicle.id}/timeline`)} />
                       <Button label="Edit" variant="secondary" onPress={() => setIsEditMode(true)} />
                       {activeVehicle.archivedAt ? (
-                        <Button label="Restore" onPress={() => restoreVehicle.mutate(activeVehicle.id)} />
+                        <Button label="Restore" variant="secondary" onPress={() => restoreVehicle.mutate(activeVehicle.id)} />
                       ) : (
-                        <Button label="Archive" variant="danger" onPress={() => archiveVehicle.mutate(activeVehicle.id)} />
+                        <Button label="Archive" variant="secondary" onPress={() => archiveVehicle.mutate(activeVehicle.id)} />
                       )}
                     </View>
                   ) : null}
                 </View>
-              ) : null}
+              ) : <VehicleCard vehicle={vehicle} onPress={() => handleSelectVehicle(vehicle)} />}
             </View>
           ))}
         </>
       )}
     </ScrollView>
+  );
+}
+
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <View className="min-w-36 flex-1 rounded-lg bg-wrnc-background px-3 py-2">
+      <Text className="text-xs uppercase tracking-wide text-wrnc-text-secondary">{label}</Text>
+      <Text className="mt-1 text-sm font-medium text-wrnc-text-primary">{value}</Text>
+    </View>
+  );
+}
+
+function RecentActivities({
+  activities,
+  onPress,
+}: {
+  activities: Activity[];
+  onPress: (activityId: string) => void;
+}) {
+  const recentActivities = [...activities]
+    .sort((left, right) => new Date(right.activityDate).getTime() - new Date(left.activityDate).getTime())
+    .slice(0, 3);
+
+  return (
+    <View className="mt-4">
+      <Text className="text-sm font-semibold text-wrnc-text-primary">Recent Activity</Text>
+      {recentActivities.length === 0 ? (
+        <Text className="mt-2 text-sm text-wrnc-text-secondary">No activity recorded yet.</Text>
+      ) : (
+        recentActivities.map((activity) => (
+          <View key={activity.id} className="mt-2">
+            <Button
+              label={`${activity.title} · ${formatTimelineDate(activity.activityDate)}`}
+              variant="secondary"
+              onPress={() => onPress(activity.id)}
+            />
+          </View>
+        ))
+      )}
+    </View>
   );
 }
